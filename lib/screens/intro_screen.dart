@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_application_1/screens/registro_screen.dart';
+import 'package:go_router/go_router.dart';
 import 'selection_screen.dart'; // Importa la siguiente pantalla
 
 class IntroScreen extends StatelessWidget {
@@ -15,9 +17,9 @@ class IntroScreen extends StatelessWidget {
               'assets/images/car_logo.png',
               height: 150,
             ),
-            SizedBox(height: 30),
+            const SizedBox(height: 30),
             // Texto E-GARAJE
-            Text(
+            const Text(
               'E-GARAJE',
               style: TextStyle(
                 color: Colors.white,
@@ -31,12 +33,13 @@ class IntroScreen extends StatelessWidget {
       floatingActionButton: FloatingActionButton(
         backgroundColor: Colors.white,
         onPressed: () {
-          Navigator.push(
-            context,
-            MaterialPageRoute(builder: (context) => SelectionScreen()),
-          );
+          // Navigator.push(
+          //   context,
+          //   MaterialPageRoute(builder: (context) => SelectionScreen()),
+          // );
+          context.push('/selection');
         },
-        child: Icon(Icons.arrow_forward, color: Colors.black),
+        child: const Icon(Icons.arrow_forward, color: Colors.black),
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
     );

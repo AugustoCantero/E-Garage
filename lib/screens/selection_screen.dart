@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_application_1/core/router/app_router.dart';
+import 'package:go_router/go_router.dart';
 
 import 'registro_screen.dart';
 
@@ -15,8 +17,8 @@ class SelectionScreen extends StatelessWidget {
               'assets/images/car_logo.png',
               height: 150,
             ),
-            SizedBox(height: 30),
-            Text(
+            const SizedBox(height: 30),
+            const Text(
               'E-GARAJE',
               style: TextStyle(
                 color: Colors.white,
@@ -24,39 +26,40 @@ class SelectionScreen extends StatelessWidget {
                 fontWeight: FontWeight.bold,
               ),
             ),
-            SizedBox(height: 50),
+            const SizedBox(height: 50),
             // Botón de LOGIN
             OutlinedButton(
               onPressed: () {},
               style: OutlinedButton.styleFrom(
-                side: BorderSide(color: Colors.white),
-                padding: EdgeInsets.symmetric(horizontal: 50, vertical: 20),
+                side: const BorderSide(color: Colors.white),
+                padding: const EdgeInsets.symmetric(horizontal: 50, vertical: 20),
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(30),
                 ),
               ),
-              child: Text(
+              child: const Text(
                 'LOGIN',
                 style: TextStyle(color: Colors.white, fontSize: 20),
               ),
             ),
-            SizedBox(height: 20),
+            const SizedBox(height: 20),
             // Botón de REGISTER
             OutlinedButton(
               onPressed: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (context) => RegistroScreen()),
-                );
+                // Navigator.push(
+                //   context,
+                //   MaterialPageRoute(builder: (context) => RegistroScreen()),
+                // );
+                context.push('/registro');
               },
               style: OutlinedButton.styleFrom(
-                side: BorderSide(color: Colors.white),
-                padding: EdgeInsets.symmetric(horizontal: 50, vertical: 20),
+                side: const BorderSide(color: Colors.white),
+                padding: const EdgeInsets.symmetric(horizontal: 50, vertical: 20),
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(30),
                 ),
               ),
-              child: Text(
+              child: const Text(
                 'REGISTER',
                 style: TextStyle(color: Colors.white, fontSize: 20),
               ),

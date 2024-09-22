@@ -24,36 +24,36 @@ class _RegistroUsuarioScreenState extends State<RegistroUsuarioScreen> {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              SizedBox(height: 30),
+              const SizedBox(height: 30),
               Image.asset(
                 'assets/images/car_logo.png',
                 height: 200,
               ),
-              SizedBox(height: 30),
+              const SizedBox(height: 30),
               _buildTextField('Nombre Completo', _nombreController),
-              SizedBox(height: 20),
+              const SizedBox(height: 20),
               _buildTextField('Número DNI', _dniController),
-              SizedBox(height: 20),
+              const SizedBox(height: 20),
               _buildTextField('Correo Electrónico', _emailController, TextInputType.emailAddress),
-              SizedBox(height: 20),
+              const SizedBox(height: 20),
               _buildPasswordField('Contraseña', _passwordController),
-              SizedBox(height: 10),
-              Text(
+              const SizedBox(height: 10),
+              const Text(
                 'La contraseña debe contener como mínimo 8 caracteres, letras mayúsculas y minúsculas, 1 número.',
                 style: TextStyle(color: Colors.red, fontSize: 12),
               ),
-              SizedBox(height: 20),
+              const SizedBox(height: 20),
               _buildPasswordField('Reingrese Contraseña', _confirmPasswordController),
-              SizedBox(height: 10),
-              Text(
+              const SizedBox(height: 10),
+              const Text(
                 'La contraseña debe contener como mínimo 8 caracteres, letras mayúsculas y minúsculas, 1 número.',
                 style: TextStyle(color: Colors.red, fontSize: 12),
               ),
-              SizedBox(height: 30),
+              const SizedBox(height: 30),
               FloatingActionButton(
                 backgroundColor: Colors.white,
                 onPressed: _guardarUsuario,
-                child: Icon(Icons.arrow_forward, color: Colors.black),
+                child: const Icon(Icons.arrow_forward, color: Colors.black),
               ),
             ],
           ),
@@ -67,14 +67,14 @@ class _RegistroUsuarioScreenState extends State<RegistroUsuarioScreen> {
     return TextField(
       controller: controller,
       keyboardType: inputType,
-      style: TextStyle(color: Colors.white),
+      style: const TextStyle(color: Colors.white),
       decoration: InputDecoration(
         labelText: labelText,
-        labelStyle: TextStyle(color: Colors.white),
-        enabledBorder: OutlineInputBorder(
+        labelStyle: const TextStyle(color: Colors.white),
+        enabledBorder: const OutlineInputBorder(
           borderSide: BorderSide(color: Colors.white),
         ),
-        focusedBorder: OutlineInputBorder(
+        focusedBorder: const OutlineInputBorder(
           borderSide: BorderSide(color: Colors.white),
         ),
       ),
@@ -85,14 +85,14 @@ class _RegistroUsuarioScreenState extends State<RegistroUsuarioScreen> {
     return TextField(
       controller: controller,
       obscureText: true,
-      style: TextStyle(color: Colors.white),
+      style: const TextStyle(color: Colors.white),
       decoration: InputDecoration(
         labelText: labelText,
-        labelStyle: TextStyle(color: Colors.white),
-        enabledBorder: OutlineInputBorder(
+        labelStyle: const TextStyle(color: Colors.white),
+        enabledBorder: const OutlineInputBorder(
           borderSide: BorderSide(color: Colors.white),
         ),
-        focusedBorder: OutlineInputBorder(
+        focusedBorder: const OutlineInputBorder(
           borderSide: BorderSide(color: Colors.white),
         ),
       ),
@@ -107,7 +107,7 @@ class _RegistroUsuarioScreenState extends State<RegistroUsuarioScreen> {
 
     if (password != _confirmPasswordController.text) {
       // Mostrar mensaje de error si las contraseñas no coinciden
-      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
         content: Text('Las contraseñas no coinciden'),
       ));
       return;
@@ -119,7 +119,7 @@ class _RegistroUsuarioScreenState extends State<RegistroUsuarioScreen> {
     await prefs.setString('password', password);  // No se recomienda guardar contraseñas en texto plano
 
     // Mostrar mensaje de éxito
-    ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+    ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
       content: Text('Usuario guardado correctamente'),
     ));
   }

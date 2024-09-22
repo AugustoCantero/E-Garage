@@ -11,32 +11,32 @@ class RegistroAdminScreen extends StatelessWidget {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              SizedBox(height: 30),
+              const SizedBox(height: 30),
               Image.asset(
                 'assets/images/car_logo.png',
                 height: 150,
               ),
-              SizedBox(height: 30),
+              const SizedBox(height: 30),
               _buildTextField('Razón Social', TextInputType.text),
-              SizedBox(height: 20),
+              const SizedBox(height: 20),
               _buildTextField('Número CUIT', TextInputType.number),
-              SizedBox(height: 20),
+              const SizedBox(height: 20),
               _buildTextField('Correo Electrónico', TextInputType.emailAddress),
-              SizedBox(height: 20),
+              const SizedBox(height: 20),
               _buildPasswordField('Contraseña'),
-              SizedBox(height: 10),
-              Text(
+              const SizedBox(height: 10),
+              const Text(
                 'La contraseña debe contener como mínimo 8 caracteres, letras mayúsculas y minúsculas, 1 número.',
                 style: TextStyle(color: Colors.red, fontSize: 12),
               ),
-              SizedBox(height: 20),
+              const SizedBox(height: 20),
               _buildPasswordField('Reingrese Contraseña'),
-              SizedBox(height: 10),
-              Text(
+              const SizedBox(height: 10),
+              const Text(
                 'La contraseña debe contener como mínimo 8 caracteres, letras mayúsculas y minúsculas, 1 número.',
                 style: TextStyle(color: Colors.red, fontSize: 12),
               ),
-              SizedBox(height: 30),
+              const SizedBox(height: 30),
             ],
           ),
         ),
@@ -46,7 +46,7 @@ class RegistroAdminScreen extends StatelessWidget {
         onPressed: () {
           // Acción al presionar el botón
         },
-        child: Icon(Icons.arrow_forward, color: Colors.black),
+        child: const Icon(Icons.arrow_forward, color: Colors.black),
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
     );
@@ -55,14 +55,14 @@ class RegistroAdminScreen extends StatelessWidget {
   Widget _buildTextField(String labelText, TextInputType inputType) {
     return TextField(
       keyboardType: inputType,
-      style: TextStyle(color: Colors.white),
+      style: const TextStyle(color: Colors.white),
       decoration: InputDecoration(
         labelText: labelText,
-        labelStyle: TextStyle(color: Colors.white),
-        enabledBorder: OutlineInputBorder(
+        labelStyle: const TextStyle(color: Colors.white),
+        enabledBorder: const OutlineInputBorder(
           borderSide: BorderSide(color: Colors.white),
         ),
-        focusedBorder: OutlineInputBorder(
+        focusedBorder: const OutlineInputBorder(
           borderSide: BorderSide(color: Colors.white),
         ),
       ),
@@ -72,14 +72,14 @@ class RegistroAdminScreen extends StatelessWidget {
   Widget _buildPasswordField(String labelText) {
     return TextField(
       obscureText: true,
-      style: TextStyle(color: Colors.white),
+      style: const TextStyle(color: Colors.white),
       decoration: InputDecoration(
         labelText: labelText,
-        labelStyle: TextStyle(color: Colors.white),
-        enabledBorder: OutlineInputBorder(
+        labelStyle: const TextStyle(color: Colors.white),
+        enabledBorder: const OutlineInputBorder(
           borderSide: BorderSide(color: Colors.white),
         ),
-        focusedBorder: OutlineInputBorder(
+        focusedBorder: const OutlineInputBorder(
           borderSide: BorderSide(color: Colors.white),
         ),
       ),
