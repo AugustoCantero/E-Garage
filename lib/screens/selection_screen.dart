@@ -29,10 +29,13 @@ class SelectionScreen extends StatelessWidget {
             const SizedBox(height: 50),
             // Botón de LOGIN
             OutlinedButton(
-              onPressed: () {},
+              onPressed: () {
+                context.push('/login');
+              },
               style: OutlinedButton.styleFrom(
                 side: const BorderSide(color: Colors.white),
-                padding: const EdgeInsets.symmetric(horizontal: 50, vertical: 20),
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 50, vertical: 20),
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(30),
                 ),
@@ -54,7 +57,8 @@ class SelectionScreen extends StatelessWidget {
               },
               style: OutlinedButton.styleFrom(
                 side: const BorderSide(color: Colors.white),
-                padding: const EdgeInsets.symmetric(horizontal: 50, vertical: 20),
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 50, vertical: 20),
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(30),
                 ),
