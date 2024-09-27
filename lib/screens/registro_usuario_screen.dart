@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_application_1/core/router/Usuario.dart';
+import 'package:flutter_application_1/domain/Usuario.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:go_router/go_router.dart';
 
 class RegistroUsuarioScreen extends StatefulWidget {
   @override
@@ -137,13 +138,13 @@ class _RegistroUsuarioScreenState extends State<RegistroUsuarioScreen> {
       if (user != null) {
         // Crear instancia de Usuario
         Usuario newUser = Usuario(
-          id: user.uid,
-          email: _emailController.text,
-          contrasenia: _passwordController.text,
-          nombre: _nombreController.text,
-          apellido: _nombreController.text,
-          dni: _dniController.text,
-        );
+            usuarioID: user.uid,
+            email: _emailController.text,
+            password: _passwordController.text,
+            nombre: _nombreController.text,
+            apellido: _nombreController.text,
+            dni: _dniController.text,
+            telefono: "11111111");
 
         // Crear documento en Firestore con el UID del usuario
         await FirebaseFirestore.instance
@@ -156,8 +157,7 @@ class _RegistroUsuarioScreenState extends State<RegistroUsuarioScreen> {
           content: Text('Usuario guardado correctamente'),
         ));
 
-        // Navegar a la pantalla de inicio (o a donde desees)
-        //context.goNamed(Login.name); // Asegúrate de que '/' es la ruta correcta
+        context.go('/selection'); // Asegúrate de que '/' es la ruta correcta
       }
       SharedPreferences prefs = await SharedPreferences.getInstance();
       await prefs.setString('nombre', nombre);
