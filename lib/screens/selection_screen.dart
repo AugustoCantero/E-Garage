@@ -1,8 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_application_1/core/router/app_router.dart';
 import 'package:go_router/go_router.dart';
-
-import 'registro_screen.dart';
 
 class SelectionScreen extends StatelessWidget {
   @override
@@ -49,10 +46,6 @@ class SelectionScreen extends StatelessWidget {
             // Botón de REGISTER
             OutlinedButton(
               onPressed: () {
-                // Navigator.push(
-                //   context,
-                //   MaterialPageRoute(builder: (context) => RegistroScreen()),
-                // );
                 context.push('/registro');
               },
               style: OutlinedButton.styleFrom(
