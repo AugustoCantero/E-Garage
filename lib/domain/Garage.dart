@@ -10,7 +10,6 @@ class Garage {
     int usuarioID;  
     List<Lugar> lugares;
 
-   
 
   Garage({
   required this.garageID,
