@@ -1,5 +1,6 @@
-
 import 'Lugar.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+
 
 class Garage {
 
@@ -31,6 +32,30 @@ class Garage {
       lugares[i].ocupado = true; // Marca los primeros lugares como ocupados
     }
   }
+
+  Map<String, dynamic> toFirestore(){
+    return {
+      'garageID': garageID,
+      'direccion': direccion,
+      'espaciosTotales': espaciosTotales,
+      'espaciosDisponibles': espaciosDisponibles,
+      'usuarioID': usuarioID,
+      'lugares': lugares
+    };
+  }
+
+  static Garage fromFirestore(
+    DocumentSnapshot<Map<String, dynamic>> snapshot,
+    SnapshotOptions? options,
+    ){
+      final data = snapshot.data();
+      return Garage(
+        garageID: data?['garageID'], 
+        direccion: data?['direccion'], 
+        espaciosTotales: data?['espaciosTotales'], 
+        espaciosDisponibles: data?['espaciosDisponibles'], 
+        usuarioID: data?['usuarioID']);
+    }
 }
 
 
