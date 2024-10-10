@@ -1,4 +1,5 @@
 import 'package:flutter_application_1/screens/calendar_demo.dart';
+import 'package:flutter_application_1/screens/datos_cuenta_screen.dart';
 import 'package:flutter_application_1/screens/home.dart';
 import 'package:flutter_application_1/screens/intro_screen.dart';
 import 'package:flutter_application_1/screens/login.dart';
@@ -34,6 +35,7 @@ final GoRouter appRouter = GoRouter(initialLocation: '/intro', routes: [
   GoRoute(
     path: '/login',
     builder: (context, state) => Login(),
+    name: Login.name,
   ),
   GoRoute(
     path: '/home',
@@ -53,5 +55,10 @@ final GoRouter appRouter = GoRouter(initialLocation: '/intro', routes: [
     path: '/calendarioReserva',
     builder: (context, state) => const CalendarDemo(),
     name: CalendarDemo.name,
+  ),
+  GoRoute(
+    path: '/datosCuenta',
+    builder: (context, state) => DatosCuenta(),
+    name: DatosCuenta.name,
   ),
 ]);

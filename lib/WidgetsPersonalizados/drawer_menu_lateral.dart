@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_application_1/core/Providers/user_provider.dart';
+import 'package:flutter_application_1/screens/datos_cuenta_screen.dart';
 import 'package:flutter_application_1/screens/home.dart';
 import 'package:flutter_application_1/screens/login.dart';
 import 'package:flutter_application_1/screens/todasLasReservas.dart';
@@ -45,6 +46,23 @@ class DrawerMenuLateral extends ConsumerWidget {
                   ),
                   onTap: () {
                     context.goNamed(Home.name);
+                  },
+                ),
+              ),
+
+              Padding(
+                padding: EdgeInsets.only(left: 25.0),
+                child: ListTile(
+                  leading: const Icon(
+                    Icons.person,
+                    color: Colors.white,
+                  ),
+                  title: const Text(
+                    'Mi cuenta',
+                    style: TextStyle(color: Colors.white),
+                  ),
+                  onTap: () {
+                    context.goNamed(DatosCuenta.name);
                   },
                 ),
               ),
