@@ -108,6 +108,7 @@ class _RegistroUsuarioScreenState extends State<RegistroUsuarioScreen> {
   }
 
   // Función para guardar los datos del usuario
+  // EN PROVIDER??
   Future<void> _guardarUsuario() async {
     try {
       // Registrar usuario con Firebase Authentication

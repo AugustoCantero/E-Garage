@@ -4,11 +4,11 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 
 class Garage {
 
-    int garageID;
+    String garageID;
     String direccion;
     int espaciosTotales;
     int espaciosDisponibles;
-    int usuarioID;  
+    String usuarioID;  
     List<Lugar> lugares;
 
 

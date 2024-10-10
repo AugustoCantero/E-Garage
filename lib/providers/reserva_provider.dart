@@ -11,6 +11,7 @@ class ReservasNotifier extends StateNotifier<List<Reserva>> {
 
   ReservasNotifier(this.db) : super([]);
 
+//revisar!!!
   Future<void> addReserva(Reserva reserva) async {
     final doc = db.collection('reservas').doc();
     try {
@@ -27,5 +28,15 @@ class ReservasNotifier extends StateNotifier<List<Reserva>> {
         toFirestore: (Reserva reserva, _) => reserva.toFirestore());
     final reservas = await docs.get();
     state = [...state, ...reservas.docs.map((d) => d.data())];
+  }
+
+//revisar!!!
+  Future<void> deleteReserva(String id) async {
+    try {
+      await db.collection('reservas').doc(id).delete();
+      state = state.where((reserva) => reserva.reservaID != id).toList();
+    } catch (e) {
+      print(e);
+    }
   }
 }

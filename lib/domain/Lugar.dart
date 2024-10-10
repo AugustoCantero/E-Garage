@@ -4,8 +4,8 @@ class Lugar {
 
     int lugarID;
     bool ocupado;
-    int garageID;
-    int? reservaID;
+    String garageID;
+    String? reservaID;
 
     //agregar tema de faceID huella
 

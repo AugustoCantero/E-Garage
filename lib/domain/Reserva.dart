@@ -2,12 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 class Reserva {
-  int reservaID;
+  String reservaID;
   DateTime fechaReserva;
   TimeOfDay horaEntrada;
   TimeOfDay horaSalida;
   bool servicioLavado;
-  int pagoID;
+  String pagoID;
   String patente;
   int lugarID;
 

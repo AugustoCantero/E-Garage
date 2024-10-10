@@ -6,8 +6,8 @@ class Vehiculo {
   String marca;
   String modelo;
   String? autorizado;
-  int? garageID;
-  int usuarioID;
+  String? garageID;
+  String usuarioID;
 
   Vehiculo({
     required this.patente,

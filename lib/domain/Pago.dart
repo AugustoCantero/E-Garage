@@ -1,7 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 class Pago {
 
-    int pagoID;
+    String pagoID;
     int monto;
 
     // implementar todo lo de metodos de pago
