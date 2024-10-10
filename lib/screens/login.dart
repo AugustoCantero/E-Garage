@@ -1,5 +1,9 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_application_1/core/Providers/user_provider.dart';
+import 'package:flutter_application_1/screens/home.dart';
+import 'package:flutter_application_1/screens/screen_principal.dart';
+import 'package:flutter_application_1/screens/todasLasReservas.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
@@ -104,7 +108,7 @@ class Login extends ConsumerWidget {
                         .where("email", isEqualTo: _email)
                         .get();
 
-                    /* if (querySnapshot.docs.isNotEmpty) {
+                    if (querySnapshot.docs.isNotEmpty) {
                       // Obtener el primer documento que cumple con la consulta
                       QueryDocumentSnapshot userDocument =
                           querySnapshot.docs.first;
@@ -115,8 +119,7 @@ class Login extends ConsumerWidget {
 
                       if (userData != null) {
                         String? userEmail = userData['email'] as String?;
-                        String? userPassword =
-                            userData['contrasenia'] as String?;
+                        String? userPassword = userData['password'] as String?;
 
                         if (userEmail != null && userPassword != null) {
                           // Verificar si el correo electrónico ingresado coincide con el almacenado
@@ -128,14 +131,14 @@ class Login extends ConsumerWidget {
                                   userData['nombre'],
                                   userData['apellido'],
                                   userData['email'],
-                                  userData['contrasenia'],
+                                  userData['password'],
                                   userData['esAdmin']);
 
                               if (userData['esAdmin'] == true) {
                                 context.goNamed(todasLasReservas.nombre);
-                              } else {*/
-                    context.go('/ScreenPrincipal');
-                    /* }
+                              } else {
+                                context.goNamed(Home.name);
+                              }
                               // Usuario autenticado con éxito
                             } else {
                               print('Contraseña incorrecta.');
@@ -152,7 +155,7 @@ class Login extends ConsumerWidget {
                       }
                     } else {
                       print('Usuario no encontrado.');
-                    }*/
+                    }
                   } catch (e) {
                     print('Error: $e');
                     // Manejar el error

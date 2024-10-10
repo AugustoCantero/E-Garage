@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_application_1/core/router/app_router.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'firebase_options.dart';
 
 Future<void> main() async {
@@ -8,10 +9,12 @@ Future<void> main() async {
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
-  runApp(EGarajeApp());
+  runApp(ProviderScope(child: EGarajeApp()));
 }
 
 class EGarajeApp extends StatelessWidget {
+  const EGarajeApp({super.key});
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp.router(
