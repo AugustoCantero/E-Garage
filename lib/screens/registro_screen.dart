@@ -36,7 +36,7 @@ class RegistroScreen extends StatelessWidget {
                 Navigator.push(
                   context,
                   MaterialPageRoute(
-                      builder: (context) => RegistroUsuarioScreen()),
+                      builder: (context) => const RegistroUsuarioScreen()),
                 );
               },
               style: OutlinedButton.styleFrom(
@@ -59,7 +59,7 @@ class RegistroScreen extends StatelessWidget {
                 Navigator.push(
                   context,
                   MaterialPageRoute(
-                      builder: (context) => RegistroAdminScreen()),
+                      builder: (context) => const RegistroAdminScreen()),
                 );
               },
               style: OutlinedButton.styleFrom(

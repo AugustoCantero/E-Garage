@@ -35,7 +35,7 @@ class IntroScreen extends StatelessWidget {
         onPressed: () {
           Navigator.push(
             context,
-            MaterialPageRoute(builder: (context) => SelectionScreen()),
+            MaterialPageRoute(builder: (context) => const SelectionScreen()),
           );
         },
         child: const Icon(Icons.arrow_forward, color: Colors.black),

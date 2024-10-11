@@ -12,6 +12,7 @@ android {
     namespace = "com.example.e_garage"
     compileSdk = flutter.compileSdkVersion
     ndkVersion = flutter.ndkVersion
+    compileSdkVersion 33
 
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_1_8
@@ -23,12 +24,11 @@ android {
     }
 
     defaultConfig {
-        applicationId "e.g.db.voratium.android"
-        minSdkVersion 23  // Cambia esto a 23
-        targetSdkVersion 33  // Cambia esto a 33 o la versión que estés utilizando
-        versionCode flutter.versionCode
-        versionName flutter.versionName
-        multiDexEnabled true
+        applicationId "com.example.e_garage"  // Este es el mismo nombre del paquete
+        minSdkVersion 21
+        targetSdkVersion 33
+        versionCode 1
+        versionName "1.0"
     }
 
     buildTypes {

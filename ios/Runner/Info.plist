@@ -1,6 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
+<key>NSLocationWhenInUseUsageDescription</key>
+<string>Necesitamos acceder a tu ubicación para mostrar lugares cercanos en el mapa.</string>
+<key>NSLocationAlwaysUsageDescription</key>
+<string>Necesitamos acceder a tu ubicación siempre para ofrecerte los mejores resultados en el mapa.</string>
+<key>NSLocationAlwaysAndWhenInUseUsageDescription</key>
+<string>La aplicación necesita acceder a tu ubicación tanto en primer como en segundo plano.</string>
+<key>NSLocationTemporaryUsageDescriptionDictionary</key>
 <dict>
 	<key>CFBundleDevelopmentRegion</key>
 	<string>$(DEVELOPMENT_LANGUAGE)</string>
@@ -45,5 +52,7 @@
 	<true/>
 	<key>UIApplicationSupportsIndirectInputEvents</key>
 	<true/>
+	<key>Necesitamos acceder a tu ubicación para mostrarte lugares cercanos</key>
+    <string>La aplicación necesita temporalmente acceso a tu ubicación para mejorar tu experiencia.</string>
 </dict>
 </plist>

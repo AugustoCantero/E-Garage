@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_application_1/screens/login_screen.dart';
 
-import 'registro_screen.dart';
+import 'registro_generico.dart';
 
 class SelectionScreen extends StatelessWidget {
   const SelectionScreen({super.key});
@@ -29,7 +30,10 @@ class SelectionScreen extends StatelessWidget {
             const SizedBox(height: 50),
             // Botón de LOGIN
             OutlinedButton(
-              onPressed: () {},
+              onPressed: () {Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => const LoginScreen()),
+                );},
               style: OutlinedButton.styleFrom(
                 side: const BorderSide(color: Colors.white),
                 padding: const EdgeInsets.symmetric(horizontal: 50, vertical: 20),
@@ -48,7 +52,7 @@ class SelectionScreen extends StatelessWidget {
               onPressed: () {
                 Navigator.push(
                   context,
-                  MaterialPageRoute(builder: (context) => RegistroScreen()),
+                  MaterialPageRoute(builder: (context) => const RegistroGenericoScreen()),
                 );
               },
               style: OutlinedButton.styleFrom(
