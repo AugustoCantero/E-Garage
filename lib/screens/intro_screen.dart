@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:go_router/go_router.dart';
+import 'selection_screen.dart'; // Importa la siguiente pantalla
 
 class IntroScreen extends StatelessWidget {
+  const IntroScreen({super.key});
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -31,7 +33,10 @@ class IntroScreen extends StatelessWidget {
       floatingActionButton: FloatingActionButton(
         backgroundColor: Colors.white,
         onPressed: () {
-          context.push('/selection');
+          Navigator.push(
+            context,
+            MaterialPageRoute(builder: (context) => SelectionScreen()),
+          );
         },
         child: const Icon(Icons.arrow_forward, color: Colors.black),
       ),

@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:go_router/go_router.dart';
+
+import 'registro_screen.dart';
 
 class SelectionScreen extends StatelessWidget {
+  const SelectionScreen({super.key});
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -26,13 +29,10 @@ class SelectionScreen extends StatelessWidget {
             const SizedBox(height: 50),
             // Botón de LOGIN
             OutlinedButton(
-              onPressed: () {
-                context.push('/login');
-              },
+              onPressed: () {},
               style: OutlinedButton.styleFrom(
                 side: const BorderSide(color: Colors.white),
-                padding:
-                    const EdgeInsets.symmetric(horizontal: 50, vertical: 20),
+                padding: const EdgeInsets.symmetric(horizontal: 50, vertical: 20),
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(30),
                 ),
@@ -46,12 +46,14 @@ class SelectionScreen extends StatelessWidget {
             // Botón de REGISTER
             OutlinedButton(
               onPressed: () {
-                context.push('/registro');
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => RegistroScreen()),
+                );
               },
               style: OutlinedButton.styleFrom(
                 side: const BorderSide(color: Colors.white),
-                padding:
-                    const EdgeInsets.symmetric(horizontal: 50, vertical: 20),
+                padding: const EdgeInsets.symmetric(horizontal: 50, vertical: 20),
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(30),
                 ),

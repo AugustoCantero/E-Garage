@@ -12,6 +12,8 @@ Future<void> main() async {
 }
 
 class EGarajeApp extends StatelessWidget {
+  const EGarajeApp({super.key});
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp.router(

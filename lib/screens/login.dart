@@ -6,14 +6,14 @@ import 'package:go_router/go_router.dart';
 class Login extends ConsumerWidget {
   static const String name = 'Login';
 
-  const Login({Key? key}) : super(key: key);
+  const Login({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    String _email = '';
-    String _clave = '';
+    String email = '';
+    String clave = '';
     final db = FirebaseFirestore.instance;
-    final ValueNotifier<bool> _showPassword = ValueNotifier<bool>(false);
+    final ValueNotifier<bool> showPassword = ValueNotifier<bool>(false);
 
     return Scaffold(
       backgroundColor: Colors.black,
@@ -37,13 +37,13 @@ class Login extends ConsumerWidget {
               style: const TextStyle(color: Colors.white),
               decoration: const InputDecoration(labelText: 'EMAIL'),
               onChanged: (value) {
-                _email = value;
+                email = value;
               },
             ),
 
             // PASS
             ValueListenableBuilder<bool>(
-              valueListenable: _showPassword,
+              valueListenable: showPassword,
               builder: (context, value, child) {
                 return TextField(
                   style: const TextStyle(color: Colors.white),
@@ -56,12 +56,12 @@ class Login extends ConsumerWidget {
                         color: Colors.white,
                       ),
                       onPressed: () {
-                        _showPassword.value = !value;
+                        showPassword.value = !value;
                       },
                     ),
                   ),
                   onChanged: (value) {
-                    _clave = value;
+                    clave = value;
                   },
                 );
               },
@@ -101,7 +101,7 @@ class Login extends ConsumerWidget {
                     // Realizar la consulta a Firestore para obtener el usuario con el correo electrónico especificado
                     QuerySnapshot querySnapshot = await db
                         .collection("users")
-                        .where("email", isEqualTo: _email)
+                        .where("email", isEqualTo: email)
                         .get();
 
                     /* if (querySnapshot.docs.isNotEmpty) {

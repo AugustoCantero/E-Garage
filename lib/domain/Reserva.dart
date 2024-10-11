@@ -20,7 +20,7 @@ class Reserva {
       required this.pagoID,
       required this.patente,
       required this.lugarID})
-      : this.fechaReserva = fechaReserva ?? DateTime.now();
+      : fechaReserva = fechaReserva ?? DateTime.now();
 
   Map<String, dynamic> toFirestore() {
     return {

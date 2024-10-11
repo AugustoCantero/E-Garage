@@ -1,11 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_application_1/domain/Usuario.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:firebase_auth/firebase_auth.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:go_router/go_router.dart';
+
 
 class RegistroUsuarioScreen extends StatefulWidget {
+  const RegistroUsuarioScreen({super.key});
+
   @override
   _RegistroUsuarioScreenState createState() => _RegistroUsuarioScreenState();
 }
@@ -15,8 +14,7 @@ class _RegistroUsuarioScreenState extends State<RegistroUsuarioScreen> {
   final TextEditingController _dniController = TextEditingController();
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
-  final TextEditingController _confirmPasswordController =
-      TextEditingController();
+  final TextEditingController _confirmPasswordController = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
@@ -38,8 +36,7 @@ class _RegistroUsuarioScreenState extends State<RegistroUsuarioScreen> {
               const SizedBox(height: 20),
               _buildTextField('Número DNI', _dniController),
               const SizedBox(height: 20),
-              _buildTextField('Correo Electrónico', _emailController,
-                  TextInputType.emailAddress),
+              _buildTextField('Correo Electrónico', _emailController, TextInputType.emailAddress),
               const SizedBox(height: 20),
               _buildPasswordField('Contraseña', _passwordController),
               const SizedBox(height: 10),
@@ -48,8 +45,7 @@ class _RegistroUsuarioScreenState extends State<RegistroUsuarioScreen> {
                 style: TextStyle(color: Colors.red, fontSize: 12),
               ),
               const SizedBox(height: 20),
-              _buildPasswordField(
-                  'Reingrese Contraseña', _confirmPasswordController),
+              _buildPasswordField('Reingrese Contraseña', _confirmPasswordController),
               const SizedBox(height: 10),
               const Text(
                 'La contraseña debe contener como mínimo 8 caracteres, letras mayúsculas y minúsculas, 1 número.',
@@ -69,8 +65,7 @@ class _RegistroUsuarioScreenState extends State<RegistroUsuarioScreen> {
   }
 
   // Función para crear los campos de texto con el tipo de teclado correcto
-  Widget _buildTextField(String labelText, TextEditingController controller,
-      [TextInputType inputType = TextInputType.text]) {
+  Widget _buildTextField(String labelText, TextEditingController controller, [TextInputType inputType = TextInputType.text]) {
     return TextField(
       controller: controller,
       keyboardType: inputType,
@@ -88,8 +83,7 @@ class _RegistroUsuarioScreenState extends State<RegistroUsuarioScreen> {
     );
   }
 
-  Widget _buildPasswordField(
-      String labelText, TextEditingController controller) {
+  Widget _buildPasswordField(String labelText, TextEditingController controller) {
     return TextField(
       controller: controller,
       obscureText: true,
@@ -108,86 +102,27 @@ class _RegistroUsuarioScreenState extends State<RegistroUsuarioScreen> {
   }
 
   // Función para guardar los datos del usuario
-  // EN PROVIDER??
   Future<void> _guardarUsuario() async {
-    try {
-      // Registrar usuario con Firebase Authentication
-      UserCredential userCredential =
-          await FirebaseAuth.instance.createUserWithEmailAndPassword(
-        email: _emailController.text,
-        password: _passwordController.text,
-      );
+    final String nombre = _nombreController.text;
+    final String email = _emailController.text;
+    final String password = _passwordController.text;
 
-      // se asigna el user que surga de la creacion del correo y password
-      // Puede aceptar un null
-      User? user = userCredential.user;
-
-      //Almaceno en variables para controlar datos
-      final String nombre = _nombreController.text;
-      final String email = _emailController.text;
-      final String password = _passwordController.text;
-
-      if (password != _confirmPasswordController.text) {
-        // Mostrar mensaje de error si las contraseñas no coinciden
-        ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
-          content: Text('Las contraseñas no coinciden'),
-        ));
-        return;
-      }
-
-      // Verifica que el usuario creado no haya llegado en null
-      if (user != null) {
-        // Crear instancia de Usuario
-        Usuario newUser = Usuario(
-            usuarioID: user.uid,
-            email: _emailController.text,
-            password: _passwordController.text,
-            nombre: _nombreController.text,
-            apellido: _nombreController.text,
-            dni: _dniController.text,
-            telefono: "11111111");
-
-        // Crear documento en Firestore con el UID del usuario
-        await FirebaseFirestore.instance
-            .collection('users')
-            .doc(user.uid) // Utilizar user.uid directamente aquí
-            .set(newUser.toFirestore());
-
-        // Mostrar mensaje de éxito
-        ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
-          content: Text('Usuario guardado correctamente'),
-        ));
-
-        context.go('/selection'); // Asegúrate de que '/' es la ruta correcta
-      }
-      SharedPreferences prefs = await SharedPreferences.getInstance();
-      await prefs.setString('nombre', nombre);
-      await prefs.setString('email', email);
-      await prefs.setString('password',
-          password); // No se recomienda guardar contraseñas en texto plano
-    } on FirebaseAuthException catch (e) {
-      String errorMessage;
-      if (e.code == 'email-already-in-use') {
-        errorMessage = 'El correo electrónico ya está en uso por otra cuenta.';
-      } else if (e.code == 'weak-password') {
-        errorMessage = 'La contraseña es demasiado débil.';
-      } else if (e.code == 'invalid-email') {
-        errorMessage = 'El correo electrónico es inválido.';
-      } else {
-        errorMessage = 'Error al registrar el usuario: ${e.message}';
-      }
-
-      print('Error al registrar el usuario: $errorMessage');
-
-      // Muestra un mensaje de error al usuario
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text(errorMessage)),
-      );
-    } catch (e) {
-      print('Error al registrar el usuario: $e');
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Error al registrar el usuario: $e')),
-      );
+    if (password != _confirmPasswordController.text) {
+      // Mostrar mensaje de error si las contraseñas no coinciden
+      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+        content: Text('Las contraseñas no coinciden'),
+      ));
+      return;
     }
+
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    await prefs.setString('nombre', nombre); 
+    await prefs.setString('email', email);
+    await prefs.setString('password', password);  // No se recomienda guardar contraseñas en texto plano
+
+    // Mostrar mensaje de éxito
+    ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+      content: Text('Usuario guardado correctamente'),
+    ));
   }
 }

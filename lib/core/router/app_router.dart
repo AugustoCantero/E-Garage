@@ -30,10 +30,10 @@ final GoRouter appRouter = GoRouter(initialLocation: '/intro', routes: [
   ),
   GoRoute(
     path: '/login',
-    builder: (context, state) => Login(),
+    builder: (context, state) => const Login(),
   ),
   GoRoute(
     path: '/Screenlogin',
-    builder: (context, state) => ScreenPrincipal(),
+    builder: (context, state) => const ScreenPrincipal(),
   ),
 ]);

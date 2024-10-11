@@ -20,12 +20,12 @@ class Usuario {
 
   Map<String, dynamic> toFirestore() {
     return {
-      if (id != null) "id": id,
-      if (email != null) "email": email,
-      if (contrasenia != null) "contrasenia": contrasenia,
-      if (nombre != null) "nombre": nombre,
-      if (apellido != null) "apellido": apellido,
-      if (dni != null) "apellido": dni,
+      "id": id,
+      "email": email,
+      "contrasenia": contrasenia,
+      "nombre": nombre,
+      "apellido": apellido,
+      "apellido": dni,
       'esAdmin': false
     };
   }

@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:go_router/go_router.dart';
+import 'registro_admin_screen.dart';
+import 'registro_usuario_screen.dart';
 
 class RegistroScreen extends StatelessWidget {
+  const RegistroScreen({super.key});
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -29,7 +32,12 @@ class RegistroScreen extends StatelessWidget {
             // Botón de USUARIO
             OutlinedButton(
               onPressed: () {
-                context.push('/registro-usuario');
+                // Acción al presionar USUARIO
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                      builder: (context) => RegistroUsuarioScreen()),
+                );
               },
               style: OutlinedButton.styleFrom(
                 side: const BorderSide(color: Colors.white),
@@ -47,7 +55,12 @@ class RegistroScreen extends StatelessWidget {
             // Botón de ADMINISTRADOR
             OutlinedButton(
               onPressed: () {
-                context.push('/registro-admin');
+                // Acción al presionar ADMINISTRADOR
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                      builder: (context) => RegistroAdminScreen()),
+                );
               },
               style: OutlinedButton.styleFrom(
                 side: const BorderSide(color: Colors.white),
