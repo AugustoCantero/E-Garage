@@ -62,7 +62,7 @@ class DrawerMenuLateral extends ConsumerWidget {
                     style: TextStyle(color: Colors.white),
                   ),
                   onTap: () {
-                    context.goNamed(DatosCuenta.name);
+                    //context.goNamed(TEST_EDICION_CUENTA.name);
                   },
                 ),
               ),

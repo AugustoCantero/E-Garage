@@ -57,8 +57,8 @@ final GoRouter appRouter = GoRouter(initialLocation: '/intro', routes: [
     name: CalendarDemo.name,
   ),
   GoRoute(
-    path: '/datosCuenta',
-    builder: (context, state) => DatosCuenta(),
-    name: DatosCuenta.name,
+    path: '/EditarCuentaScreen',
+    builder: (context, state) => TEST_EDICION_CUENTA(),
+    name: TEST_EDICION_CUENTA.name,
   ),
 ]);
