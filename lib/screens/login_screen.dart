@@ -1,8 +1,50 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_application_1/screens/login_exitoso.dart';
+import 'package:flutter_application_1/screens/login_exitoso.dart'; // Cambia esta por la pantalla a la que desees ir
+import 'package:local_auth/local_auth.dart';
 
-class LoginScreen extends StatelessWidget {
+class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
+
+  @override
+  _LoginScreenState createState() => _LoginScreenState();
+}
+
+class _LoginScreenState extends State<LoginScreen> {
+  final LocalAuthentication auth = LocalAuthentication();
+  bool _isAuthenticated = false;
+
+  // Función para iniciar la autenticación biométrica
+  Future<void> _authenticate() async {
+    bool authenticated = false;
+    try {
+      authenticated = await auth.authenticate(
+        localizedReason: 'Autentícate para acceder',
+        options: const AuthenticationOptions(
+          biometricOnly: true, // Solo usar biometría, no PIN
+          useErrorDialogs: true,
+          stickyAuth: true,
+        ),
+      );
+    } catch (e) {
+      print(e);
+    }
+
+    if (authenticated) {
+      setState(() {
+        _isAuthenticated = true;
+      });
+
+      // Redirigir a la siguiente pantalla solo si la autenticación es exitosa
+      Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(builder: (context) => const Login()), // Aquí va la lógica para la siguiente pantalla
+      );
+    } else {
+      setState(() {
+        _isAuthenticated = false;
+      });
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -17,7 +59,7 @@ class LoginScreen extends StatelessWidget {
             // Logo del coche en la parte superior
             Center(
               child: Image.asset(
-                'assets/images/car_logo.png',  // Asegúrate de que el logo esté en assets
+                'assets/images/car_logo.png', // Asegúrate de que el logo esté en assets
                 height: 150,
               ),
             ),
@@ -34,6 +76,7 @@ class LoginScreen extends StatelessWidget {
           ],
         ),
       ),
+
       // Icono de huella digital en la parte inferior izquierda
       bottomNavigationBar: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 10.0, vertical: 10.0),
@@ -43,10 +86,12 @@ class LoginScreen extends StatelessWidget {
             // Botón de huella digital
             IconButton(
               icon: const Icon(Icons.fingerprint, color: Colors.white, size: 40),
-              onPressed: () {
-                // Lógica para huella digital
+              onPressed: () async {
+                // Llamar a la función de autenticación biométrica
+                await _authenticate();
               },
             ),
+
             // Botón flotante para continuar (parte inferior derecha)
             FloatingActionButton(
               backgroundColor: Colors.white,
@@ -78,23 +123,6 @@ class LoginScreen extends StatelessWidget {
         ),
         focusedBorder: const OutlineInputBorder(
           borderSide: BorderSide(color: Colors.white),
-        ),
-      ),
-    );
-  }
-}
-
-class NextScreen extends StatelessWidget {
-  const NextScreen({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return const Scaffold(
-      backgroundColor: Colors.black,
-      body: Center(
-        child: Text(
-          'Next Screen',
-          style: TextStyle(color: Colors.white, fontSize: 24),
         ),
       ),
     );

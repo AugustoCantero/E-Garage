@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_application_1/screens/editar_datos.dart';
 import 'package:flutter_application_1/screens/open_street_map_screen.dart';
 import 'package:flutter_application_1/screens/selection_screen.dart';
+import 'package:flutter_application_1/screens/chatBotPage.dart';  // Importar la pantalla del chatbot
 import 'package:go_router/go_router.dart'; // Si usas go_router para la navegación
 
 class Login extends StatelessWidget {
@@ -64,25 +65,41 @@ class Login extends StatelessWidget {
 
                 // Botón de "Buscar Lugar"
                 OutlinedButton(
-  onPressed: () {
-    Navigator.push(
-      context,
-      MaterialPageRoute(builder: (context) => OpenStreetMapScreen()),
-    );
-  },
-  style: OutlinedButton.styleFrom(
-    side: const BorderSide(color: Colors.white),
-    padding: const EdgeInsets.symmetric(horizontal: 50, vertical: 20),
-    shape: RoundedRectangleBorder(
-      borderRadius: BorderRadius.circular(30),
-    ),
-  ),
-  child: const Text(
-    'BUSCAR LUGAR',
-    style: TextStyle(color: Colors.white, fontSize: 20),
-  ),
-),
+                  onPressed: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (context) => OpenStreetMapScreen()),
+                    );
+                  },
+                  style: OutlinedButton.styleFrom(
+                    side: const BorderSide(color: Colors.white),
+                    padding: const EdgeInsets.symmetric(horizontal: 50, vertical: 20),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(30),
+                    ),
+                  ),
+                  child: const Text(
+                    'BUSCAR LUGAR',
+                    style: TextStyle(color: Colors.white, fontSize: 20),
+                  ),
+                ),
               ],
+            ),
+          ),
+
+          // Botón flotante con el logo del bot
+          Positioned(
+            bottom: 20,
+            right: 20,
+            child: FloatingActionButton(
+              onPressed: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => ChatBotPage()),  // Navega a ChatBotPage
+                );
+              },
+              backgroundColor: const Color.fromARGB(0, 33, 149, 243),
+              child: Image.asset('assets/images/bot.png'),
             ),
           ),
         ],
@@ -114,16 +131,14 @@ class Login extends StatelessWidget {
               onTap: () {
                 Navigator.push(
                   context,
-                  MaterialPageRoute(
-                      builder: (context) => const EditarDatosScreen()),
+                  MaterialPageRoute(builder: (context) => const EditarDatosScreen()),
                 );
               },
             ),
             // Opción Gestión de Reservas
             ListTile(
               leading: const Icon(Icons.timer, size: 40, color: Colors.black),
-              title: const Text('Gestión de Reservas',
-                  style: TextStyle(fontSize: 18)),
+              title: const Text('Gestión de Reservas', style: TextStyle(fontSize: 18)),
               onTap: () {
                 // Agrega tu lógica de navegación o acción aquí
               },
@@ -131,22 +146,19 @@ class Login extends StatelessWidget {
             // Opción Historial y Registro
             ListTile(
               leading: const Icon(Icons.history, size: 40, color: Colors.black),
-              title: const Text('Historial y Registro',
-                  style: TextStyle(fontSize: 18)),
+              title: const Text('Historial y Registro', style: TextStyle(fontSize: 18)),
               onTap: () {
                 // Agrega tu lógica de navegación o acción aquí
               },
             ),
             // Opción Salir
             ListTile(
-              leading:
-                  const Icon(Icons.exit_to_app, size: 40, color: Colors.black),
+              leading: const Icon(Icons.exit_to_app, size: 40, color: Colors.black),
               title: const Text('Salir', style: TextStyle(fontSize: 18)),
               onTap: () {
                 Navigator.push(
                   context,
-                  MaterialPageRoute(
-                          builder: (context) => const SelectionScreen()),
+                  MaterialPageRoute(builder: (context) => const SelectionScreen()),
                 );
               },
             ),
