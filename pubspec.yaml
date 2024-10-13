@@ -22,7 +22,7 @@ dependencies:
   geolocator: ^8.2.0
   http: ^0.13.4
   permission_handler: ^10.2.0
-  here_sdk: ^4.8.0
+  local_auth: ^2.3.0
 
 dev_dependencies:
   flutter_lints: ^4.0.0
@@ -33,3 +33,4 @@ flutter:
   uses-material-design: true
   assets:
     - assets/images/car_logo.png
+    - assets/images/bot.png
