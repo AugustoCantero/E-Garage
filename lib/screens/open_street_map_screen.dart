@@ -208,7 +208,7 @@ class _OpenStreetMapScreenState extends State<OpenStreetMapScreen> {
           SizedBox(height: 10), // Espaciado entre los botones
           FloatingActionButton(
             onPressed: _goBack, // Botón para volver
-            backgroundColor: Colors.red,
+            backgroundColor: const Color.fromARGB(255, 248, 248, 248),
             child: Icon(Icons.arrow_back), // Ícono de "Volver"
           ),
         ],

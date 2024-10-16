@@ -3,6 +3,7 @@ import 'package:flutter_application_1/core/Providers/user_provider.dart';
 import 'package:flutter_application_1/screens/editar_datos.dart';
 import 'package:flutter_application_1/screens/open_street_map_screen.dart';
 import 'package:flutter_application_1/screens/selection_screen.dart';
+import 'package:flutter_application_1/screens/chatBotPage.dart'; // Importar la pantalla del chatbot
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart'; // Si usas go_router para la navegación
 
@@ -70,10 +71,11 @@ class login_exitoso_home_user extends ConsumerWidget {
                 // Botón de "Buscar Lugar"
                 OutlinedButton(
                   onPressed: () {
-                    /*Navigator.push(
-      //context,
-      //MaterialPageRoute(builder: (context) => OpenStreetMapScreen()),
-    );*/
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => OpenStreetMapScreen()),
+                    );
                   },
                   style: OutlinedButton.styleFrom(
                     side: const BorderSide(color: Colors.white),
@@ -89,6 +91,24 @@ class login_exitoso_home_user extends ConsumerWidget {
                   ),
                 ),
               ],
+            ),
+          ),
+
+          // Botón flotante con el logo del bot
+          Positioned(
+            bottom: 20,
+            right: 20,
+            child: FloatingActionButton(
+              onPressed: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                      builder: (context) =>
+                          ChatBotPage()), // Navega a ChatBotPage
+                );
+              },
+              backgroundColor: const Color.fromARGB(0, 33, 149, 243),
+              child: Image.asset('assets/images/bot.png'),
             ),
           ),
         ],
