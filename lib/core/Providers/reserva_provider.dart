@@ -1,4 +1,20 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter_application_1/domain/Reserva.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+
+final reservaProvider = StateProvider<List<Reserva>>((ref) {
+  return [
+    /*Reserva(fecha: "2024-05-31 00:00:00", lote: 1),
+    Reserva(fecha: "2024-05-31 00:00:00", lote: 2),
+    Reserva(fecha: "2024-05-31 00:00:00", lote: 3),
+    Reserva(fecha: "2024-05-31 00:00:00", lote: 4),*/
+  ];
+});
+
+final indexButton = StateProvider<int>((ref) {
+  return 0;
+});
+
+/*import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter_application_1/domain/Reserva.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -11,7 +27,6 @@ class ReservasNotifier extends StateNotifier<List<Reserva>> {
 
   ReservasNotifier(this.db) : super([]);
 
-//revisar!!!
   Future<void> addReserva(Reserva reserva) async {
     final doc = db.collection('reservas').doc();
     try {
@@ -29,14 +44,4 @@ class ReservasNotifier extends StateNotifier<List<Reserva>> {
     final reservas = await docs.get();
     state = [...state, ...reservas.docs.map((d) => d.data())];
   }
-
-//revisar!!!
-  Future<void> deleteReserva(String id) async {
-    try {
-      await db.collection('reservas').doc(id).delete();
-      state = state.where((reserva) => reserva.reservaID != id).toList();
-    } catch (e) {
-      print(e);
-    }
-  }
-}
+}*/

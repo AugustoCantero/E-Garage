@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 class ScreenPrincipal extends StatelessWidget {
+  static const nombre = "ScreenPrincipal";
   const ScreenPrincipal({super.key});
 
   @override

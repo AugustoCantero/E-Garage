@@ -3,7 +3,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 class Usuario {
   String id;
   String email;
-  String contrasenia;
+  String password;
   String nombre;
   String apellido;
   String dni;
@@ -12,7 +12,7 @@ class Usuario {
   Usuario(
       {required this.id,
       required this.email,
-      required this.contrasenia,
+      required this.password,
       required this.nombre,
       required this.apellido,
       required this.dni,
@@ -20,12 +20,12 @@ class Usuario {
 
   Map<String, dynamic> toFirestore() {
     return {
-      "id": id,
-      "email": email,
-      "contrasenia": contrasenia,
-      "nombre": nombre,
-      "apellido": apellido,
-      "apellido": dni,
+      if (id != null) "id": id,
+      if (email != null) "email": email,
+      if (password != null) "password": password,
+      if (nombre != null) "nombre": nombre,
+      if (apellido != null) "apellido": apellido,
+      if (dni != null) "dni": dni,
       'esAdmin': false
     };
   }
@@ -38,12 +38,28 @@ class Usuario {
     return Usuario(
         id: data?['id'],
         email: data?['email'],
-        contrasenia: data?['contrasenia'],
+        password: data?['password'],
         nombre: data?['nombre'],
         apellido: data?['apellido'],
         dni: data?['dni'],
         esAdmin: data?['esAdmin']);
   }
 
-  //Sirve para editar datos // es basicamente otro constructor
+  Usuario copywith(
+      {String? id,
+      String? email,
+      String? password,
+      String? nombre,
+      String? apellido,
+      String? dni,
+      bool? esAdmin}) {
+    return Usuario(
+        id: id ?? this.id,
+        email: email ?? this.email,
+        password: password ?? this.password,
+        nombre: nombre ?? this.nombre,
+        apellido: apellido ?? this.apellido,
+        dni: dni ?? this.dni,
+        esAdmin: esAdmin ?? false);
+  }
 }
