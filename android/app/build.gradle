@@ -12,7 +12,7 @@ android {
     namespace = "com.example.e_garage"
     compileSdk = flutter.compileSdkVersion
     ndkVersion = flutter.ndkVersion
-    compileSdkVersion 33
+    //compileSdkVersion 33
 
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_1_8
@@ -29,8 +29,11 @@ android {
 
     defaultConfig {
         applicationId "com.example.e_garage"  // Este es el mismo nombre del paquete
-        minSdkVersion 21
+        minSdkVersion 23
         targetSdkVersion 33
+        versionCode flutter.versionCode
+        versionName flutter.versionName
+        multiDexEnabled true
         versionCode 1
         versionName "1.0"
     }

@@ -14,16 +14,19 @@ class UsuarioNotifier extends StateNotifier<Usuario> {
             nombre: '',
             apellido: '',
             dni: '',
+            telefono: '',
             esAdmin: false));
 
   void setUsuario(String id, String nombre, String apellido, String email,
-      String password, bool esAdmin) {
+      String password, String dni, String telefono, bool esAdmin) {
     state = state.copywith(
         id: id,
         nombre: nombre,
         apellido: apellido,
         password: password,
         email: email,
+        dni: dni,
+        telefono: telefono,
         esAdmin: esAdmin);
   }
 }

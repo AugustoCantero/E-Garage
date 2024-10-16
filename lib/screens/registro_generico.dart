@@ -1,5 +1,10 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_application_1/core/Entities/Usuario.dart';
+import 'package:flutter_application_1/screens/login_screen.dart';
 import 'package:flutter_application_1/screens/selection_screen.dart';
+import 'package:go_router/go_router.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class RegistroGenericoScreen extends StatefulWidget {
@@ -11,12 +16,15 @@ class RegistroGenericoScreen extends StatefulWidget {
 
 class _RegistroGenericoScreen extends State<RegistroGenericoScreen> {
   final TextEditingController _nombreController = TextEditingController();
+  final TextEditingController _apellidoController = TextEditingController();
   final TextEditingController _dniController = TextEditingController();
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
+  final TextEditingController _telefonoController = TextEditingController();
   final TextEditingController _confirmPasswordController =
       TextEditingController();
 
+  // PANTALLA
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -33,9 +41,13 @@ class _RegistroGenericoScreen extends State<RegistroGenericoScreen> {
                 height: 200,
               ),
               const SizedBox(height: 30),
-              _buildTextField('Nombre Completo', _nombreController),
+              _buildTextField('Nombre', _nombreController),
+              const SizedBox(height: 20),
+              _buildTextField('Apellido', _apellidoController),
               const SizedBox(height: 20),
               _buildTextField('Número DNI', _dniController),
+              const SizedBox(height: 20),
+              _buildTextField('Telefono', _telefonoController),
               const SizedBox(height: 20),
               _buildTextField('Correo Electrónico', _emailController,
                   TextInputType.emailAddress),
@@ -118,13 +130,8 @@ class _RegistroGenericoScreen extends State<RegistroGenericoScreen> {
     );
   }
 
-  // Función para guardar los datos del usuario
   Future<bool> _guardarUsuario() async {
-    final String nombre = _nombreController.text;
-    final String email = _emailController.text;
-    final String password = _passwordController.text;
-
-    if (password != _confirmPasswordController.text) {
+    if (_passwordController.text != _confirmPasswordController.text) {
       // Mostrar mensaje de error si las contraseñas no coinciden
       ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
         content: Text('Las contraseñas no coinciden'),
@@ -133,24 +140,67 @@ class _RegistroGenericoScreen extends State<RegistroGenericoScreen> {
     }
 
     try {
-      SharedPreferences prefs = await SharedPreferences.getInstance();
-      await prefs.setString('nombre', nombre);
-      await prefs.setString('email', email);
-      await prefs.setString('password',
-          password); // No se recomienda guardar contraseñas en texto plano
+      // Registrar usuario con Firebase Authentication
+      UserCredential userCredential =
+          await FirebaseAuth.instance.createUserWithEmailAndPassword(
+        email: _emailController.text,
+        password: _passwordController.text,
+      );
 
-      // Mostrar mensaje de éxito
-      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
-        content: Text('Usuario guardado correctamente'),
-      ));
+      // se asigna el user que surja de la creación del correo y password
+      User? user = userCredential.user;
 
-      return true; // Guardado exitoso, proceder con la navegación
-    } catch (error) {
-      // Mostrar mensaje de error si hay problemas al guardar
-      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
-        content: Text('Error al guardar los datos del usuario'),
-      ));
-      return false; // Error al guardar, no proceder con la navegación
+      // Verifica que el usuario creado no haya llegado en null
+      if (user != null) {
+        // Crear instancia de Usuario
+        Usuario newUser = Usuario(
+            id: user.uid,
+            email: _emailController.text,
+            password: _passwordController.text,
+            nombre: _nombreController.text,
+            apellido: _apellidoController.text,
+            dni: _dniController.text,
+            telefono: _telefonoController.text);
+
+        // Crear documento en Firestore con el UID del usuario
+        await FirebaseFirestore.instance
+            .collection('users')
+            .doc(user.uid) // Utilizar user.uid directamente aquí
+            .set(newUser.toFirestore());
+
+        ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+          content: Text('Usuario guardado correctamente'),
+        ));
+
+        return true; // Asegúrate de que '/' es la ruta correcta
+      }
+    } on FirebaseAuthException catch (e) {
+      String errorMessage;
+      if (e.code == 'email-already-in-use') {
+        errorMessage = 'El correo electrónico ya está en uso por otra cuenta.';
+      } else if (e.code == 'weak-password') {
+        errorMessage = 'La contraseña es demasiado débil.';
+      } else if (e.code == 'invalid-email') {
+        errorMessage = 'El correo electrónico es inválido.';
+      } else {
+        errorMessage = 'Error al registrar el usuario: ${e.message}';
+      }
+
+      print('Error al registrar el usuario: $errorMessage');
+
+      // Muestra un mensaje de error al usuario
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text(errorMessage)),
+      );
+    } catch (e) {
+      print('Error al registrar el usuario: $e');
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Error al registrar el usuario: $e')),
+      );
     }
+
+    return false; // Añadido para asegurarse de que siempre se retorna un valor
   }
+
+  // Función para guardar los datos del usuario
 }

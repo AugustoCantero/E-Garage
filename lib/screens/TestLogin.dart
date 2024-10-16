@@ -7,10 +7,10 @@ import 'package:flutter_application_1/screens/todasLasReservas.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
-class Login extends ConsumerWidget {
-  static const String name = 'Login';
+class Logintro extends ConsumerWidget {
+  static const String name = 'LoginOtro';
 
-  const Login({Key? key}) : super(key: key);
+  const Logintro({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -132,6 +132,8 @@ class Login extends ConsumerWidget {
                                   userData['apellido'],
                                   userData['email'],
                                   userData['password'],
+                                  userData['dni'],
+                                  userData['telefono'],
                                   userData['esAdmin']);
 
                               if (userData['esAdmin'] == true) {
@@ -154,7 +156,8 @@ class Login extends ConsumerWidget {
                         print('No se encontraron datos del usuario.');
                       }
                     } else {
-                      print('Usuario no encontrado.');
+                      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+                          content: Text('Error con el usuario o contraseña.')));
                     }
                   } catch (e) {
                     print('Error: $e');

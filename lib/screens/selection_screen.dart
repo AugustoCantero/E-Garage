@@ -20,7 +20,7 @@ class SelectionScreen extends StatelessWidget {
             ),
             const SizedBox(height: 30),
             const Text(
-              'E-GARAJE',
+              'E-GARAGE',
               style: TextStyle(
                 color: Colors.white,
                 fontSize: 40,
@@ -30,13 +30,16 @@ class SelectionScreen extends StatelessWidget {
             const SizedBox(height: 50),
             // Botón de LOGIN
             OutlinedButton(
-              onPressed: () {Navigator.push(
+              onPressed: () {
+                Navigator.push(
                   context,
-                  MaterialPageRoute(builder: (context) => const LoginScreen()),
-                );},
+                  MaterialPageRoute(builder: (context) => LoginScreen()),
+                );
+              },
               style: OutlinedButton.styleFrom(
                 side: const BorderSide(color: Colors.white),
-                padding: const EdgeInsets.symmetric(horizontal: 50, vertical: 20),
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 50, vertical: 20),
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(30),
                 ),
@@ -52,12 +55,14 @@ class SelectionScreen extends StatelessWidget {
               onPressed: () {
                 Navigator.push(
                   context,
-                  MaterialPageRoute(builder: (context) => const RegistroGenericoScreen()),
+                  MaterialPageRoute(
+                      builder: (context) => const RegistroGenericoScreen()),
                 );
               },
               style: OutlinedButton.styleFrom(
                 side: const BorderSide(color: Colors.white),
-                padding: const EdgeInsets.symmetric(horizontal: 50, vertical: 20),
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 50, vertical: 20),
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(30),
                 ),

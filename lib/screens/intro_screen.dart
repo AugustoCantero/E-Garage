@@ -20,7 +20,7 @@ class IntroScreen extends StatelessWidget {
             const SizedBox(height: 30),
             // Texto E-GARAJE
             const Text(
-              'E-GARAJE',
+              'E-GARAGE',
               style: TextStyle(
                 color: Colors.white,
                 fontSize: 40,

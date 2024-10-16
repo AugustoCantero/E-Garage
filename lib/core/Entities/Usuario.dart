@@ -7,6 +7,7 @@ class Usuario {
   String nombre;
   String apellido;
   String dni;
+  String telefono;
   bool? esAdmin;
 
   Usuario(
@@ -16,6 +17,7 @@ class Usuario {
       required this.nombre,
       required this.apellido,
       required this.dni,
+      required this.telefono,
       this.esAdmin});
 
   Map<String, dynamic> toFirestore() {
@@ -26,6 +28,7 @@ class Usuario {
       if (nombre != null) "nombre": nombre,
       if (apellido != null) "apellido": apellido,
       if (dni != null) "dni": dni,
+      if (telefono != null) "telefono": telefono,
       'esAdmin': false
     };
   }
@@ -42,6 +45,7 @@ class Usuario {
         nombre: data?['nombre'],
         apellido: data?['apellido'],
         dni: data?['dni'],
+        telefono: data?['telefono'],
         esAdmin: data?['esAdmin']);
   }
 
@@ -52,6 +56,7 @@ class Usuario {
       String? nombre,
       String? apellido,
       String? dni,
+      String? telefono,
       bool? esAdmin}) {
     return Usuario(
         id: id ?? this.id,
@@ -60,6 +65,7 @@ class Usuario {
         nombre: nombre ?? this.nombre,
         apellido: apellido ?? this.apellido,
         dni: dni ?? this.dni,
+        telefono: telefono ?? this.telefono,
         esAdmin: esAdmin ?? false);
   }
 }

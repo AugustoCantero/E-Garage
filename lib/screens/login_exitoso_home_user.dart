@@ -1,14 +1,19 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_application_1/core/Providers/user_provider.dart';
 import 'package:flutter_application_1/screens/editar_datos.dart';
 import 'package:flutter_application_1/screens/open_street_map_screen.dart';
 import 'package:flutter_application_1/screens/selection_screen.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart'; // Si usas go_router para la navegación
 
-class Login extends StatelessWidget {
-  const Login({super.key});
+class login_exitoso_home_user extends ConsumerWidget {
+  static const String name = "HomeUser";
+  const login_exitoso_home_user({super.key});
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    final usuario = ref.watch(usuarioProvider);
+
     return Scaffold(
       backgroundColor: Colors.black,
       appBar: AppBar(
@@ -53,8 +58,8 @@ class Login extends StatelessWidget {
                 const SizedBox(height: 10),
 
                 // Nombre del usuario
-                const Text(
-                  'USER NAME',
+                Text(
+                  usuario.nombre,
                   style: TextStyle(
                     fontSize: 28,
                     color: Colors.white,
@@ -64,24 +69,25 @@ class Login extends StatelessWidget {
 
                 // Botón de "Buscar Lugar"
                 OutlinedButton(
-  onPressed: () {
-    Navigator.push(
-      context,
-      MaterialPageRoute(builder: (context) => OpenStreetMapScreen()),
-    );
-  },
-  style: OutlinedButton.styleFrom(
-    side: const BorderSide(color: Colors.white),
-    padding: const EdgeInsets.symmetric(horizontal: 50, vertical: 20),
-    shape: RoundedRectangleBorder(
-      borderRadius: BorderRadius.circular(30),
-    ),
-  ),
-  child: const Text(
-    'BUSCAR LUGAR',
-    style: TextStyle(color: Colors.white, fontSize: 20),
-  ),
-),
+                  onPressed: () {
+                    /*Navigator.push(
+      //context,
+      //MaterialPageRoute(builder: (context) => OpenStreetMapScreen()),
+    );*/
+                  },
+                  style: OutlinedButton.styleFrom(
+                    side: const BorderSide(color: Colors.white),
+                    padding: const EdgeInsets.symmetric(
+                        horizontal: 50, vertical: 20),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(30),
+                    ),
+                  ),
+                  child: const Text(
+                    'BUSCAR LUGAR',
+                    style: TextStyle(color: Colors.white, fontSize: 20),
+                  ),
+                ),
               ],
             ),
           ),
@@ -146,7 +152,7 @@ class Login extends StatelessWidget {
                 Navigator.push(
                   context,
                   MaterialPageRoute(
-                          builder: (context) => const SelectionScreen()),
+                      builder: (context) => const SelectionScreen()),
                 );
               },
             ),

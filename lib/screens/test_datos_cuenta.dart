@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_application_1/screens/login.dart';
+import 'package:flutter_application_1/screens/TestLogin.dart';
+import 'package:flutter_application_1/screens/login_screen.dart';
 import 'package:go_router/go_router.dart';
 import 'package:flutter_application_1/screens/home.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -7,7 +8,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter_application_1/core/Providers/user_provider.dart';
 
 class TEST_EDICION_CUENTA extends ConsumerWidget {
-  static final String name = "EditarCuentaScreen";
+  static final String name = "TEST_EDICION_CUENTA";
   const TEST_EDICION_CUENTA({Key? key}) : super(key: key);
 
   @override
@@ -56,6 +57,8 @@ class TEST_EDICION_CUENTA extends ConsumerWidget {
                       apellidoController.text,
                       usuario.email,
                       usuario.password,
+                      usuario.telefono,
+                      usuario.dni,
                       usuario.esAdmin = false,
                     );
 
@@ -73,7 +76,7 @@ class TEST_EDICION_CUENTA extends ConsumerWidget {
                 await db.collection('users').doc(usuario.id).delete();
 
                 // Regresar a la pantalla anterior
-                context.goNamed(Login.name);
+                context.goNamed(LoginScreen.name);
               },
               child: const Text('Eliminar cuenta'),
             ),

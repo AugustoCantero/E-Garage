@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_application_1/core/Providers/user_provider.dart';
-import 'package:flutter_application_1/screens/datos_cuenta_screen.dart';
+import 'package:flutter_application_1/screens/test_datos_cuenta.dart';
 import 'package:flutter_application_1/screens/home.dart';
-import 'package:flutter_application_1/screens/login.dart';
+import 'package:flutter_application_1/screens/TestLogin.dart';
+import 'package:flutter_application_1/screens/login_screen.dart';
 import 'package:flutter_application_1/screens/todasLasReservas.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
@@ -136,7 +137,7 @@ class DrawerMenuLateral extends ConsumerWidget {
                 style: TextStyle(color: Colors.white),
               ),
               onTap: () {
-                context.goNamed(Login.name);
+                context.goNamed(LoginScreen.name);
               },
             ),
           ),
