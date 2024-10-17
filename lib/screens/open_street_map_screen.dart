@@ -1,4 +1,4 @@
-/*import 'dart:convert';
+import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:flutter_map/flutter_map.dart';
 import 'package:http/http.dart' as http;
@@ -14,27 +14,37 @@ class OpenStreetMapScreen extends StatefulWidget {
 class _OpenStreetMapScreenState extends State<OpenStreetMapScreen> {
   late MapController _mapController;
   TextEditingController _addressController = TextEditingController();
-  LatLng _initialPosition =
-      LatLng(-34.6037, -58.3816); // Buenos Aires por defecto
-  LatLng? _searchedPosition; // Coordenadas del destino buscado
-  List<Marker> _markers = []; // Lista de marcadores
-  List<LatLng> _routePoints = []; // Lista de puntos para la ruta
+  LatLng _initialPosition = LatLng(-34.6037, -58.3816);  // Buenos Aires por defecto
+  LatLng? _searchedPosition;  // Coordenadas del destino buscado
+  List<Marker> _markers = [];  // Lista de marcadores
+  List<LatLng> _routePoints = [];  // Lista de puntos para la ruta
 
   @override
   void initState() {
     super.initState();
-    _requestLocationPermission(); // Solicitar permisos de ubicación
+    _requestLocationPermission();  // Solicitar permisos de ubicación
     _mapController = MapController();
-    _setInitialLocation(); // Intentamos centrar el mapa en la ubicación del usuario al iniciar
+    _setInitialLocation();  // Intentamos centrar el mapa en la ubicación del usuario al iniciar
   }
 
   // Función para solicitar permisos
   Future<void> _requestLocationPermission() async {
-    var status = await Permission.location.status;
-    if (!status.isGranted) {
-      await Permission.location.request();
-    }
+  var status = await Permission.location.status;
+  if (status.isDenied || status.isRestricted) {
+    // Solicitar permisos si no están concedidos
+    status = await Permission.location.request();
   }
+
+  if (status.isGranted) {
+    // Los permisos fueron otorgados, obtener la ubicación
+    _setInitialLocation();
+  } else {
+    // Mostrar un mensaje indicando que se necesita el permiso
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(content: Text('Se necesita permiso de ubicación para mostrar tu posición')),
+    );
+  }
+}
 
   // Obtener la ubicación actual del usuario y centrar el mapa
   Future<void> _setInitialLocation() async {
@@ -58,8 +68,7 @@ class _OpenStreetMapScreenState extends State<OpenStreetMapScreen> {
             ),
           ),
         ];
-        _mapController.move(
-            _initialPosition, 15.0); // Mover el mapa a la ubicación del usuario
+        _mapController.move(_initialPosition, 15.0);  // Mover el mapa a la ubicación del usuario
       });
     } catch (e) {
       print('Error al obtener la ubicación: $e');
@@ -81,14 +90,12 @@ class _OpenStreetMapScreenState extends State<OpenStreetMapScreen> {
   // Función que se ejecuta al presionar el botón "Generar ruta"
   Future<void> _generateRoute() async {
     if (_searchedPosition != null) {
-      final start =
-          "${_initialPosition.longitude},${_initialPosition.latitude}";
-      final end =
-          "${_searchedPosition!.longitude},${_searchedPosition!.latitude}";
+      final start = "${_initialPosition.longitude},${_initialPosition.latitude}";
+      final end = "${_searchedPosition!.longitude},${_searchedPosition!.latitude}";
 
       final url = Uri.parse(
           'https://router.project-osrm.org/route/v1/driving/$start;$end?overview=full&geometries=geojson');
-
+      
       final response = await http.get(url);
 
       if (response.statusCode == 200) {
@@ -97,7 +104,7 @@ class _OpenStreetMapScreenState extends State<OpenStreetMapScreen> {
 
         setState(() {
           _routePoints = route.map<LatLng>((coord) {
-            return LatLng(coord[1], coord[0]); // Latitud, Longitud
+            return LatLng(coord[1], coord[0]);  // Latitud, Longitud
           }).toList();
         });
       } else {
@@ -114,7 +121,7 @@ class _OpenStreetMapScreenState extends State<OpenStreetMapScreen> {
 
   // Función que se ejecuta al presionar el botón "Volver"
   void _goBack() {
-    Navigator.of(context).pop(); // Volver a la pantalla anterior
+    Navigator.of(context).pop();  // Volver a la pantalla anterior
   }
 
   @override
@@ -134,8 +141,7 @@ class _OpenStreetMapScreenState extends State<OpenStreetMapScreen> {
             ),
             children: [
               TileLayer(
-                urlTemplate:
-                    "https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",
+                urlTemplate: "https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",
                 subdomains: ['a', 'b', 'c'],
               ),
               // Capa de marcadores
@@ -150,7 +156,7 @@ class _OpenStreetMapScreenState extends State<OpenStreetMapScreen> {
                     Polyline(
                       points: _routePoints,
                       strokeWidth: 4.0,
-                      color: Colors.blue, // Color de la línea de la ruta
+                      color: Colors.blue,  // Color de la línea de la ruta
                     ),
                   ],
                 ),
@@ -194,22 +200,21 @@ class _OpenStreetMapScreenState extends State<OpenStreetMapScreen> {
         mainAxisAlignment: MainAxisAlignment.end,
         children: [
           FloatingActionButton(
-            onPressed: _generateRoute, // Botón para generar la ruta
+            onPressed: _generateRoute,  // Botón para generar la ruta
             backgroundColor: Colors.green,
-            child: Icon(Icons.directions), // Ícono de "Ruta"
+            child: Icon(Icons.directions),  // Ícono de "Ruta"
           ),
-          SizedBox(height: 10), // Espaciado entre los botones
+          SizedBox(height: 10),  // Espaciado entre los botones
           FloatingActionButton(
-            onPressed:
-                _goToCurrentLocation, // Botón para ir a la ubicación actual
+            onPressed: _goToCurrentLocation,  // Botón para ir a la ubicación actual
             backgroundColor: Colors.blue,
-            child: Icon(Icons.my_location), // Ícono de "Mi ubicación"
+            child: Icon(Icons.my_location),  // Ícono de "Mi ubicación"
           ),
-          SizedBox(height: 10), // Espaciado entre los botones
+          SizedBox(height: 10),  // Espaciado entre los botones
           FloatingActionButton(
-            onPressed: _goBack, // Botón para volver
-            backgroundColor: const Color.fromARGB(255, 248, 248, 248),
-            child: Icon(Icons.arrow_back), // Ícono de "Volver"
+            onPressed: _goBack,  // Botón para volver
+            backgroundColor: const Color.fromARGB(255, 255, 255, 255),
+            child: Icon(Icons.arrow_back),  // Ícono de "Volver"
           ),
         ],
       ),
@@ -224,8 +229,7 @@ class _OpenStreetMapScreenState extends State<OpenStreetMapScreen> {
       return;
     }
 
-    final url = Uri.parse(
-        'https://nominatim.openstreetmap.org/search?q=$address&format=json&addressdetails=1&limit=1');
+    final url = Uri.parse('https://nominatim.openstreetmap.org/search?q=$address&format=json&addressdetails=1&limit=1');
 
     final response = await http.get(url);
 
@@ -264,4 +268,4 @@ class _OpenStreetMapScreenState extends State<OpenStreetMapScreen> {
       );
     }
   }
-}*/
+}

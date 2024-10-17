@@ -71,11 +71,11 @@ class login_exitoso_home_user extends ConsumerWidget {
                 // Botón de "Buscar Lugar"
                 OutlinedButton(
                   onPressed: () {
-                    //Navigator.push(
-                    //context,
-                    // MaterialPageRoute(
-                    //builder: (context) => OpenStreetMapScreen()),
-                    //  );
+                    Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                    builder: (context) => OpenStreetMapScreen()),
+                  );
                   },
                   style: OutlinedButton.styleFrom(
                     side: const BorderSide(color: Colors.white),
