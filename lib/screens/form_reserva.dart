@@ -1,8 +1,8 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_application_1/core/Entities/Vehiculo.dart';
 import 'package:flutter_application_1/core/Providers/user_provider.dart';
 import 'package:flutter_application_1/core/Providers/vehiculo_provider.dart';
-import 'package:flutter_application_1/domain/Vehiculo.dart';
 import 'package:flutter_application_1/screens/calendar_demo.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
@@ -19,6 +19,7 @@ class _ConfirmReservationPageState
   final TextEditingController _marcaController = TextEditingController();
   final TextEditingController _modeloController = TextEditingController();
   final TextEditingController _patenteController = TextEditingController();
+  final TextEditingController _colorController = TextEditingController();
   final FocusNode _patenteFocusNode = FocusNode();
   final _formKey = GlobalKey<FormState>();
   bool _isButtonEnabled = false;
@@ -135,7 +136,8 @@ class _ConfirmReservationPageState
                                         marca: _marcaController.text,
                                         modelo: _modeloController.text,
                                         patente: _patenteController.text,
-                                        idDuenio: usuarioState.id,
+                                        color: 'blanco',
+                                        userId: usuarioState.id,
                                       );
 
                                       ref

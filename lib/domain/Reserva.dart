@@ -1,5 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:flutter_application_1/domain/Vehiculo.dart';
+import 'package:flutter_application_1/core/Entities/Vehiculo.dart';
 
 class Reserva {
   int fecha;
@@ -23,7 +23,7 @@ class Reserva {
   }
 
   String getDatos() {
-    return 'Fecha reservada: ${fecha.toString()}, Patente: ${elvehiculo.patente}, Propietario: ${elvehiculo.idDuenio}, Marca: ${elvehiculo.marca} ';
+    return 'Fecha reservada: ${fecha.toString()}, Patente: ${elvehiculo.patente}, Propietario: ${elvehiculo.userId}, Marca: ${elvehiculo.marca} ';
   }
 
   Map<String, dynamic> toFirestore() {
@@ -34,7 +34,7 @@ class Reserva {
         'modelo': elvehiculo.modelo,
         'marca': elvehiculo.marca,
         'patente': elvehiculo.patente,
-        'idDuenio': elvehiculo.idDuenio
+        'idDuenio': elvehiculo.userId
       }
     };
   }
@@ -45,7 +45,7 @@ class Reserva {
     return Reserva(
       fecha: data['fecha'],
       lote: data['lote'],
-      elvehiculo: Vehiculo.fromFirestore(data['elvehiculo']),
+      elvehiculo: Vehiculo.fromFirestore(data['elvehiculo'], null),
     );
   }
 }

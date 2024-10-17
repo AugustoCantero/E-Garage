@@ -1,6 +1,8 @@
 import 'package:flutter_application_1/screens/Test_agregar_vehiculos.dart';
 import 'package:flutter_application_1/screens/VehiculosUsuario.dart';
 import 'package:flutter_application_1/screens/calendar_demo.dart';
+import 'package:flutter_application_1/screens/test-pantallaAdmin.dart';
+import 'package:flutter_application_1/screens/testEdicionVehiculo.dart';
 import 'package:flutter_application_1/screens/test_datos_cuenta.dart';
 import 'package:flutter_application_1/screens/home.dart';
 import 'package:flutter_application_1/screens/intro_screen.dart';
@@ -78,5 +80,15 @@ final GoRouter appRouter = GoRouter(initialLocation: '/intro', routes: [
     path: '/vehiculosUsuario',
     builder: (context, state) => const vehiculosUsuario(),
     name: vehiculosUsuario.name,
+  ),
+  GoRoute(
+    path: '/testAdminScreen',
+    builder: (context, state) => const testAdminScreen(),
+    name: testAdminScreen.name,
+  ),
+  GoRoute(
+    path: '/EditarDatosAuto',
+    builder: (context, state) => const EditarDatosAuto(),
+    name: EditarDatosAuto.name,
   ),
 ]);

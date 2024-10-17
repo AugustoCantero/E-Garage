@@ -2,7 +2,10 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_application_1/core/Entities/Vehiculo.dart';
 import 'package:flutter_application_1/core/Providers/user_provider.dart';
+import 'package:flutter_application_1/core/Providers/vehiculo_provider.dart';
 import 'package:flutter_application_1/screens/Test_agregar_vehiculos.dart';
+import 'package:flutter_application_1/screens/login_exitoso_home_user.dart';
+import 'package:flutter_application_1/screens/testEdicionVehiculo.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
@@ -28,7 +31,7 @@ class vehiculosUsuarioState extends ConsumerState<vehiculosUsuario> {
       body: const _ListView(),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
-          //context.goNamed(Home.name);
+          context.goNamed(login_exitoso_home_user.name);
         },
         child: const Icon(Icons.arrow_circle_right_outlined),
       ),
@@ -39,7 +42,7 @@ class vehiculosUsuarioState extends ConsumerState<vehiculosUsuario> {
 class _ListView extends ConsumerWidget {
   const _ListView({super.key});
 
-  Future<List<Vehiculo>> _fetchReservas(WidgetRef ref) async {
+  Future<List<Vehiculo>> _fetchAutos(WidgetRef ref) async {
     final usuarioState = ref.watch(usuarioProvider);
     FirebaseFirestore db = FirebaseFirestore.instance;
 
@@ -61,7 +64,7 @@ class _ListView extends ConsumerWidget {
         children: [
           Center(
             child: FutureBuilder<List<Vehiculo>>(
-              future: _fetchReservas(ref),
+              future: _fetchAutos(ref),
               builder: (context, snapshot) {
                 if (snapshot.connectionState == ConnectionState.waiting) {
                   return const Center(child: CircularProgressIndicator());
@@ -89,7 +92,12 @@ class _ListView extends ConsumerWidget {
                               ),
                             ),
                             IconButton(
-                              onPressed: () {},
+                              onPressed: () {
+                                ref
+                                    .read(vehiculoProvider.notifier)
+                                    .setVehiculo(elVehiculo);
+                                context.goNamed(EditarDatosAuto.name);
+                              },
                               icon:
                                   const Icon(Icons.arrow_circle_right_outlined),
                             ),

@@ -72,10 +72,10 @@ class login_exitoso_home_user extends ConsumerWidget {
                 OutlinedButton(
                   onPressed: () {
                     Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                    builder: (context) => OpenStreetMapScreen()),
-                  );
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => OpenStreetMapScreen()),
+                    );
                   },
                   style: OutlinedButton.styleFrom(
                     side: const BorderSide(color: Colors.white),
