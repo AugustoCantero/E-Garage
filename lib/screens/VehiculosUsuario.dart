@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_application_1/core/Entities/Vehiculo.dart';
 import 'package:flutter_application_1/core/Providers/user_provider.dart';
 import 'package:flutter_application_1/screens/Test_agregar_vehiculos.dart';
+import 'package:flutter_application_1/screens/login_exitoso_home_user.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
@@ -28,7 +29,7 @@ class vehiculosUsuarioState extends ConsumerState<vehiculosUsuario> {
       body: const _ListView(),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
-          //context.goNamed(Home.name);
+          context.goNamed(login_exitoso_home_user.name);
         },
         child: const Icon(Icons.arrow_circle_right_outlined),
       ),
@@ -39,7 +40,7 @@ class vehiculosUsuarioState extends ConsumerState<vehiculosUsuario> {
 class _ListView extends ConsumerWidget {
   const _ListView({super.key});
 
-  Future<List<Vehiculo>> _fetchReservas(WidgetRef ref) async {
+  Future<List<Vehiculo>> _fetchAutos(WidgetRef ref) async {
     final usuarioState = ref.watch(usuarioProvider);
     FirebaseFirestore db = FirebaseFirestore.instance;
 
@@ -53,6 +54,31 @@ class _ListView extends ConsumerWidget {
     }).toList();
   }
 
+  Future<void> _eliminarAuto(String patente) async {
+    FirebaseFirestore db = FirebaseFirestore.instance;
+    await db
+        .collection('Vehiculos')
+        .where('patente', isEqualTo: patente)
+        .get()
+        .then((querySnapshot) {
+      if (querySnapshot.docs.isNotEmpty) {
+        querySnapshot.docs.first.reference.delete();
+      } else {
+        print('No se encontró ningún vehículo con esa patente.');
+      }
+    });
+
+    QuerySnapshot querySnap1 = await db
+        .collection('UsuariosVehiculos')
+        .where('idVehiculo', isEqualTo: patente)
+        .limit(1)
+        .get();
+
+    DocumentSnapshot userVehiculoDoc = querySnap1.docs.first;
+
+    await userVehiculoDoc.reference.delete();
+  }
+
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     return SingleChildScrollView(
@@ -61,7 +87,7 @@ class _ListView extends ConsumerWidget {
         children: [
           Center(
             child: FutureBuilder<List<Vehiculo>>(
-              future: _fetchReservas(ref),
+              future: _fetchAutos(ref),
               builder: (context, snapshot) {
                 if (snapshot.connectionState == ConnectionState.waiting) {
                   return const Center(child: CircularProgressIndicator());
@@ -89,7 +115,15 @@ class _ListView extends ConsumerWidget {
                               ),
                             ),
                             IconButton(
-                              onPressed: () {},
+                              onPressed: () {
+                                if (elVehiculo.patente != null) {
+                                  _eliminarAuto(elVehiculo
+                                      .patente!); // Usa el operador de null assertion "!"
+                                } else {
+                                  print(
+                                      'La patente es nula, no se puede eliminar el vehículo.');
+                                }
+                              },
                               icon:
                                   const Icon(Icons.arrow_circle_right_outlined),
                             ),
