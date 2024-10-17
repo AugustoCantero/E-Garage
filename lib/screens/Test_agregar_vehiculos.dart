@@ -140,6 +140,12 @@ class _TestAgregarVehiculos extends ConsumerState<TestAgregarVehiculos> {
           centerTitle: true,
           title: const Text('Complete los datos del vehiculo'),
         ),
+        floatingActionButton: FloatingActionButton(
+          onPressed: () {
+            context.goNamed(vehiculosUsuario.name);
+          },
+          child: const Icon(Icons.arrow_circle_right_outlined),
+        ),
         body: LayoutBuilder(
           builder: (context, constraints) {
             return SingleChildScrollView(
