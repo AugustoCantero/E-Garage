@@ -39,4 +39,24 @@ class Vehiculo {
         patente: data?['patente'],
         color: data?['color']);
   }
+
+  Vehiculo copywith(
+      {String? modelo,
+      String? marca,
+      String? patente,
+      String? userId,
+      String? color}) {
+    return Vehiculo(
+        modelo: modelo ?? this.modelo,
+        marca: marca ?? this.marca,
+        patente: patente ?? this.patente,
+        userId: userId ?? this.userId,
+        color: color ?? this.color);
+  }
 }
+
+/*enum TipoVehiculo {
+  Auto,
+  Camioneta,
+  Moto,
+}*/

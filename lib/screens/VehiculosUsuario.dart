@@ -2,8 +2,10 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_application_1/core/Entities/Vehiculo.dart';
 import 'package:flutter_application_1/core/Providers/user_provider.dart';
+import 'package:flutter_application_1/core/Providers/vehiculo_provider.dart';
 import 'package:flutter_application_1/screens/Test_agregar_vehiculos.dart';
 import 'package:flutter_application_1/screens/login_exitoso_home_user.dart';
+import 'package:flutter_application_1/screens/testEdicionVehiculo.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
@@ -54,31 +56,6 @@ class _ListView extends ConsumerWidget {
     }).toList();
   }
 
-  Future<void> _eliminarAuto(String patente) async {
-    FirebaseFirestore db = FirebaseFirestore.instance;
-    await db
-        .collection('Vehiculos')
-        .where('patente', isEqualTo: patente)
-        .get()
-        .then((querySnapshot) {
-      if (querySnapshot.docs.isNotEmpty) {
-        querySnapshot.docs.first.reference.delete();
-      } else {
-        print('No se encontró ningún vehículo con esa patente.');
-      }
-    });
-
-    QuerySnapshot querySnap1 = await db
-        .collection('UsuariosVehiculos')
-        .where('idVehiculo', isEqualTo: patente)
-        .limit(1)
-        .get();
-
-    DocumentSnapshot userVehiculoDoc = querySnap1.docs.first;
-
-    await userVehiculoDoc.reference.delete();
-  }
-
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     return SingleChildScrollView(
@@ -116,13 +93,10 @@ class _ListView extends ConsumerWidget {
                             ),
                             IconButton(
                               onPressed: () {
-                                if (elVehiculo.patente != null) {
-                                  _eliminarAuto(elVehiculo
-                                      .patente!); // Usa el operador de null assertion "!"
-                                } else {
-                                  print(
-                                      'La patente es nula, no se puede eliminar el vehículo.');
-                                }
+                                ref
+                                    .read(vehiculoProvider.notifier)
+                                    .setVehiculo(elVehiculo);
+                                context.goNamed(EditarDatosAuto.name);
                               },
                               icon:
                                   const Icon(Icons.arrow_circle_right_outlined),
