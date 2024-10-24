@@ -1,13 +1,14 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_application_1/core/Entities/Reserva.dart';
 import 'package:flutter_application_1/core/Providers/user_provider.dart';
-import 'package:flutter_application_1/domain/Reserva.dart';
-import 'package:flutter_application_1/screens/home.dart';
+import 'package:flutter_application_1/screens/login_exitoso_home_user.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import 'package:intl/intl.dart'; // Importa intl para formatear fechas
 
 class ReservasUsuario extends ConsumerStatefulWidget {
-  static final String nombre = 'reservasUsuario';
+  static const String nombre = 'ReservasUsuario';
   const ReservasUsuario({super.key});
 
   @override
@@ -27,7 +28,7 @@ class ReservasUsuarioState extends ConsumerState<ReservasUsuario> {
       body: const _ListView(),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
-          context.goNamed(Home.name);
+          context.goNamed(login_exitoso_home_user.name);
         },
         child: const Icon(Icons.arrow_circle_right_outlined),
       ),
@@ -69,12 +70,19 @@ class _ListView extends ConsumerWidget {
             itemCount: listaReservas.length,
             itemBuilder: (context, index) {
               Reserva reserva = listaReservas[index];
+
+              // Formatear la fecha y hora a 'yyyy-MM-dd HH:mm'
+              String formattedStartTime =
+                  DateFormat('yyyy-MM-dd HH:mm').format(reserva.startTime);
+              String formattedEndTime =
+                  DateFormat('yyyy-MM-dd HH:mm').format(reserva.endTime);
+
               return Card(
                 child: ListTile(
-                    //  title: Text('Lote: ${reserva.lote}'),
-                    /* subtitle: Text(
-                      'Patente: ${reserva.elvehiculo.patente}, Modelo: ${reserva.elvehiculo.modelo}, Marca: ${reserva.elvehiculo.marca}'),*/
-                    ),
+                  title: Text('Lote: $formattedStartTime'),
+                  subtitle: Text(
+                      'Fecha fin: $formattedEndTime, Modelo: ${reserva.elvehiculo.modelo}, patente: ${reserva.elvehiculo.patente}'),
+                ),
               );
             },
           );

@@ -128,7 +128,7 @@ class EditarDatosAutoState extends ConsumerState<EditarDatosAuto> {
               child: IconButton(
                 icon: const Icon(Icons.arrow_back, color: Colors.white),
                 onPressed: () {
-                  Navigator.pop(context);
+                  context.goNamed(vehiculosUsuario.name);
                 },
               ),
             ),

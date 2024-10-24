@@ -2,9 +2,9 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_application_1/core/Entities/Usuario.dart';
 import 'package:flutter_application_1/core/Entities/Vehiculo.dart';
+import 'package:flutter_application_1/core/Entities/usuarioVehiculos.dart';
 import 'package:flutter_application_1/core/Providers/user_provider.dart';
 import 'package:flutter_application_1/core/Providers/vehiculo_provider.dart';
-import 'package:flutter_application_1/domain/usuarioVehiculo.dart';
 import 'package:flutter_application_1/screens/VehiculosUsuario.dart';
 import 'package:flutter_application_1/screens/login_exitoso_home_user.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -88,6 +88,7 @@ class _TestAgregarVehiculos extends ConsumerState<TestAgregarVehiculos> {
   Future<void> guardarAuto(bool statusFormulario, Usuario usuario) async {
     if (statusFormulario) {
       try {
+        print('Llegue a');
         final nuevoVehiculo = Vehiculo(
           marca: _marcaController.text,
           modelo: _modeloController.text,
@@ -105,14 +106,14 @@ class _TestAgregarVehiculos extends ConsumerState<TestAgregarVehiculos> {
             .collection('UsuariosVehiculos')
             .doc()
             .set(nuevaRelacionUserVehiculo.toFirestore());
-
+        print('Llegue c');
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(
             content: Text('Vehiculo agregado'),
             duration: Duration(seconds: 3),
           ),
         );
-
+        print('Llegue d');
         context.goNamed(vehiculosUsuario.name);
       } catch (e) {
         ScaffoldMessenger.of(context).showSnackBar(

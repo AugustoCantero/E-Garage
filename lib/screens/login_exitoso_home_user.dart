@@ -1,9 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_application_1/core/Providers/user_provider.dart';
+import 'package:flutter_application_1/screens/TestReservaSeleccionVehic.dart';
 import 'package:flutter_application_1/screens/editar_datos.dart';
-import 'package:flutter_application_1/screens/open_street_map_screen.dart';
+import 'package:flutter_application_1/screens/reservasUsuario.dart';
+//import 'package:flutter_application_1/screens/open_street_map_screen.dart';
 import 'package:flutter_application_1/screens/selection_screen.dart';
 import 'package:flutter_application_1/screens/chatBotPage.dart'; // Importar la pantalla del chatbot
+import 'package:flutter_application_1/screens/testReserva.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart'; // Si usas go_router para la navegación
 
@@ -71,11 +74,12 @@ class login_exitoso_home_user extends ConsumerWidget {
                 // Botón de "Buscar Lugar"
                 OutlinedButton(
                   onPressed: () {
-                    Navigator.push(
+                    /*  Navigator.push(
                       context,
                       MaterialPageRoute(
                           builder: (context) => OpenStreetMapScreen()),
-                    );
+                    );*/
+                    context.goNamed(ReservationSelectVehicule.name);
                   },
                   style: OutlinedButton.styleFrom(
                     side: const BorderSide(color: Colors.white),
@@ -151,7 +155,7 @@ class login_exitoso_home_user extends ConsumerWidget {
               title: const Text('Gestión de Reservas',
                   style: TextStyle(fontSize: 18)),
               onTap: () {
-                // Agrega tu lógica de navegación o acción aquí
+                context.goNamed(ReservasUsuario.nombre);
               },
             ),
             // Opción Historial y Registro

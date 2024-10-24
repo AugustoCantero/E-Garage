@@ -1,7 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_application_1/core/Providers/user_provider.dart';
-import 'package:flutter_application_1/screens/home.dart';
 import 'package:flutter_application_1/screens/screen_principal.dart';
 import 'package:flutter_application_1/screens/todasLasReservas.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -139,7 +138,7 @@ class Logintro extends ConsumerWidget {
                               if (userData['esAdmin'] == true) {
                                 context.goNamed(todasLasReservas.nombre);
                               } else {
-                                context.goNamed(Home.name);
+                                context.goNamed('/home');
                               }
                               // Usuario autenticado con éxito
                             } else {

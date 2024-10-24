@@ -10,7 +10,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
 class vehiculosUsuario extends ConsumerStatefulWidget {
-  static const String name = 'reservasUsuario';
+  static const String name = 'vehiculosUsuario';
   const vehiculosUsuario({super.key});
 
   @override

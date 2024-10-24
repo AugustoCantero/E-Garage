@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_application_1/screens/TestLogin.dart';
+import 'package:flutter_application_1/screens/login_exitoso_home_user.dart';
 import 'package:flutter_application_1/screens/login_screen.dart';
 import 'package:go_router/go_router.dart';
-import 'package:flutter_application_1/screens/home.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter_application_1/core/Providers/user_provider.dart';
@@ -63,7 +63,7 @@ class TEST_EDICION_CUENTA extends ConsumerWidget {
                     );
 
                 // Regresar a la pantalla anterior
-                context.goNamed(Home.name);
+                context.goNamed(login_exitoso_home_user.name);
               },
               child: const Text('Guardar Cambios'),
             ),
