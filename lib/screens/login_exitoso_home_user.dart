@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_application_1/core/Providers/user_provider.dart';
 import 'package:flutter_application_1/screens/TestReservaSeleccionVehic.dart';
 import 'package:flutter_application_1/screens/editar_datos.dart';
+import 'package:flutter_application_1/screens/open_street_map_screen.dart';
 import 'package:flutter_application_1/screens/reservasUsuario.dart';
 //import 'package:flutter_application_1/screens/open_street_map_screen.dart';
 import 'package:flutter_application_1/screens/selection_screen.dart';
@@ -74,12 +75,12 @@ class login_exitoso_home_user extends ConsumerWidget {
                 // Botón de "Buscar Lugar"
                 OutlinedButton(
                   onPressed: () {
-                    /*  Navigator.push(
+                      Navigator.push(
                       context,
                       MaterialPageRoute(
                           builder: (context) => OpenStreetMapScreen()),
-                    );*/
-                    context.goNamed(ReservationSelectVehicule.name);
+                    );
+                    //context.goNamed(GestionVehiculosScreen.name);
                   },
                   style: OutlinedButton.styleFrom(
                     side: const BorderSide(color: Colors.white),
