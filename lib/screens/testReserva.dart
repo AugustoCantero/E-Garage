@@ -3,9 +3,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_application_1/core/Entities/Reserva.dart';
 import 'package:flutter_application_1/core/Providers/vehiculo_provider.dart';
 import 'package:flutter_application_1/screens/login_exitoso_home_user.dart';
+import 'package:flutter_application_1/screens/login_screen.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
-import 'package:intl/intl.dart'; // Importar el paquete intl
+import 'package:intl/intl.dart';
 
 class ReservationScreen extends ConsumerStatefulWidget {
   static const String name = "ReservationScreen";
@@ -13,8 +14,7 @@ class ReservationScreen extends ConsumerStatefulWidget {
   @override
   _ReservationScreenState createState() => _ReservationScreenState();
 }
-
-class Garage {
+  class Garage {
   // Tengo que llenar esta array con las reservas
 
   final List<Reserva> reservations; // Lista de reservas
@@ -79,15 +79,15 @@ class Garage {
   }
 }
 
+
 class _ReservationScreenState extends ConsumerState<ReservationScreen> {
-  //consumer state, staful y consumer widget combinados!!!
   List<Reserva> lasReservas = [];
   final Garage garage = Garage();
   DateTime? selectedDate;
   DateTime? startTime;
   DateTime? endTime;
 
-  @override // lo primero que se va a ejectuar al abrir la pantalla.
+  @override
   void initState() {
     super.initState();
     _fetchReservas();
@@ -98,28 +98,13 @@ class _ReservationScreenState extends ConsumerState<ReservationScreen> {
     QuerySnapshot<Map<String, dynamic>> snapshot =
         await firestore.collection('Reservas').get();
 
-    // Usa snapshot.docs para obtener una lista de DocumentSnapshot
     List<Reserva> reservas = snapshot.docs.map((doc) {
-      return Reserva.fromFirestore(doc); // Esto debería estar bien
+      return Reserva.fromFirestore(doc);
     }).toList();
 
     setState(() {
       lasReservas = reservas;
     });
-  }
-
-  void checkAvailability() {
-    if (selectedDate != null && startTime != null && endTime != null) {
-      if (startTime!.isBefore(endTime!) &&
-          garage.isAvailable(startTime!, endTime!)) {
-        // Aquí puedes añadir la lógica para hacer la reserva
-        ScaffoldMessenger.of(context)
-            .showSnackBar(SnackBar(content: Text('Reserva realizada!')));
-      } else {
-        ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(content: Text('No disponible en este rango horario.')));
-      }
-    }
   }
 
   Future<void> selectDate(BuildContext context) async {
@@ -132,7 +117,7 @@ class _ReservationScreenState extends ConsumerState<ReservationScreen> {
     if (picked != null && picked != selectedDate) {
       setState(() {
         selectedDate = picked;
-        startTime = null; // Reinicia el tiempo seleccionado al cambiar la fecha
+        startTime = null;
         endTime = null;
       });
     }
@@ -141,8 +126,7 @@ class _ReservationScreenState extends ConsumerState<ReservationScreen> {
   Future<void> selectStartTime(BuildContext context) async {
     if (selectedDate == null) return;
 
-    final List<DateTime> availableTimes =
-        garage.getAvailableTimes(selectedDate!);
+    final List<DateTime> availableTimes = garage.getAvailableTimes(selectedDate!);
     final DateTime? picked = await showDialog<DateTime>(
       context: context,
       builder: (BuildContext context) {
@@ -170,8 +154,7 @@ class _ReservationScreenState extends ConsumerState<ReservationScreen> {
     if (picked != null) {
       setState(() {
         startTime = picked;
-        endTime =
-            null; // Reinicia el tiempo de salida al seleccionar uno nuevo de ingreso
+        endTime = null;
       });
     }
   }
@@ -179,8 +162,7 @@ class _ReservationScreenState extends ConsumerState<ReservationScreen> {
   Future<void> selectEndTime(BuildContext context) async {
     if (selectedDate == null || startTime == null) return;
 
-    final List<DateTime> availableTimes =
-        garage.getAvailableDepartureTimes(selectedDate!, startTime!);
+    final List<DateTime> availableTimes = garage.getAvailableDepartureTimes(selectedDate!, startTime!);
     final DateTime? picked = await showDialog<DateTime>(
       context: context,
       builder: (BuildContext context) {
@@ -217,66 +199,160 @@ class _ReservationScreenState extends ConsumerState<ReservationScreen> {
     final vehiculoState = ref.watch(vehiculoProvider);
     final db = FirebaseFirestore.instance;
 
-    return Scaffold(
-        appBar: AppBar(title: Text('Reservar Garage')),
-        body: Padding(
-          padding: const EdgeInsets.all(16.0),
-          child: Column(
-            children: [
-              ElevatedButton(
-                onPressed: () => selectDate(context),
-                child: Text(selectedDate == null
-                    ? 'Seleccionar Fecha'
-                    : 'Fecha: ${DateFormat('dd/MM/yyyy').format(selectedDate!)}'), // Formatear la fecha
-              ),
-              SizedBox(height: 16),
-              ElevatedButton(
-                onPressed: () => selectStartTime(context),
-                child: Text(startTime == null
-                    ? 'Seleccionar Hora de Inicio'
-                    : 'Hora de Inicio: ${startTime!.hour}:${startTime!.minute.toString().padLeft(2, '0')}'),
-              ),
-              SizedBox(height: 16),
-              ElevatedButton(
-                onPressed: () => selectEndTime(context),
-                child: Text(endTime == null
-                    ? 'Seleccionar Hora de Fin'
-                    : 'Hora de Fin: ${endTime!.hour}:${endTime!.minute.toString().padLeft(2, '0')}'),
-              ),
-              SizedBox(height: 32),
-              ElevatedButton(
-                onPressed: () async {
-                  if (selectedDate != null &&
-                      startTime != null &&
-                      endTime != null) {
-                    final reserva = Reserva(
-                        startTime: startTime!,
-                        endTime: endTime!,
-                        elvehiculo: vehiculoState,
-                        usuarioId: vehiculoState.userId!);
+    return GestureDetector(
+      onTap: () {
+        FocusScope.of(context).unfocus();
+      },
+      child: Scaffold(
+        backgroundColor: Colors.black,
+        appBar: AppBar(
+          backgroundColor: Colors.black,
+          elevation: 0,
+          title: Center(
+            child: Text(
+              'Reservar Garage',
+              style: TextStyle(color: Colors.white),
+            ),
+          ),
+        ),
+        drawer: _buildDrawer(context), // Agregar el Drawer
+        body: Center( // Centra todo el contenido de la columna
+          child: SingleChildScrollView(
+            padding: const EdgeInsets.symmetric(horizontal: 30, vertical: 20),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center, // Centra verticalmente
+              crossAxisAlignment: CrossAxisAlignment.center, // Centra horizontalmente
+              children: [
+                Image.asset(
+                  'assets/images/car_logo.png', // Asegúrate de tener esta imagen en tus assets
+                  height: 120,
+                ),
+                const SizedBox(height: 20),
+                ElevatedButton(
+                  onPressed: () => selectDate(context),
+                  style: ElevatedButton.styleFrom(backgroundColor: Colors.blue),
+                  child: Text(
+                    selectedDate == null
+                        ? 'Seleccionar Fecha'
+                        : 'Fecha: ${DateFormat('dd/MM/yyyy').format(selectedDate!)}',
+                    style: TextStyle(color: Colors.white),
+                  ),
+                ),
+                const SizedBox(height: 16),
+                ElevatedButton(
+                  onPressed: () => selectStartTime(context),
+                  style: ElevatedButton.styleFrom(backgroundColor: Colors.blue),
+                  child: Text(
+                    startTime == null
+                        ? 'Seleccionar Hora de Inicio'
+                        : 'Hora de Inicio: ${startTime!.hour}:${startTime!.minute.toString().padLeft(2, '0')}',
+                    style: TextStyle(color: Colors.white),
+                  ),
+                ),
+                const SizedBox(height: 16),
+                ElevatedButton(
+                  onPressed: () => selectEndTime(context),
+                  style: ElevatedButton.styleFrom(backgroundColor: Colors.blue),
+                  child: Text(
+                    endTime == null
+                        ? 'Seleccionar Hora de Fin'
+                        : 'Hora de Fin: ${endTime!.hour}:${endTime!.minute.toString().padLeft(2, '0')}',
+                    style: TextStyle(color: Colors.white),
+                  ),
+                ),
+                const SizedBox(height: 32),
+                ElevatedButton(
+                  onPressed: () async {
+                    if (selectedDate != null && startTime != null && endTime != null) {
+                      final reserva = Reserva(
+                          startTime: startTime!,
+                          endTime: endTime!,
+                          elvehiculo: vehiculoState,
+                          usuarioId: vehiculoState.userId!);
 
-                    await db
-                        .collection('Reservas')
-                        .doc()
-                        .set(reserva.toFirestore());
+                      await db.collection('Reservas').doc().set(reserva.toFirestore());
 
-                    context.goNamed(login_exitoso_home_user.name);
-                  } else {
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      const SnackBar(
-                          content: Text('Seleccione una fecha y un lote')),
-                    );
-                  }
-                },
-                child: const Text('Reservar'),
-              ),
-            ],
+                      context.goNamed(login_exitoso_home_user.name);
+                    } else {
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        const SnackBar(content: Text('Seleccione una fecha y un lote')),
+                      );
+                    }
+                  },
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: Colors.green,
+                    padding: const EdgeInsets.symmetric(horizontal: 40, vertical: 12),
+                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+                  ),
+                  child: const Text(
+                    'Reservar',
+                    style: TextStyle(color: Colors.white, fontSize: 16),
+                  ),
+                ),
+              ],
+            ),
           ),
         ),
         floatingActionButton: FloatingActionButton(
           onPressed: () {
-            context.goNamed(login_exitoso_home_user.name);
-          },
-        ));
+            context.goNamed('ReservationSelectVehicule');
+          }, 
+          backgroundColor: Colors.white,
+          child: const Icon(Icons.arrow_back, color: Colors.black),
+        ),
+      ),
+    );
   }
 }
+Widget _buildDrawer(BuildContext context) {
+    return Drawer(
+      child: Container(
+        color: Colors.grey[200],
+        child: ListView(
+          padding: EdgeInsets.zero,
+          children: [
+            const DrawerHeader(
+              decoration: BoxDecoration(
+                color: Colors.white,
+              ),
+              child: Text(
+                'Menú',
+                style: TextStyle(fontSize: 24),
+              ),
+            ),
+            ListTile(
+              leading: const Icon(Icons.person, size: 40, color: Colors.black),
+              title: const Text('Editar Datos', style: TextStyle(fontSize: 18)),
+              onTap: () {
+                // Lógica de navegación a Editar Datos
+              },
+            ),
+            ListTile(
+              leading: const Icon(Icons.timer, size: 40, color: Colors.black),
+              title: const Text('Gestión de Vehiculos', style: TextStyle(fontSize: 18)),
+              onTap: () {
+                // Lógica de navegación o acción para Gestión de Reservas
+              },
+            ),
+            ListTile(
+              leading: const Icon(Icons.history, size: 40, color: Colors.black),
+              title: const Text('Historial y Registro', style: TextStyle(fontSize: 18)),
+              onTap: () {
+                // Lógica de navegación o acción para Historial y Registro
+              },
+            ),
+            ListTile(
+              leading: const Icon(Icons.exit_to_app, size: 40, color: Colors.black),
+              title: const Text('Salir', style: TextStyle(fontSize: 18)),
+              onTap: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => LoginScreen()),
+                );
+              },
+            ),
+          ],
+        ),
+      ),
+    );
+  }

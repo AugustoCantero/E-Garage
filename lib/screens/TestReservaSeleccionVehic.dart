@@ -87,7 +87,8 @@ class _GestionVehiculosScreenState extends State<GestionVehiculosScreen> {
                 const SizedBox(height: 20),
                 GestureDetector(
                   onTap: () {
-                    print('Acción de gestión de reservas 2');
+                  context.goNamed('ReservationScreen'); // Navega a la ruta 'ReservationScreen' usando GoRouter
+
                   },
                   child: Container(
                     padding: EdgeInsets.all(16),
@@ -127,7 +128,7 @@ class _GestionVehiculosScreenState extends State<GestionVehiculosScreen> {
             left: 20,
             child: FloatingActionButton(
               onPressed: () {
-                Navigator.of(context).pop();
+                context.goNamed('OpenStreetMapScreen');
               },
               backgroundColor: Colors.white,
               child: const Icon(
