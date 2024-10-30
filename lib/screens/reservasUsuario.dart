@@ -6,9 +6,11 @@ import 'package:flutter_application_1/screens/login_exitoso_home_user.dart';
 import 'package:flutter_application_1/screens/login_screen.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
-import 'package:intl/intl.dart';
 
-class ReservasUsuario extends StatefulWidget {
+class ReservasUsuario extends ConsumerStatefulWidget {
+  static const String nombre = 'reservasUsuario';
+  const ReservasUsuario({super.key});
+
   @override
   _ReservasUsuarioState createState() => _ReservasUsuarioState();
 }
@@ -172,23 +174,12 @@ class _ListView extends ConsumerWidget {
             itemCount: listaReservas.length,
             itemBuilder: (context, index) {
               Reserva reserva = listaReservas[index];
-
-              String formattedStartTime =
-                  DateFormat('yyyy-MM-dd HH:mm').format(reserva.startTime);
-              String formattedEndTime =
-                  DateFormat('yyyy-MM-dd HH:mm').format(reserva.endTime);
-
               return Card(
                 color: Colors.grey[800],
                 child: ListTile(
-                  title: Text(
-                    'Lote: $formattedStartTime',
-                    style: TextStyle(color: Colors.white),
-                  ),
+                  title: Text('Lote: ${reserva.startTime}'),
                   subtitle: Text(
-                    'Fecha fin: $formattedEndTime, Modelo: ${reserva.elvehiculo.modelo}, patente: ${reserva.elvehiculo.patente}',
-                    style: const TextStyle(color: Colors.white70),
-                  ),
+                      'Fecha fin: ${reserva.endTime}, Modelo: ${reserva.elvehiculo.modelo}, patente: ${reserva.elvehiculo.marca}'),
                 ),
               );
             },
