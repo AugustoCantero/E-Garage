@@ -66,11 +66,11 @@ class _listViewState extends State<_listView> {
         Reserva reserva = listaReservas[index];
         return Card(
           child: ListTile(
-              // title: Text('lote: ${reserva.lote}'),
-              /* subtitle: Text(
-                'Patente: ${reserva.elvehiculo.patente}, Modelo: ${reserva.elvehiculo.modelo}, Marca: ${reserva.elvehiculo.marca}'),
+            title: Text('lote: ${reserva.elvehiculo.patente}'),
+            subtitle: Text(
+                'Patente: ${reserva.startTime}, Modelo: ${reserva.endTime}'),
             // le pasa como parametro la vista que se busca.*/
-              ),
+          ),
         );
       },
     );

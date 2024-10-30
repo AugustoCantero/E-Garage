@@ -44,13 +44,18 @@ class Garage {
 
   List<DateTime> getAvailableTimes(DateTime selectedDate) {
     List<DateTime> times = [];
+    DateTime now = DateTime.now(); // Obtener la hora actual
+
     for (int hour = 0; hour < 24; hour++) {
       for (int minute = 0; minute < 60; minute += 30) {
         DateTime time = DateTime(selectedDate.year, selectedDate.month,
             selectedDate.day, hour, minute);
-        // Solo agrega el tiempo si está disponible
-        if (isAvailable(time, time.add(Duration(minutes: 30)))) {
-          times.add(time);
+
+        // Solo agregar el tiempo si es después de la hora actual y está disponible
+        if (time.isAfter(now) || time.isAtSameMomentAs(now)) {
+          if (isAvailable(time, time.add(Duration(minutes: 30)))) {
+            times.add(time);
+          }
         }
       }
     }
@@ -80,17 +85,17 @@ class Garage {
 }
 
 class _ReservationScreenState extends ConsumerState<ReservationScreen> {
-  //consumer state, staful y consumer widget combinados!!!
   List<Reserva> lasReservas = [];
-  final Garage garage = Garage();
+  final Garage garage = Garage(); // Usar garage para almacenar las reservas
   DateTime? selectedDate;
   DateTime? startTime;
   DateTime? endTime;
 
-  @override // lo primero que se va a ejectuar al abrir la pantalla.
+  @override
   void initState() {
     super.initState();
-    _fetchReservas();
+    _fetchReservas(); // Llamada para cargar las reservas
+    print('Hora actual: ${DateTime.now()}');
   }
 
   Future<void> _fetchReservas() async {
@@ -98,13 +103,18 @@ class _ReservationScreenState extends ConsumerState<ReservationScreen> {
     QuerySnapshot<Map<String, dynamic>> snapshot =
         await firestore.collection('Reservas').get();
 
-    // Usa snapshot.docs para obtener una lista de DocumentSnapshot
+    // Convierte los documentos de Firestore en objetos Reserva
     List<Reserva> reservas = snapshot.docs.map((doc) {
-      return Reserva.fromFirestore(doc); // Esto debería estar bien
+      return Reserva.fromFirestore(doc); // Convierte los datos en Reserva
     }).toList();
 
     setState(() {
-      lasReservas = reservas;
+      lasReservas =
+          reservas; // Asigna las reservas recuperadas a la lista local
+      garage.reservations
+          .addAll(reservas); // Carga las reservas en el array del objeto Garage
+      print('Reservas cargadas: ${garage.reservations.length}');
+      print('Contenido de las reservas: ${garage.reservations}');
     });
   }
 
@@ -129,6 +139,7 @@ class _ReservationScreenState extends ConsumerState<ReservationScreen> {
       firstDate: DateTime.now(),
       lastDate: DateTime(2101),
     );
+
     if (picked != null && picked != selectedDate) {
       setState(() {
         selectedDate = picked;
