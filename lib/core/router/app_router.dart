@@ -53,7 +53,7 @@ final GoRouter appRouter = GoRouter(initialLocation: '/intro', routes: [
     name: TEST_EDICION_CUENTA.name,
   ),
   GoRoute(
-    path: '/loginExitosoHomeUser',
+    path: '/HomeUser',
     builder: (context, state) => const login_exitoso_home_user(),
     name: login_exitoso_home_user.name,
   ),
@@ -87,10 +87,6 @@ final GoRouter appRouter = GoRouter(initialLocation: '/intro', routes: [
     builder: (context, state) => GestionVehiculosScreen(),
     name: GestionVehiculosScreen.name,
   ),
-  GoRoute(
-    path: '/reservasUsuario',
-    builder: (context, state) => const ReservasUsuario(),
-    name: ReservasUsuario.nombre,
-  ),
+ 
  
 ]);

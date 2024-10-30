@@ -1,12 +1,13 @@
-/*import 'package:flutter/material.dart';
+import 'package:flutter/material.dart';
 import 'package:mercadopago_sdk/mercadopago_sdk.dart';
 import 'package:url_launcher/url_launcher.dart';
 
-class PaymentScreen extends StatelessWidget {
-  final String accessToken = 'dev_24c65fb163bf11ea96500242ac130004';
+class MercadoPagoScreen extends StatelessWidget {
+  final String accessToken = 'APP_USR-4021139532974623-101620-506707f7d313d1a8dcdb038bfedf91de-139642498';
+  final String secretClient= '3XmQlru5zMmf71QrlhseZ1CwhZx2y50B';
 
   void _createPayment(BuildContext context) async {
-    var mp = MP(accessToken);
+    var mp = MP(accessToken,secretClient);
 
     var preference = {
       "items": [
@@ -64,5 +65,4 @@ class PaymentScreen extends StatelessWidget {
       ),
     );
   }
-}
-*/
+} 

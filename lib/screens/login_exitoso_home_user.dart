@@ -4,7 +4,6 @@ import 'package:flutter_application_1/screens/TestReservaSeleccionVehic.dart';
 import 'package:flutter_application_1/screens/editar_datos.dart';
 import 'package:flutter_application_1/screens/open_street_map_screen.dart';
 import 'package:flutter_application_1/screens/reservasUsuario.dart';
-//import 'package:flutter_application_1/screens/open_street_map_screen.dart';
 import 'package:flutter_application_1/screens/selection_screen.dart';
 import 'package:flutter_application_1/screens/chatBotPage.dart'; // Importar la pantalla del chatbot
 import 'package:flutter_application_1/screens/testReserva.dart';
@@ -156,7 +155,11 @@ class login_exitoso_home_user extends ConsumerWidget {
               title: const Text('Gestión de Reservas',
                   style: TextStyle(fontSize: 18)),
               onTap: () {
-                context.goNamed(ReservasUsuario.nombre);
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                      builder: (context) => ReservasUsuario()),
+                );
               },
             ),
             // Opción Historial y Registro
