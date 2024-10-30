@@ -84,12 +84,13 @@ final GoRouter appRouter = GoRouter(initialLocation: '/intro', routes: [
   ),
   GoRoute(
     path: '/ReservationSelectVehicule',
-    builder: (context, state) => ReservationSelectVehicule(),
-    name: ReservationSelectVehicule.name,
+    builder: (context, state) => GestionVehiculosScreen(),
+    name: GestionVehiculosScreen.name,
   ),
   GoRoute(
     path: '/reservasUsuario',
     builder: (context, state) => const ReservasUsuario(),
     name: ReservasUsuario.nombre,
   ),
+ 
 ]);

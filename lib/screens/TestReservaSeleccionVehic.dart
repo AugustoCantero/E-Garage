@@ -1,131 +1,197 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_application_1/core/Entities/Usuario.dart';
 import 'package:flutter_application_1/core/Entities/Vehiculo.dart';
-import 'package:flutter_application_1/core/Providers/user_provider.dart';
-import 'package:flutter_application_1/core/Providers/vehiculo_provider.dart';
-import 'package:flutter_application_1/screens/login_exitoso_home_user.dart';
-import 'package:flutter_application_1/screens/testReserva.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter_application_1/screens/VehiculosUsuario.dart';
+import 'package:flutter_application_1/screens/chatBotPage.dart';
+import 'package:flutter_application_1/screens/login_screen.dart';
 import 'package:go_router/go_router.dart';
 
-class ReservationSelectVehicule extends StatefulWidget {
+class GestionVehiculosScreen extends StatefulWidget {
   static const String name = 'ReservationSelectVehicule';
 
+  const GestionVehiculosScreen({super.key});
+
   @override
-  _ReservationSelectVehicule createState() => _ReservationSelectVehicule();
+  State<GestionVehiculosScreen> createState() => _GestionVehiculosScreenState();
 }
 
-class _ReservationSelectVehicule extends State<ReservationSelectVehicule> {
-  String? selectedVehicle; // Variable para almacenar el vehículo seleccionado
+class _GestionVehiculosScreenState extends State<GestionVehiculosScreen> {
   Vehiculo? vehiculoSeleccionado;
-
-  void _showVehiclePicker(BuildContext context, Usuario usuarioLogueado) {
-    final db = FirebaseFirestore.instance;
-
-    showModalBottomSheet(
-      context: context,
-      builder: (BuildContext context) {
-        return Container(
-          height: 300, // Definir altura de la ventana emergente
-          child: FutureBuilder<QuerySnapshot<Map<String, dynamic>>>(
-            future: db
-                .collection('Vehiculos')
-                .where('userId', isEqualTo: usuarioLogueado.id)
-                .get(), // Obtener datos de Firestore
-            builder: (BuildContext context,
-                AsyncSnapshot<QuerySnapshot<Map<String, dynamic>>> snapshot) {
-              if (snapshot.connectionState == ConnectionState.waiting) {
-                return Center(child: CircularProgressIndicator());
-              } else if (snapshot.hasError) {
-                return Center(child: Text('Error al cargar vehículos'));
-              } else if (!snapshot.hasData || snapshot.data!.docs.isEmpty) {
-                return Center(child: Text('No se encontraron vehículos'));
-              }
-
-              // Mostrar la lista de vehículos
-              List<DocumentSnapshot<Map<String, dynamic>>> vehicles =
-                  snapshot.data!.docs;
-
-              return ListView.builder(
-                itemCount: vehicles.length,
-                itemBuilder: (BuildContext context, int index) {
-                  // Crear el objeto Vehiculo usando fromFirestore
-                  final vehiculo =
-                      Vehiculo.fromFirestore(vehicles[index], null);
-
-                  return ListTile(
-                    title: Text(vehiculo.patente ??
-                        'Sin patente'), // Usar el campo marca
-                    subtitle: Text(vehiculo.modelo ?? 'Sin Modelo'),
-                    trailing: Text(vehiculo.marca ?? 'Sin Marca'),
-                    // Mostrar modelo
-                    onTap: () {
-                      setState(() {
-                        selectedVehicle = vehiculo
-                            .marca; // Guardar el nombre del vehículo seleccionado
-                        vehiculoSeleccionado = vehiculo;
-                      });
-                      Navigator.pop(context); // Cerrar la ventana modal
-                    },
-                  );
-                },
-              );
-            },
-          ),
-        );
-      },
-    );
-  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text('Reservar Garage')),
-      body: Consumer(
-        //para usar un consumer sin tener el consumerWidget!!!!!!!
-        builder: (context, ref, child) {
-          final usuarioState = ref.watch(usuarioProvider);
-
-          // Obtener el estado del usuario
-
-          return Padding(
-            padding: const EdgeInsets.all(16.0),
+      backgroundColor: Colors.black,
+      appBar: AppBar(
+        backgroundColor: Colors.black,
+        elevation: 0,
+        leading: Builder(
+          builder: (context) {
+            return IconButton(
+              icon: const Icon(Icons.menu, color: Colors.white),
+              onPressed: () {
+                Scaffold.of(context).openDrawer(); // Abrir el Drawer (Menú hamburguesa)
+              },
+            );
+          },
+        ),
+        title: const Text(
+          'GESTION DE VEHICULOS',
+          style: TextStyle(
+            color: Colors.white,
+            fontSize: 24,
+            fontWeight: FontWeight.bold,
+          ),
+        ),
+        centerTitle: true, // Centrar el título
+      ),
+      drawer: _buildDrawer(context), // Agregar el Drawer
+      body: Stack(
+        children: [
+          Center(
             child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                ElevatedButton(
-                  onPressed: () => _showVehiclePicker(context, usuarioState),
-                  child: Text(selectedVehicle == null
-                      ? 'Seleccionar vehículo'
-                      : 'Vehículo: $selectedVehicle'), // Mostrar vehículo seleccionado
+                const SizedBox(height: 40),
+                Image.asset(
+                  'assets/images/car_logo.png',  // Reemplaza con la ruta de tu logo
+                  height: 100,  // Ajusta el tamaño del logo según sea necesario
                 ),
-                SizedBox(height: 32),
-                ElevatedButton(
-                  onPressed: () {
-                    if (vehiculoSeleccionado != null) {
-                      // Llama a setVehiculo pasando el objeto vehiculoSeleccionado completo
-                      ref
-                          .read(vehiculoProvider.notifier)
-                          .setVehiculo(vehiculoSeleccionado!);
-                      print(
-                          'Vehículo seleccionado: ${vehiculoSeleccionado!.marca} ');
-                      context.goNamed(ReservationScreen.name);
-                    } else {
-                      print(
-                          'Por favor, selecciona un vehículo antes de continuar');
+                const SizedBox(height: 40),
+                GestureDetector(
+                  onTap: () async {
+                    final resultado = await Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (context) => vehiculosUsuario()),
+                    );
+
+                    if (resultado != null && resultado is Vehiculo) {
+                      setState(() {
+                        vehiculoSeleccionado = resultado;
+                      });
                     }
                   },
-                  child: Text('Continuar'),
-                )
+                  child: Container(
+                    padding: EdgeInsets.all(16),
+                    decoration: BoxDecoration(
+                      border: Border.all(color: Colors.white, width: 2),
+                      borderRadius: BorderRadius.circular(8),
+                    ),
+                    child: Text(
+                      vehiculoSeleccionado == null
+                          ? 'Seleccionar Vehiculo'
+                          : 'Vehículo: ${vehiculoSeleccionado!.patente}',
+                      style: TextStyle(color: Colors.white, fontSize: 20),
+                    ),
+                  ),
+                ),
+                const SizedBox(height: 20),
+                GestureDetector(
+                  onTap: () {
+                  context.goNamed('ReservationScreen'); // Navega a la ruta 'ReservationScreen' usando GoRouter
+
+                  },
+                  child: Container(
+                    padding: EdgeInsets.all(16),
+                    decoration: BoxDecoration(
+                      border: Border.all(color: Colors.white, width: 2),
+                      borderRadius: BorderRadius.circular(8),
+                    ),
+                    child: const Text(
+                      'Continuar',
+                      style: TextStyle(color: Colors.white, fontSize: 20),
+                    ),
+                  ),
+                ),
+                const SizedBox(height: 40),
               ],
             ),
-          );
-        },
+          ),
+          Positioned(
+            bottom: 80,
+            right: 20,
+            child: FloatingActionButton(
+              onPressed: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => ChatBotPage()),
+                );
+              },
+              backgroundColor: Colors.transparent,
+              child: Image.asset(
+                'assets/images/bot.png',
+                height: 70,
+              ),
+            ),
+          ),
+          Positioned(
+            bottom: 20,
+            left: 20,
+            child: FloatingActionButton(
+              onPressed: () {
+                context.goNamed('OpenStreetMapScreen');
+              },
+              backgroundColor: Colors.white,
+              child: const Icon(
+                Icons.arrow_back,
+                color: Colors.black,
+              ),
+            ),
+          ),
+        ],
       ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: () {
-          context.goNamed(login_exitoso_home_user.name);
-        },
+    );
+  }
+
+  // Función que crea el Drawer (Menú lateral)
+  Widget _buildDrawer(BuildContext context) {
+    return Drawer(
+      child: Container(
+        color: Colors.grey[200],
+        child: ListView(
+          padding: EdgeInsets.zero,
+          children: [
+            const DrawerHeader(
+              decoration: BoxDecoration(
+                color: Colors.white,
+              ),
+              child: Text(
+                'Menú',
+                style: TextStyle(fontSize: 24),
+              ),
+            ),
+            ListTile(
+              leading: const Icon(Icons.person, size: 40, color: Colors.black),
+              title: const Text('Editar Datos', style: TextStyle(fontSize: 18)),
+              onTap: () {
+                // Lógica de navegación a Editar Datos
+              },
+            ),
+            ListTile(
+              leading: const Icon(Icons.timer, size: 40, color: Colors.black),
+              title: const Text('Gestión de Vehiculos', style: TextStyle(fontSize: 18)),
+              onTap: () {
+                // Lógica de navegación o acción para Gestión de Reservas
+              },
+            ),
+            ListTile(
+              leading: const Icon(Icons.history, size: 40, color: Colors.black),
+              title: const Text('Historial y Registro', style: TextStyle(fontSize: 18)),
+              onTap: () {
+                // Lógica de navegación o acción para Historial y Registro
+              },
+            ),
+            ListTile(
+              leading: const Icon(Icons.exit_to_app, size: 40, color: Colors.black),
+              title: const Text('Salir', style: TextStyle(fontSize: 18)),
+              onTap: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => LoginScreen()),
+                );
+              },
+            ),
+          ],
+        ),
       ),
     );
   }

@@ -8,6 +8,7 @@
 <key>NSLocationAlwaysAndWhenInUseUsageDescription</key>
 <string>La aplicación necesita acceder a tu ubicación tanto en primer como en segundo plano.</string>
 <key>NSLocationTemporaryUsageDescriptionDictionary</key>
+
 <dict>
 	<key>CFBundleDevelopmentRegion</key>
 	<string>$(DEVELOPMENT_LANGUAGE)</string>
