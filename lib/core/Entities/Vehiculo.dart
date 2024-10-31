@@ -39,4 +39,37 @@ class Vehiculo {
         patente: data?['patente'],
         color: data?['color']);
   }
+
+  Vehiculo copywith(
+      {String? modelo,
+      String? marca,
+      String? patente,
+      String? userId,
+      String? color}) {
+    return Vehiculo(
+        modelo: modelo ?? this.modelo,
+        marca: marca ?? this.marca,
+        patente: patente ?? this.patente,
+        userId: userId ?? this.userId,
+        color: color ?? this.color);
+  }
+
+  factory Vehiculo.fromMap(Map<String, dynamic> data) {
+    return Vehiculo(
+      userId: data['userId'],
+      marca: data['marca'],
+      modelo: data['modelo'],
+      patente: data['patente'],
+      color: data['color'],
+    );
+  }
 }
+
+// Método para convertir un Map a Vehiculo
+ 
+
+/*enum TipoVehiculo {
+  Auto,
+  Camioneta,
+  Moto,
+}*/

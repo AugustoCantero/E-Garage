@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_application_1/core/Providers/user_provider.dart';
 import 'package:flutter_application_1/screens/test_datos_cuenta.dart';
-import 'package:flutter_application_1/screens/home.dart';
 import 'package:flutter_application_1/screens/TestLogin.dart';
 import 'package:flutter_application_1/screens/login_screen.dart';
 import 'package:flutter_application_1/screens/todasLasReservas.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import 'package:flutter_application_1/screens/reservasUsuario.dart';
 
 class DrawerMenuLateral extends ConsumerWidget {
   const DrawerMenuLateral({super.key});
@@ -46,7 +46,7 @@ class DrawerMenuLateral extends ConsumerWidget {
                     style: TextStyle(color: Colors.white),
                   ),
                   onTap: () {
-                    context.goNamed(Home.name);
+                    context.goNamed('');
                   },
                 ),
               ),
@@ -113,10 +113,10 @@ class DrawerMenuLateral extends ConsumerWidget {
                   onTap: () {
                     print(usuarioState.esAdmin);
 
-                    if (usuarioState.esAdmin == true) {
-                      context.goNamed(todasLasReservas.nombre);
+                    if (usuarioState.esAdmin == false) {
+                      context.go('');
                     } else {
-                      //   context.goNamed(ReservasUsuario.nombre);
+                      context.goNamed(todasLasReservas.nombre);
                     }
                   },
                 ),

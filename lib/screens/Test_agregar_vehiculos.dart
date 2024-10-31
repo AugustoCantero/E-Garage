@@ -2,11 +2,9 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_application_1/core/Entities/Usuario.dart';
 import 'package:flutter_application_1/core/Entities/Vehiculo.dart';
+import 'package:flutter_application_1/core/Entities/usuarioVehiculos.dart';
 import 'package:flutter_application_1/core/Providers/user_provider.dart';
-import 'package:flutter_application_1/core/Providers/vehiculo_provider.dart';
-import 'package:flutter_application_1/domain/usuarioVehiculo.dart';
 import 'package:flutter_application_1/screens/VehiculosUsuario.dart';
-import 'package:flutter_application_1/screens/login_exitoso_home_user.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
@@ -108,7 +106,7 @@ class _TestAgregarVehiculos extends ConsumerState<TestAgregarVehiculos> {
 
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(
-            content: Text('Vehiculo agregado'),
+            content: Text('Vehículo agregado'),
             duration: Duration(seconds: 3),
           ),
         );
@@ -125,8 +123,6 @@ class _TestAgregarVehiculos extends ConsumerState<TestAgregarVehiculos> {
     }
   }
 
-  guardarEnFireStore(Vehiculo vehiculo) {}
-
   @override
   Widget build(BuildContext context) {
     final usuarioState = ref.watch(usuarioProvider);
@@ -136,34 +132,51 @@ class _TestAgregarVehiculos extends ConsumerState<TestAgregarVehiculos> {
         FocusScope.of(context).unfocus();
       },
       child: Scaffold(
+        backgroundColor: Colors.black,
         appBar: AppBar(
+          backgroundColor: Colors.black,
           centerTitle: true,
           title: const Text('Complete los datos del vehiculo'),
+          leading: IconButton(
+            icon: const Icon(Icons.arrow_back),
+            onPressed: () {
+              context.goNamed(vehiculosUsuario.name);
+            },
+          ),
         ),
-        body: LayoutBuilder(
-          builder: (context, constraints) {
-            return SingleChildScrollView(
-              padding: const EdgeInsets.all(30.0),
-              child: ConstrainedBox(
-                constraints: BoxConstraints(minHeight: constraints.maxHeight),
-                child: IntrinsicHeight(
-                  child: Form(
+        body: Stack(
+          children: [
+            Padding(
+              padding: const EdgeInsets.all(20.0),
+              child: Column(
+                children: [
+                  const SizedBox(height: 20),
+                  Image.asset(
+                    'assets/images/car_logo.png', // Reemplaza con la ruta del logo de tu auto
+                    height: 100,
+                  ),
+                  const SizedBox(height: 20),
+                  Form(
                     key: _formKey,
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         TextFormField(
                           controller: _marcaController,
+                          style: const TextStyle(color: Colors.white),
                           decoration: const InputDecoration(
                             labelText: 'Marca',
+                            labelStyle: TextStyle(color: Colors.white),
                             border: OutlineInputBorder(),
                           ),
                         ),
                         const SizedBox(height: 20),
                         TextFormField(
                           controller: _modeloController,
+                          style: const TextStyle(color: Colors.white),
                           decoration: const InputDecoration(
                             labelText: 'Modelo',
+                            labelStyle: TextStyle(color: Colors.white),
                             border: OutlineInputBorder(),
                           ),
                         ),
@@ -171,16 +184,20 @@ class _TestAgregarVehiculos extends ConsumerState<TestAgregarVehiculos> {
                         TextFormField(
                           controller: _patenteController,
                           focusNode: _patenteFocusNode,
+                          style: const TextStyle(color: Colors.white),
                           decoration: const InputDecoration(
                             labelText: 'Patente',
+                            labelStyle: TextStyle(color: Colors.white),
                             border: OutlineInputBorder(),
                           ),
                         ),
                         const SizedBox(height: 20),
                         TextFormField(
                           controller: _color,
+                          style: const TextStyle(color: Colors.white),
                           decoration: const InputDecoration(
                             labelText: 'Color',
+                            labelStyle: TextStyle(color: Colors.white),
                             border: OutlineInputBorder(),
                           ),
                         ),
@@ -198,10 +215,22 @@ class _TestAgregarVehiculos extends ConsumerState<TestAgregarVehiculos> {
                       ],
                     ),
                   ),
-                ),
+                ],
               ),
-            );
-          },
+            ),
+            // Botón para volver en la esquina inferior izquierda
+            Positioned(
+              bottom: 20,
+              left: 20,
+              child: FloatingActionButton(
+                backgroundColor: Colors.white,
+                onPressed: () {
+                  context.goNamed(vehiculosUsuario.name);
+                },
+                child: const Icon(Icons.arrow_back, color: Colors.black),
+              ),
+            ),
+          ],
         ),
       ),
     );

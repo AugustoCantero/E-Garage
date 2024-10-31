@@ -1,39 +1,49 @@
 plugins {
     id "com.android.application"
-    id 'com.google.gms.google-services'  // FlutterFire Configuration
+    // START: FlutterFire Configuration
+    id 'com.google.gms.google-services'
+    // END: FlutterFire Configuration
     id "kotlin-android"
+    // The Flutter Gradle Plugin must be applied after the Android and Kotlin Gradle plugins.
     id "dev.flutter.flutter-gradle-plugin"
 }
 
 android {
-    namespace "com.example.e_garage"  // Especifica el namespace aquí directamente
-    compileSdkVersion 34  // Establece la versión del SDK de compilación directamente
-    ndkVersion "23.1.7779620"  // Puedes reemplazar por tu versión de NDK o dejar que Flutter administre esto
+    namespace = "com.example.e_garage"
+    compileSdk = flutter.compileSdkVersion
+    ndkVersion = flutter.ndkVersion
 
     compileOptions {
-        sourceCompatibility JavaVersion.VERSION_1_8
-        targetCompatibility JavaVersion.VERSION_1_8
+        sourceCompatibility = JavaVersion.VERSION_1_8
+        targetCompatibility = JavaVersion.VERSION_1_8
+         tasks.withType(JavaCompile) {
+        options.compilerArgs << "-Xlint:deprecation"
+    }
+
     }
 
     kotlinOptions {
-        jvmTarget = "1.8"
+        jvmTarget = JavaVersion.VERSION_1_8
     }
 
     defaultConfig {
         applicationId "e.g.db.voratium.android"
-        minSdkVersion 23
-        targetSdkVersion 34
-        versionCode 1
-        versionName "1.0"
+        minSdkVersion 23  // Cambia esto a 23
+        targetSdkVersion 33  // Cambia esto a 33 o la versión que estés utilizando
+        versionCode flutter.versionCode
+        versionName flutter.versionName
+        multiDexEnabled true
     }
 
     buildTypes {
         release {
-            signingConfig signingConfigs.debug  // Cambiar esto para firmar correctamente en release
+            // TODO: Add your own signing config for the release build.
+            // Signing with the debug keys for now, so `flutter run --release` works.
+            signingConfig = signingConfigs.debug
         }
     }
 }
 
 flutter {
-    source = "../.."  // Esto está bien para indicar la ruta de tu proyecto Flutter
+    source = "../.."
 }

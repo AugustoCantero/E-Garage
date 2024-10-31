@@ -1,5 +1,5 @@
-import 'package:flutter_application_1/domain/Reserva.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter_application_1/core/Entities/Reserva.dart';
 
 final reservaProvider = StateProvider<List<Reserva>>((ref) {
   return [

@@ -1,18 +1,11 @@
-<manifest xmlns:android="http://schemas.android.com/apk/res/android" package="com.example.e_garage">
-<!--Permisos para Android-->
-<uses-permission android:name="android.permission.INTERNET" />
+<manifest xmlns:android="http://schemas.android.com/apk/res/android">
 <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
 <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
-<uses-permission android:name="android.permission.USE_BIOMETRIC" />
-<uses-permission android:name="android.permission.USE_FINGERPRINT" />
 
     <application
         android:label="e_garage"
         android:name="${applicationName}"
         android:icon="@mipmap/ic_launcher">
-        <meta-data
-            android:name="com.here.android.maps.apikey"
-            android:value="dUvS4UBzEzx9l5DBC-0pFQnhDjLj3n5pFMa2pII3wpk"/>
         <activity
             android:name=".MainActivity"
             android:exported="true"

@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_application_1/core/Providers/user_provider.dart';
 import 'package:flutter_application_1/screens/login_exitoso_home_user.dart';
+import 'package:flutter_application_1/screens/test-pantallaAdmin.dart';
 import 'package:local_auth/local_auth.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
@@ -117,11 +118,17 @@ class LoginScreen extends ConsumerWidget {
           String? userEmail = userData['email'] as String?;
           String? userPassword = userData['password'] as String?;
           print('LLEGUE');
+          print(_email);
+          print(_clave);
+          print(userEmail);
+          print(userPassword);
           if (userEmail != null && userPassword != null) {
+            print('LLEGUE2');
             // Verificar si el correo electrónico ingresado coincide con el almacenado
             if (userEmail == _email) {
               // Verificar si la contraseña ingresada coincide con la almacenada
               if (userPassword == _clave) {
+                print('LLEGUE3');
                 ref.read(usuarioProvider.notifier).setUsuario(
                     userData['id'],
                     userData['nombre'],
@@ -132,10 +139,11 @@ class LoginScreen extends ConsumerWidget {
                     userData['password'],
                     userData['esAdmin']);
 
-                if (userData['esAdmin'] == true) {
-                  //context.goNamed(todasLasReservas.nombre);
-                } else {
+                if (userData['esAdmin'] == false) {
                   context.goNamed(login_exitoso_home_user.name);
+                } else {
+                  print('LLEGUE4');
+                  context.goNamed(testAdminScreen.name);
                 }
                 // Usuario autenticado con éxito
               } else {
@@ -163,7 +171,6 @@ class LoginScreen extends ConsumerWidget {
     }
   }
 
-  // Función para iniciar la autenticación biométrica
   // Función para iniciar la autenticación biométrica
   Future<void> _authenticate() async {
     bool authenticated = false;
