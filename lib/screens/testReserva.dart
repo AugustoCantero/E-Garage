@@ -275,41 +275,43 @@ class _ReservationScreenState extends ConsumerState<ReservationScreen> {
                 ),
                 const SizedBox(height: 32),
                 ElevatedButton(
-                  onPressed: () async {
-                    if (selectedDate != null &&
-                        startTime != null &&
-                        endTime != null) {
-                      final reserva = Reserva(
-                          startTime: startTime!,
-                          endTime: endTime!,
-                          elvehiculo: vehiculoState,
-                          usuarioId: vehiculoState.userId!);
+  onPressed: () async {
+    if (selectedDate != null && startTime != null && endTime != null) {
+      final reserva = Reserva(
+        startTime: startTime!,
+        endTime: endTime!,
+        elvehiculo: vehiculoState,
+        usuarioId: vehiculoState.userId!,
+      );
 
-                      await db
-                          .collection('Reservas')
-                          .doc()
-                          .set(reserva.toFirestore());
+      // Guardar la reserva en Firestore
+      await db.collection('Reservas').doc().set(reserva.toFirestore());
 
-                      context.goNamed(login_exitoso_home_user.name);
-                    } else {
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        const SnackBar(
-                            content: Text('Seleccione una fecha y un lote')),
-                      );
-                    }
-                  },
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: Colors.green,
-                    padding: const EdgeInsets.symmetric(
-                        horizontal: 40, vertical: 12),
-                    shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(20)),
-                  ),
-                  child: const Text(
-                    'Reservar',
-                    style: TextStyle(color: Colors.white, fontSize: 16),
-                  ),
-                ),
+      // Redirigir a la pantalla de pago de Mercado Pago
+      Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (context) => MercadoPagoScreen(
+            //reserva: reserva,  // Pasa los detalles de la reserva si es necesario
+          ),
+        ),
+      );
+    } else {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Seleccione una fecha y un lote')),
+      );
+    }
+  },
+  style: ElevatedButton.styleFrom(
+    backgroundColor: Colors.green,
+    padding: const EdgeInsets.symmetric(horizontal: 40, vertical: 12),
+    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+  ),
+  child: const Text(
+    'Reservar',
+    style: TextStyle(color: Colors.white, fontSize: 16),
+  ),
+),
               ],
             ),
           ),

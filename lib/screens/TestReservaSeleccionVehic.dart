@@ -17,6 +17,10 @@ class GestionVehiculosScreen extends StatefulWidget {
 class _GestionVehiculosScreenState extends State<GestionVehiculosScreen> {
   Vehiculo? vehiculoSeleccionado;
 
+void _goBack() {
+    Navigator.of(context).pop(); // Volver a la pantalla anterior
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -127,16 +131,11 @@ class _GestionVehiculosScreenState extends State<GestionVehiculosScreen> {
             bottom: 20,
             left: 20,
             child: FloatingActionButton(
-              onPressed: () {
-                context.goNamed('OpenStreetMapScreen');
-              },
-              backgroundColor: Colors.white,
-              child: const Icon(
-                Icons.arrow_back,
-                color: Colors.black,
-              ),
-            ),
+            onPressed: _goBack,
+            backgroundColor: Colors.white,
+            child: Icon(Icons.arrow_back, color: Colors.black),
           ),
+            ),
         ],
       ),
     );

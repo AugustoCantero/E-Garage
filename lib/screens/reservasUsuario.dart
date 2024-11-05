@@ -1,3 +1,5 @@
+// ignore_for_file: library_private_types_in_public_api
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_application_1/core/Entities/Reserva.dart';
@@ -10,9 +12,12 @@ import 'package:go_router/go_router.dart';
 class ReservasUsuario extends ConsumerStatefulWidget {
   static const String nombre = 'reservasUsuario';
   const ReservasUsuario({super.key});
-
+  
   @override
-  _ReservasUsuarioState createState() => _ReservasUsuarioState();
+  ConsumerState<ConsumerStatefulWidget> createState() {
+    // TODO: implement createState
+    throw UnimplementedError();
+  }
 }
 
 
