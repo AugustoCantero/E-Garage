@@ -1,11 +1,9 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_application_1/WidgetsPersonalizados/BotonAtras.dart';
 import 'package:flutter_application_1/core/Entities/Usuario.dart';
-import 'package:flutter_application_1/screens/login_screen.dart';
-import 'package:flutter_application_1/screens/selection_screen.dart';
-import 'package:go_router/go_router.dart';
-import 'package:shared_preferences/shared_preferences.dart';
+import 'package:flutter_application_1/screens/PantallaSeleccion.dart';
 
 class RegistroGenericoScreen extends StatefulWidget {
   const RegistroGenericoScreen({super.key});
@@ -21,10 +19,17 @@ class _RegistroGenericoScreen extends State<RegistroGenericoScreen> {
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
   final TextEditingController _telefonoController = TextEditingController();
-  final TextEditingController _confirmPasswordController =
-      TextEditingController();
+  final TextEditingController _confirmPasswordController = TextEditingController();
+  bool _isPasswordValid = false;
 
-  // PANTALLA
+  bool _validatePassword(String password) {
+    final hasUppercase = password.contains(RegExp(r'[A-Z]'));
+    final hasLowercase = password.contains(RegExp(r'[a-z]'));
+    final hasDigit = password.contains(RegExp(r'\d'));
+    final hasMinLength = password.length >= 8;
+    return hasUppercase && hasLowercase && hasDigit && hasMinLength;
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -47,51 +52,71 @@ class _RegistroGenericoScreen extends State<RegistroGenericoScreen> {
               const SizedBox(height: 20),
               _buildTextField('Número DNI', _dniController),
               const SizedBox(height: 20),
-              _buildTextField('Telefono', _telefonoController),
+              _buildTextField('Teléfono', _telefonoController),
               const SizedBox(height: 20),
-              _buildTextField('Correo Electrónico', _emailController,
-                  TextInputType.emailAddress),
+              _buildTextField('Correo Electrónico', _emailController, TextInputType.emailAddress),
               const SizedBox(height: 20),
-              _buildPasswordField('Contraseña', _passwordController),
+              
+              _buildPasswordField('Contraseña', _passwordController, (value) {
+                setState(() {
+                  _isPasswordValid = _validatePassword(value);
+                });
+              }),
               const SizedBox(height: 10),
-              const Text(
+              Text(
                 'La contraseña debe contener como mínimo 8 caracteres, letras mayúsculas y minúsculas, 1 número.',
-                style: TextStyle(color: Colors.red, fontSize: 12),
+                style: TextStyle(
+                  color: _isPasswordValid ? Colors.green : Colors.red,
+                  fontSize: 12,
+                ),
               ),
               const SizedBox(height: 20),
-              _buildPasswordField(
-                  'Reingrese Contraseña', _confirmPasswordController),
-              const SizedBox(height: 10),
-              const Text(
-                'La contraseña debe contener como mínimo 8 caracteres, letras mayúsculas y minúsculas, 1 número.',
-                style: TextStyle(color: Colors.red, fontSize: 12),
-              ),
+              _buildPasswordField('Reingrese Contraseña', _confirmPasswordController, null),
               const SizedBox(height: 30),
-              FloatingActionButton(
-                backgroundColor: Colors.white,
-                onPressed: () async {
-                  // Primero, guardamos el usuario
-                  bool isSaved = await _guardarUsuario();
-
-                  // Si el usuario se guarda correctamente, navegamos a la pantalla de selección
-                  if (isSaved) {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                          builder: (context) => const SelectionScreen()),
-                    );
-                  }
-                },
-                child: const Icon(Icons.arrow_forward, color: Colors.black),
-              )
             ],
           ),
         ),
       ),
+      
+      // Align buttons at the bottom
+      floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
+      floatingActionButton: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          const BackButtonWidget(),
+      
+          Padding(
+            padding: const EdgeInsets.only(right: 16.0),
+            child: Container(
+              decoration: const BoxDecoration(
+                color: Colors.white,
+                shape: BoxShape.circle,
+              ),
+              child: IconButton(
+                icon: const Icon(Icons.arrow_forward, color: Colors.black),
+                onPressed: () async {
+                  if (_isPasswordValid) {
+                    bool isSaved = await _guardarUsuario();
+                    if (isSaved) {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(builder: (context) => const SelectionScreen()),
+                      );
+                    }
+                  } else {
+                    ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+                      content: Text('La contraseña no cumple con los requisitos mínimos.'),
+                    ));
+                  }
+                },
+              ),
+            ),
+          ),
+        ],
+      ),
     );
   }
 
-  // Función para crear los campos de texto con el tipo de teclado correcto
   Widget _buildTextField(String labelText, TextEditingController controller,
       [TextInputType inputType = TextInputType.text]) {
     return TextField(
@@ -112,7 +137,7 @@ class _RegistroGenericoScreen extends State<RegistroGenericoScreen> {
   }
 
   Widget _buildPasswordField(
-      String labelText, TextEditingController controller) {
+      String labelText, TextEditingController controller, ValueChanged<String>? onChanged) {
     return TextField(
       controller: controller,
       obscureText: true,
@@ -127,52 +152,45 @@ class _RegistroGenericoScreen extends State<RegistroGenericoScreen> {
           borderSide: BorderSide(color: Colors.white),
         ),
       ),
+      onChanged: onChanged,
     );
   }
 
   Future<bool> _guardarUsuario() async {
     if (_passwordController.text != _confirmPasswordController.text) {
-      // Mostrar mensaje de error si las contraseñas no coinciden
       ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
         content: Text('Las contraseñas no coinciden'),
       ));
-      return false; // No proceder con la navegación
+      return false;
     }
 
     try {
-      // Registrar usuario con Firebase Authentication
-      UserCredential userCredential =
-          await FirebaseAuth.instance.createUserWithEmailAndPassword(
+      UserCredential userCredential = await FirebaseAuth.instance.createUserWithEmailAndPassword(
         email: _emailController.text,
         password: _passwordController.text,
       );
 
-      // se asigna el user que surja de la creación del correo y password
       User? user = userCredential.user;
-
-      // Verifica que el usuario creado no haya llegado en null
       if (user != null) {
-        // Crear instancia de Usuario
         Usuario newUser = Usuario(
-            id: user.uid,
-            email: _emailController.text,
-            password: _passwordController.text,
-            nombre: _nombreController.text,
-            apellido: _apellidoController.text,
-            dni: _dniController.text,
-            telefono: _telefonoController.text);
+          id: user.uid,
+          email: _emailController.text,
+          password: _passwordController.text,
+          nombre: _nombreController.text,
+          apellido: _apellidoController.text,
+          dni: _dniController.text,
+          telefono: _telefonoController.text,
+        );
 
-        // Crear documento en Firestore con el UID del usuario
         await FirebaseFirestore.instance
             .collection('users')
-            .doc(user.uid) // Utilizar user.uid directamente aquí
+            .doc(user.uid)
             .set(newUser.toFirestore());
 
         ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
           content: Text('Usuario guardado correctamente'),
         ));
-
-        return true; // Asegúrate de que '/' es la ruta correcta
+        return true;
       }
     } on FirebaseAuthException catch (e) {
       String errorMessage;
@@ -185,22 +203,14 @@ class _RegistroGenericoScreen extends State<RegistroGenericoScreen> {
       } else {
         errorMessage = 'Error al registrar el usuario: ${e.message}';
       }
-
-      print('Error al registrar el usuario: $errorMessage');
-
-      // Muestra un mensaje de error al usuario
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text(errorMessage)),
       );
     } catch (e) {
-      print('Error al registrar el usuario: $e');
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text('Error al registrar el usuario: $e')),
       );
     }
-
-    return false; // Añadido para asegurarse de que siempre se retorna un valor
+    return false;
   }
-
-  // Función para guardar los datos del usuario
 }

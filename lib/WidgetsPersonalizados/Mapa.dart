@@ -1,6 +1,6 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
-import 'package:flutter_application_1/WidgetsPersonalizados/garage_marker.dart';
+import 'package:flutter_application_1/WidgetsPersonalizados/GarageMarker.dart';
 import 'package:flutter_map/flutter_map.dart';
 import 'package:http/http.dart' as http;
 import 'package:geolocator/geolocator.dart';
@@ -8,14 +8,17 @@ import 'package:latlong2/latlong.dart';
 import 'package:permission_handler/permission_handler.dart';
 
 class OpenStreetMapScreen extends StatefulWidget {
+  const OpenStreetMapScreen({super.key});
+
   @override
   _OpenStreetMapScreenState createState() => _OpenStreetMapScreenState();
 }
 
 class _OpenStreetMapScreenState extends State<OpenStreetMapScreen> {
   late MapController _mapController;
-  TextEditingController _addressController = TextEditingController();
-  LatLng _initialPosition = LatLng(-34.6037, -58.3816); // Buenos Aires por defecto
+  final TextEditingController _addressController = TextEditingController();
+  LatLng _initialPosition =
+      LatLng(-34.6037, -58.3816); // Buenos Aires por defecto
   LatLng? _searchedPosition;
   List<LatLng> _routePoints = [];
   Marker? _currentLocationMarker;
@@ -61,7 +64,9 @@ class _OpenStreetMapScreenState extends State<OpenStreetMapScreen> {
       _setInitialLocation();
     } else {
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Se necesita permiso de ubicación para mostrar tu posición')),
+        const SnackBar(
+            content: Text(
+                'Se necesita permiso de ubicación para mostrar tu posición')),
       );
     }
   }
@@ -100,7 +105,7 @@ class _OpenStreetMapScreenState extends State<OpenStreetMapScreen> {
       });
     } else {
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Error al calcular la ruta')),
+        const SnackBar(content: Text('Error al calcular la ruta')),
       );
     }
   }
@@ -114,7 +119,7 @@ class _OpenStreetMapScreenState extends State<OpenStreetMapScreen> {
         width: 80.0,
         height: 80.0,
         point: searchPosition,
-        builder: (ctx) => Icon(
+        builder: (ctx) => const Icon(
           Icons.location_pin,
           color: Colors.red,
           size: 30.0,
@@ -144,12 +149,12 @@ class _OpenStreetMapScreenState extends State<OpenStreetMapScreen> {
         await _updateSearchLocation(lat, lon);
       } else {
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('No se encontró la dirección')),
+          const SnackBar(content: Text('No se encontró la dirección')),
         );
       }
     } else {
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Error al buscar la dirección')),
+        const SnackBar(content: Text('Error al buscar la dirección')),
       );
     }
   }
@@ -168,7 +173,7 @@ class _OpenStreetMapScreenState extends State<OpenStreetMapScreen> {
           width: 80.0,
           height: 80.0,
           point: currentPosition,
-          builder: (ctx) => Icon(
+          builder: (ctx) => const Icon(
             Icons.my_location,
             color: Colors.blue,
             size: 30.0,
@@ -201,7 +206,8 @@ class _OpenStreetMapScreenState extends State<OpenStreetMapScreen> {
             ),
             children: [
               TileLayer(
-                urlTemplate: "https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",
+                urlTemplate:
+                    "https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",
                 subdomains: ['a', 'b', 'c'],
               ),
               if (_routePoints.isNotEmpty)
@@ -218,7 +224,9 @@ class _OpenStreetMapScreenState extends State<OpenStreetMapScreen> {
                 markers: [
                   if (_currentLocationMarker != null) _currentLocationMarker!,
                   if (_searchResultMarker != null) _searchResultMarker!,
-                  ...garageMarkers.map((garage) => garage.buildMarker(context)).toList(),
+                  ...garageMarkers
+                      .map((garage) => garage.buildMarker(context))
+                      ,
                 ],
               ),
             ],
@@ -238,7 +246,7 @@ class _OpenStreetMapScreenState extends State<OpenStreetMapScreen> {
                   Expanded(
                     child: TextField(
                       controller: _addressController,
-                      decoration: InputDecoration(
+                      decoration: const InputDecoration(
                         hintText: 'Buscar dirección',
                         border: InputBorder.none,
                       ),
@@ -257,25 +265,41 @@ class _OpenStreetMapScreenState extends State<OpenStreetMapScreen> {
       floatingActionButton: Column(
         mainAxisAlignment: MainAxisAlignment.end,
         children: [
-          FloatingActionButton(
+          _buildFloatingActionButton(
+            icon: Icons.my_location,
+            color: Colors.blue,
             onPressed: _goToCurrentLocation,
-            backgroundColor: Colors.blue,
-            child: Icon(Icons.my_location),
           ),
-          SizedBox(height: 10),
-          FloatingActionButton(
-            onPressed: () => _calculateRoute(_initialPosition, _searchedPosition ?? _initialPosition),
-            backgroundColor: Colors.green,
-            child: Icon(Icons.directions),
+          const SizedBox(height: 10),
+          _buildFloatingActionButton(
+            icon: Icons.directions,
+            color: Colors.green,
+            onPressed: () => _calculateRoute(
+                _initialPosition, _searchedPosition ?? _initialPosition),
           ),
-          SizedBox(height: 10),
-          FloatingActionButton(
+          const SizedBox(height: 10),
+          _buildFloatingActionButton(
+            icon: Icons.arrow_back,
+            color: Colors.white,
+            iconColor: Colors.black,
             onPressed: _goBack,
-            backgroundColor: Colors.white,
-            child: Icon(Icons.arrow_back, color: Colors.black),
           ),
         ],
       ),
+    );
+  }
+
+  Widget _buildFloatingActionButton({
+    required IconData icon,
+    required Color color,
+    required VoidCallback onPressed,
+    Color iconColor = Colors.white,
+  }) {
+    return FloatingActionButton(
+      onPressed: onPressed,
+      backgroundColor: color,
+      shape: const CircleBorder(),
+      child: Icon(icon, color: iconColor),
     );
   }
 }

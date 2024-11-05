@@ -1,11 +1,13 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_application_1/core/Entities/Reserva.dart';
-import 'package:flutter_application_1/screens/login_exitoso_home_user.dart';
+import 'package:flutter_application_1/screens/LoginUsuario.dart';
 import 'package:go_router/go_router.dart';
 
 class todasLasReservas extends StatelessWidget {
   static final String nombre = 'reservasEfectuadas';
+
+  const todasLasReservas({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -14,12 +16,12 @@ class todasLasReservas extends StatelessWidget {
         title: Center(
           child: const Text('Reservas en sistema'),
         ),
-        leading: ButtonBar(),
+        leading: OverflowBar(),
       ),
       body: const _listView(),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
-          context.goNamed(login_exitoso_home_user.name);
+          context.goNamed(LoginUsuario.name);
         },
         child: const Icon(Icons.arrow_circle_right_outlined),
       ),
@@ -28,7 +30,7 @@ class todasLasReservas extends StatelessWidget {
 }
 
 class _listView extends StatefulWidget {
-  const _listView({super.key});
+  const _listView();
 
   @override
   State<_listView> createState() => _listViewState();

@@ -1,16 +1,18 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_application_1/WidgetsPersonalizados/BotonAtras.dart';
+import 'package:flutter_application_1/WidgetsPersonalizados/MenuUsuario.dart';
 import 'package:flutter_application_1/core/Entities/Reserva.dart';
 import 'package:flutter_application_1/core/Providers/vehiculo_provider.dart';
-import 'package:flutter_application_1/screens/login_exitoso_home_user.dart';
-import 'package:flutter_application_1/screens/login_screen.dart';
-import 'package:flutter_application_1/screens/mercadoPago.dart';
+import 'package:flutter_application_1/screens/MetodoDePago.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
 
 class ReservationScreen extends ConsumerStatefulWidget {
   static const String name = "ReservationScreen";
+
+  const ReservationScreen({super.key});
 
   @override
   _ReservationScreenState createState() => _ReservationScreenState();
@@ -88,7 +90,7 @@ class Garage {
 
 class _ReservationScreenState extends ConsumerState<ReservationScreen> {
   List<Reserva> lasReservas = [];
-  final Garage garage = Garage(); // Usar garage para almacenar las reservas
+  final Garage garage = Garage();
   DateTime? selectedDate;
   DateTime? startTime;
   DateTime? endTime;
@@ -96,8 +98,7 @@ class _ReservationScreenState extends ConsumerState<ReservationScreen> {
   @override
   void initState() {
     super.initState();
-    _fetchReservas(); // Llamada para cargar las reservas
-    print('Hora actual: ${DateTime.now()}');
+    _fetchReservas();
   }
 
   Future<void> _fetchReservas() async {
@@ -140,8 +141,8 @@ class _ReservationScreenState extends ConsumerState<ReservationScreen> {
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
-          title: Text('Seleccionar Hora de Inicio'),
-          content: Container(
+          title: const Text('Seleccionar Hora de Inicio'),
+          content: SizedBox(
             width: double.maxFinite,
             child: ListView.builder(
               itemCount: availableTimes.length,
@@ -177,8 +178,8 @@ class _ReservationScreenState extends ConsumerState<ReservationScreen> {
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
-          title: Text('Seleccionar Hora de Fin'),
-          content: Container(
+          title: const Text('Seleccionar Hora de Fin'),
+          content: SizedBox(
             width: double.maxFinite,
             child: ListView.builder(
               itemCount: availableTimes.length,
@@ -218,27 +219,29 @@ class _ReservationScreenState extends ConsumerState<ReservationScreen> {
         appBar: AppBar(
           backgroundColor: Colors.black,
           elevation: 0,
-          title: Center(
-            child: Text(
-              'Reservar Garage',
-              style: TextStyle(color: Colors.white),
-            ),
-          ),
+          centerTitle: true,
         ),
-        drawer: _buildDrawer(context), // Agregar el Drawer
+        drawer: const MenuUsuario(),
         body: Center(
-          // Centra todo el contenido de la columna
           child: SingleChildScrollView(
             padding: const EdgeInsets.symmetric(horizontal: 30, vertical: 20),
             child: Column(
-              mainAxisAlignment:
-                  MainAxisAlignment.center, // Centra verticalmente
-              crossAxisAlignment:
-                  CrossAxisAlignment.center, // Centra horizontalmente
+              mainAxisAlignment: MainAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.center,
               children: [
                 Image.asset(
-                  'assets/images/car_logo.png', // Asegúrate de tener esta imagen en tus assets
-                  height: 120,
+                  'assets/images/car_logo.png',
+                  height: 100, // Tamaño más pequeño para el auto
+                ),
+                const SizedBox(height: 10),
+                const Text(
+                  'Reservar Garage',
+                  style: TextStyle(
+                    color: Colors.white,
+                    fontSize: 24, // Ajusta el tamaño del texto
+                    fontWeight: FontWeight.bold,
+                  ),
+                  textAlign: TextAlign.center,
                 ),
                 const SizedBox(height: 20),
                 ElevatedButton(
@@ -248,7 +251,7 @@ class _ReservationScreenState extends ConsumerState<ReservationScreen> {
                     selectedDate == null
                         ? 'Seleccionar Fecha'
                         : 'Fecha: ${DateFormat('dd/MM/yyyy').format(selectedDate!)}',
-                    style: TextStyle(color: Colors.white),
+                    style: const TextStyle(color: Colors.white),
                   ),
                 ),
                 const SizedBox(height: 16),
@@ -259,7 +262,7 @@ class _ReservationScreenState extends ConsumerState<ReservationScreen> {
                     startTime == null
                         ? 'Seleccionar Hora de Inicio'
                         : 'Hora de Inicio: ${startTime!.hour}:${startTime!.minute.toString().padLeft(2, '0')}',
-                    style: TextStyle(color: Colors.white),
+                    style: const TextStyle(color: Colors.white),
                   ),
                 ),
                 const SizedBox(height: 16),
@@ -270,116 +273,63 @@ class _ReservationScreenState extends ConsumerState<ReservationScreen> {
                     endTime == null
                         ? 'Seleccionar Hora de Fin'
                         : 'Hora de Fin: ${endTime!.hour}:${endTime!.minute.toString().padLeft(2, '0')}',
-                    style: TextStyle(color: Colors.white),
+                    style: const TextStyle(color: Colors.white),
                   ),
                 ),
                 const SizedBox(height: 32),
                 ElevatedButton(
-  onPressed: () async {
-    if (selectedDate != null && startTime != null && endTime != null) {
-      final reserva = Reserva(
-        startTime: startTime!,
-        endTime: endTime!,
-        elvehiculo: vehiculoState,
-        usuarioId: vehiculoState.userId!,
-      );
+                  onPressed: () async {
+                    if (selectedDate != null &&
+                        startTime != null &&
+                        endTime != null) {
+                      final reserva = Reserva(
+                        startTime: startTime!,
+                        endTime: endTime!,
+                        elvehiculo: vehiculoState,
+                        usuarioId: vehiculoState.userId!,
+                      );
 
-      // Guardar la reserva en Firestore
-      await db.collection('Reservas').doc().set(reserva.toFirestore());
+                      await db
+                          .collection('Reservas')
+                          .doc()
+                          .set(reserva.toFirestore());
 
-      // Redirigir a la pantalla de pago de Mercado Pago
-      Navigator.push(
-        context,
-        MaterialPageRoute(
-          builder: (context) => MercadoPagoScreen(
-            //reserva: reserva,  // Pasa los detalles de la reserva si es necesario
-          ),
-        ),
-      );
-    } else {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Seleccione una fecha y un lote')),
-      );
-    }
-  },
-  style: ElevatedButton.styleFrom(
-    backgroundColor: Colors.green,
-    padding: const EdgeInsets.symmetric(horizontal: 40, vertical: 12),
-    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
-  ),
-  child: const Text(
-    'Reservar',
-    style: TextStyle(color: Colors.white, fontSize: 16),
-  ),
-),
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => MetodoPagoScreen(),
+                        ),
+                      );
+                    } else {
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        const SnackBar(
+                            content: Text('Seleccione una fecha y un lote')),
+                      );
+                    }
+                  },
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: Colors.green,
+                    padding: const EdgeInsets.symmetric(
+                        horizontal: 40, vertical: 12),
+                    shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(20)),
+                  ),
+                  child: const Text(
+                    'Reservar',
+                    style: TextStyle(color: Colors.white, fontSize: 16),
+                  ),
+                ),
               ],
             ),
           ),
         ),
-        floatingActionButton: FloatingActionButton(
+        floatingActionButton: BackButtonWidget(
           onPressed: () {
             context.goNamed('ReservationSelectVehicule');
           },
-          backgroundColor: Colors.white,
-          child: const Icon(Icons.arrow_back, color: Colors.black),
         ),
+        floatingActionButtonLocation: FloatingActionButtonLocation.startFloat,
       ),
     );
   }
-}
-
-Widget _buildDrawer(BuildContext context) {
-  return Drawer(
-    child: Container(
-      color: Colors.grey[200],
-      child: ListView(
-        padding: EdgeInsets.zero,
-        children: [
-          const DrawerHeader(
-            decoration: BoxDecoration(
-              color: Colors.white,
-            ),
-            child: Text(
-              'Menú',
-              style: TextStyle(fontSize: 24),
-            ),
-          ),
-          ListTile(
-            leading: const Icon(Icons.person, size: 40, color: Colors.black),
-            title: const Text('Editar Datos', style: TextStyle(fontSize: 18)),
-            onTap: () {
-              // Lógica de navegación a Editar Datos
-            },
-          ),
-          ListTile(
-            leading: const Icon(Icons.timer, size: 40, color: Colors.black),
-            title: const Text('Gestión de Vehiculos',
-                style: TextStyle(fontSize: 18)),
-            onTap: () {
-              // Lógica de navegación o acción para Gestión de Reservas
-            },
-          ),
-          ListTile(
-            leading: const Icon(Icons.history, size: 40, color: Colors.black),
-            title: const Text('Historial y Registro',
-                style: TextStyle(fontSize: 18)),
-            onTap: () {
-              // Lógica de navegación o acción para Historial y Registro
-            },
-          ),
-          ListTile(
-            leading:
-                const Icon(Icons.exit_to_app, size: 40, color: Colors.black),
-            title: const Text('Salir', style: TextStyle(fontSize: 18)),
-            onTap: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(builder: (context) => LoginScreen()),
-              );
-            },
-          ),
-        ],
-      ),
-    ),
-  );
 }

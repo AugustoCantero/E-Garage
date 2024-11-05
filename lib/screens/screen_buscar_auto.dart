@@ -4,7 +4,7 @@ import 'package:flutter_application_1/WidgetsPersonalizados/dialog_box.dart';
 
 class BuscadorAuto extends StatefulWidget {
   static const String name = 'BuscadorAuto';
-  const BuscadorAuto({Key? key}) : super(key: key);
+  const BuscadorAuto({super.key});
 
   @override
   State<BuscadorAuto> createState() => _BuscadorAutoState();

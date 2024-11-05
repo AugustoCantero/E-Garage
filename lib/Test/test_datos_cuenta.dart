@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_application_1/screens/TestLogin.dart';
-import 'package:flutter_application_1/screens/login_exitoso_home_user.dart';
-import 'package:flutter_application_1/screens/login_screen.dart';
+import 'package:flutter_application_1/screens/LoginUsuario.dart';
 import 'package:go_router/go_router.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -9,7 +7,7 @@ import 'package:flutter_application_1/core/Providers/user_provider.dart';
 
 class TEST_EDICION_CUENTA extends ConsumerWidget {
   static final String name = "TEST_EDICION_CUENTA";
-  const TEST_EDICION_CUENTA({Key? key}) : super(key: key);
+  const TEST_EDICION_CUENTA({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -63,7 +61,7 @@ class TEST_EDICION_CUENTA extends ConsumerWidget {
                     );
 
                 // Regresar a la pantalla anterior
-                context.goNamed(login_exitoso_home_user.name);
+                context.goNamed(LoginUsuario.name);
               },
               child: const Text('Guardar Cambios'),
             ),
@@ -76,7 +74,8 @@ class TEST_EDICION_CUENTA extends ConsumerWidget {
                 await db.collection('users').doc(usuario.id).delete();
 
                 // Regresar a la pantalla anterior
-                context.goNamed(LoginScreen.name);
+                context.goNamed('/login');
+                
               },
               child: const Text('Eliminar cuenta'),
             ),

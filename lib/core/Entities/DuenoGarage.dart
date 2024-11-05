@@ -7,24 +7,17 @@ class DuenoGarage extends Usuario {
   String CUIT;
 
   DuenoGarage({
-    required String id,
-    required String email,
-    required String password,
-    required String nombre,
-    required String apellido,
-    required String dni,
-    required String telefono,
+    required super.id,
+    required super.email,
+    required super.password,
+    required super.nombre,
+    required super.apellido,
+    required super.dni,
+    required super.telefono,
     required this.garages,
     required this.razonSocial,
     required this.CUIT
   }) : super (
-          id: id,
-          email: email,
-          password: password,
-          nombre: nombre,
-          apellido: apellido,
-          dni: dni,
-          telefono: telefono,
           esAdmin: true,
         );
 }

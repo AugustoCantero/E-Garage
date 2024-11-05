@@ -1,10 +1,8 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_application_1/WidgetsPersonalizados/BotonAtras.dart';
 import 'package:flutter_application_1/core/Entities/Vehiculo.dart';
 import 'package:flutter_application_1/core/Providers/user_provider.dart';
-import 'package:flutter_application_1/screens/Test_agregar_vehiculos.dart';
-import 'package:flutter_application_1/screens/login_exitoso_home_user.dart';
-import 'package:flutter_application_1/screens/login_screen.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
@@ -24,105 +22,56 @@ class vehiculosUsuarioState extends ConsumerState<vehiculosUsuario> {
       appBar: AppBar(
         backgroundColor: Colors.black,
         elevation: 0,
-        leading: IconButton(
-          icon: Icon(Icons.menu, color: Colors.white),
-          onPressed: () {
-            Scaffold.of(context).openDrawer();
-          },
-        ),
-        title: const Text(
-          'SUS VEHICULOS',
-          style: TextStyle(color: Colors.white),
-        ),
         centerTitle: true,
       ),
-      drawer: _buildDrawer(context),
-      body: Column(
+      body: Stack(
         children: [
-          const SizedBox(height: 20),
-          Image.asset(
-            'assets/images/car_logo.png', // Ruta de la imagen del auto
-            height: 120,
-          ),
-          const SizedBox(height: 20),
-          Expanded(child: _ListView()), // Lista de vehículos
-          Container(
-            padding: const EdgeInsets.symmetric(vertical: 20),
-            child: ElevatedButton(
-              style: ElevatedButton.styleFrom(
-                backgroundColor: const Color.fromARGB(92, 54, 243, 33),
-                padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 15),
+          Column(
+            children: [
+              const SizedBox(height: 20),
+              Image.asset(
+                'assets/images/car_logo.png',
+                height: 120,
               ),
-              onPressed: () {
-                context.goNamed(TestAgregarVehiculos.name);
-              },
-              child: const Text("Agregar vehículo", style:TextStyle(color: Colors.white),
-            ),  
+              const SizedBox(height: 20),
+              const Text(
+                'SUS VEHICULOS',
+                style: TextStyle(color: Colors.white, fontSize: 24),
+              ),
+              const SizedBox(height: 20),
+              const Expanded(child: _ListView()), // Lista de vehículos
+              Container(
+                padding: const EdgeInsets.symmetric(vertical: 20),
+                child: ElevatedButton(
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: const Color.fromARGB(92, 54, 243, 33),
+                    padding: const EdgeInsets.symmetric(
+                        horizontal: 20, vertical: 15),
+                  ),
+                  onPressed: () {
+                    context.goNamed('AgregarVehiculos');
+                  },
+                  child: const Text(
+                    "Agregar vehículo",
+                    style: TextStyle(color: Colors.white),
+                  ),
+                ),
+              ),
+            ],
           ),
-          ),
+          BackButtonWidget(
+            onPressed: () {
+              context.goNamed('HomeUser'); // Usa el nombre definido en GoRoute
+            },
+          )
         ],
-      ),
-      floatingActionButton: FloatingActionButton(
-        backgroundColor: Colors.white,
-        onPressed: () {
-          context.goNamed('ReservationSelectVehicule');// MANDAR AL MAPA
-        },
-        child: const Icon(Icons.arrow_back, color: Colors.black),
-      ),
-      floatingActionButtonLocation: FloatingActionButtonLocation.startFloat,
-    );
-  }
-
-  Widget _buildDrawer(BuildContext context) {
-    return Drawer(
-      child: Container(
-        color: Colors.grey[200],
-        child: ListView(
-          padding: EdgeInsets.zero,
-          children: [
-            const DrawerHeader(
-              decoration: BoxDecoration(
-                color: Colors.white,
-              ),
-              child: Text(
-                'Menú',
-                style: TextStyle(fontSize: 24),
-              ),
-            ),
-            ListTile(
-              leading: const Icon(Icons.person, size: 40, color: Colors.black),
-              title: const Text('Editar Datos', style: TextStyle(fontSize: 18)),
-              onTap: () {},
-            ),
-            ListTile(
-              leading: const Icon(Icons.timer, size: 40, color: Colors.black),
-              title: const Text('Gestión de Vehiculos', style: TextStyle(fontSize: 18)),
-              onTap: () {},
-            ),
-            ListTile(
-              leading: const Icon(Icons.history, size: 40, color: Colors.black),
-              title: const Text('Historial y Registro', style: TextStyle(fontSize: 18)),
-              onTap: () {},
-            ),
-            ListTile(
-              leading: const Icon(Icons.exit_to_app, size: 40, color: Colors.black),
-              title: const Text('Salir', style: TextStyle(fontSize: 18)),
-              onTap: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (context) => LoginScreen()),
-                );
-              },
-            ),
-          ],
-        ),
       ),
     );
   }
 }
 
 class _ListView extends ConsumerWidget {
-  const _ListView({super.key});
+  const _ListView();
 
   Future<List<Vehiculo>> _fetchAutos(WidgetRef ref) async {
     final usuarioState = ref.watch(usuarioProvider);
@@ -165,10 +114,11 @@ class _ListView extends ConsumerWidget {
                       return Card(
                         color: Colors.grey[900],
                         child: ListTile(
-                          title: Text('Patente: ${elVehiculo.patente}', style: TextStyle(color: Colors.white)),
+                          title: Text('Patente: ${elVehiculo.patente}',
+                              style: const TextStyle(color: Colors.white)),
                           subtitle: Text(
                             "Modelo: ${elVehiculo.modelo}, Marca: ${elVehiculo.marca}, Color: ${elVehiculo.color}",
-                            style: TextStyle(color: Colors.white70),
+                            style: const TextStyle(color: Colors.white70),
                           ),
                           onTap: () {
                             Navigator.pop(context, elVehiculo);

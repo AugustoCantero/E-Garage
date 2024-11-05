@@ -17,19 +17,17 @@ class GarageDetailDialog extends StatelessWidget {
   Widget build(BuildContext context) {
     return Stack(
       children: [
-        // Fondo semi-transparente para dar efecto de modal
         Positioned.fill(
           child: GestureDetector(
-            onTap: () => Navigator.of(context).pop(), // Cerrar el diálogo al tocar fuera del cuadro
+            onTap: () => Navigator.of(context).pop(),
             child: Container(
-              color: Colors.black.withOpacity(0.5), // Fondo semi-transparente
+              color: Colors.black.withOpacity(0.5),
             ),
           ),
         ),
-        // Contenedor flotante en el centro
         Center(
           child: Container(
-            width: MediaQuery.of(context).size.width * 0.5, // Ancho del 80% de la pantalla
+            width: MediaQuery.of(context).size.width * 0.5,
             padding: const EdgeInsets.all(12.0),
             decoration: BoxDecoration(
               color: Colors.white,
@@ -38,7 +36,7 @@ class GarageDetailDialog extends StatelessWidget {
                 BoxShadow(
                   color: Colors.black.withOpacity(0.3),
                   blurRadius: 10,
-                  offset: Offset(0, 5),
+                  offset: const Offset(0, 5),
                 ),
               ],
             ),
@@ -49,29 +47,38 @@ class GarageDetailDialog extends StatelessWidget {
                 const SizedBox(height: 20),
                 Text(
                   name,
-                  style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: Colors.black, decoration: TextDecoration.none),
+                  style: const TextStyle(
+                      fontSize: 18,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.black,
+                      decoration: TextDecoration.none),
                   textAlign: TextAlign.center,
                 ),
                 const SizedBox(height: 10),
                 Text(
                   details,
                   textAlign: TextAlign.center,
-                  style: const TextStyle( fontSize: 16, color:Colors.black54, decoration: TextDecoration.none),
+                  style: const TextStyle(
+                      fontSize: 16,
+                      color: Colors.black54,
+                      decoration: TextDecoration.none),
                 ),
                 const SizedBox(height: 20),
                 ElevatedButton(
-                    onPressed: () {
-                      context.goNamed('ReservationSelectVehicule'); // Navegar a `vehiculosUsuario`
-                    },
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: Colors.green,
-                      padding: const EdgeInsets.symmetric(vertical: 12.0, horizontal: 24.0),
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(20),
-                      ),  
+                  onPressed: () {
+                    context.goNamed('ReservationSelectVehicule');
+                  },
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: Colors.green,
+                    padding: const EdgeInsets.symmetric(
+                        vertical: 12.0, horizontal: 24.0),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(20),
                     ),
-                    child: const Text('Reservar', style: TextStyle(fontSize: 16, color: Colors.white)),
                   ),
+                  child: const Text('Reservar',
+                      style: TextStyle(fontSize: 16, color: Colors.white)),
+                ),
               ],
             ),
           ),

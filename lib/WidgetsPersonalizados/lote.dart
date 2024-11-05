@@ -5,7 +5,7 @@ class Lote extends StatelessWidget {
   final bool isSelected;
   final VoidCallback onSelected;
 
-  Lote({
+  const Lote({
     super.key,
     required this.id,
     required this.isSelected,
@@ -18,7 +18,7 @@ class Lote extends StatelessWidget {
         onPressed: onSelected,
         style: ButtonStyle(
           backgroundColor:
-              MaterialStateProperty.all(isSelected ? Colors.red : Colors.green),
+              WidgetStateProperty.all(isSelected ? Colors.red : Colors.green),
         ),
 
         //Nro de lote

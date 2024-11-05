@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:local_auth/local_auth.dart';
 
 class BiometricAuthPage extends StatefulWidget {
+  const BiometricAuthPage({super.key});
+
   @override
   _BiometricAuthPageState createState() => _BiometricAuthPageState();
 }
@@ -62,6 +64,8 @@ class _BiometricAuthPageState extends State<BiometricAuthPage> {
 }
 
 class HomePage extends StatelessWidget {
+  const HomePage({super.key});
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(

@@ -1,148 +1,73 @@
-// ignore_for_file: library_private_types_in_public_api
-
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_application_1/WidgetsPersonalizados/BotonAtras.dart';
+import 'package:flutter_application_1/WidgetsPersonalizados/BotonBot.dart';
+import 'package:flutter_application_1/WidgetsPersonalizados/MenuUsuario.dart';
 import 'package:flutter_application_1/core/Entities/Reserva.dart';
 import 'package:flutter_application_1/core/Providers/user_provider.dart';
-import 'package:flutter_application_1/screens/login_exitoso_home_user.dart';
-import 'package:flutter_application_1/screens/login_screen.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:go_router/go_router.dart';
 
 class ReservasUsuario extends ConsumerStatefulWidget {
-  static const String nombre = 'reservasUsuario';
   const ReservasUsuario({super.key});
-  
+
   @override
-  ConsumerState<ConsumerStatefulWidget> createState() {
-    // TODO: implement createState
-    throw UnimplementedError();
-  }
+  _ReservasUsuarioState createState() => _ReservasUsuarioState();
 }
 
-
-
-class _ReservasUsuarioState extends State<ReservasUsuario> {
-  // Función para manejar el botón de retroceso
-  void _goBack(BuildContext context) {
-    if (Navigator.canPop(context)) {
-      Navigator.pop(context); // Vuelve a la pantalla anterior si es posible
-    } else {
-      Navigator.pushReplacement(
-        context,
-        MaterialPageRoute(builder: (context) => const login_exitoso_home_user()), // Redirige a la pantalla inicial si no hay pantallas previas
-      );
-    }
-  }
+class _ReservasUsuarioState extends ConsumerState<ReservasUsuario> {
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.black,
       appBar: AppBar(
         backgroundColor: Colors.black,
-        iconTheme: const IconThemeData(
-          color: Colors
-              .white, // Cambia el color de las tres barras del menú hamburguesa
-        ),
         elevation: 0,
-        automaticallyImplyLeading:
-            true, // Esto añadirá automáticamente el icono del Drawer
-      ),
-      drawer: _buildDrawer(context),
-      body: Column(
-        children: [
-          Padding(
-            padding: const EdgeInsets.only(top: 10.0),
-            child: Image.asset(
-              'assets/images/car_logo.png',
-              height: 100,
-            ),
-          ),
-          const Text(
-            'GESTION de RESERVAS',
-            style: TextStyle(
-              color: Colors.white,
-              fontSize: 24,
-              fontWeight: FontWeight.bold,
-            ),
-            textAlign: TextAlign.center,
-          ),
-          const Expanded(
-            child: _ListView(),
-          ),
-        ],
-      ),
-      floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
-      floatingActionButton: Stack(
-        children: [
-          Positioned(
-            left: 20,
-            bottom: 20,
-            child:  FloatingActionButton(
-    onPressed: () => _goBack(context), // Llamada a la función _goBack
-    backgroundColor: Colors.white,
-    child: const Icon(Icons.arrow_back, color: Colors.black),
-  ),
-          ),
-        ],
-      ),
-    );
-  }
-
-  
-
-  Widget _buildDrawer(BuildContext context) {
-    return Drawer(
-      child: Container(
-        color: Colors.grey[200],
-        child: ListView(
-          padding: EdgeInsets.zero,
-          children: [
-            const DrawerHeader(
-              decoration: BoxDecoration(
-                color: Colors.white,
-              ),
-              child: Text(
-                'Menú',
-                style: TextStyle(fontSize: 24),
-              ),
-            ),
-            ListTile(
-              leading: const Icon(Icons.person, size: 40, color: Colors.black),
-              title: const Text('Editar Datos', style: TextStyle(fontSize: 18)),
-              onTap: () {},
-            ),
-            ListTile(
-              leading: const Icon(Icons.timer, size: 40, color: Colors.black),
-              title: const Text('Gestión de Vehiculos',
-                  style: TextStyle(fontSize: 18)),
-              onTap: () {},
-            ),
-            ListTile(
-              leading: const Icon(Icons.history, size: 40, color: Colors.black),
-              title: const Text('Historial y Registro',
-                  style: TextStyle(fontSize: 18)),
-              onTap: () {},
-            ),
-            ListTile(
-              leading:
-                  const Icon(Icons.exit_to_app, size: 40, color: Colors.black),
-              title: const Text('Salir', style: TextStyle(fontSize: 18)),
-              onTap: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (context) => LoginScreen()),
-                );
+        leading: Builder(
+          builder: (context) {
+            return IconButton(
+              icon: const Icon(Icons.menu, color: Colors.white),
+              onPressed: () {
+                Scaffold.of(context).openDrawer();
               },
-            ),
-          ],
+            );
+          },
         ),
+      ),
+      drawer: const MenuUsuario(),
+      body: Stack(
+        children: [
+          Center(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                Image.asset(
+                  'assets/images/car_logo.png',
+                  height: 100,
+                ),
+                const SizedBox(height: 20),
+                const Center(
+                  child: Text(
+                    'GESTION de RESERVAS',
+                    style: TextStyle(
+                      fontSize: 32,
+                      color: Colors.white,
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ),
+          const BackButtonWidget(),
+          const BotLogoButton(),
+        ],
       ),
     );
   }
 }
 
 class _ListView extends ConsumerWidget {
-  const _ListView({super.key});
+  const _ListView();
 
   Future<List<Reserva>> _fetchReservas(WidgetRef ref) async {
     final usuarioState = ref.watch(usuarioProvider);

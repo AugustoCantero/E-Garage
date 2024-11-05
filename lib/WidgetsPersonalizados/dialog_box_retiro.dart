@@ -6,7 +6,7 @@ class BoxDialogRetiro extends StatelessWidget {
   final VoidCallback onCancel;
 
   // Constructor que recibe el mensaje a mostrar y la función de cancelación
-  BoxDialogRetiro({
+  const BoxDialogRetiro({
     super.key,
     required this.message,
     required this.onCancel,

@@ -1,10 +1,13 @@
+
 import 'package:flutter/material.dart';
-import 'package:flutter_application_1/screens/open_street_map_screen.dart';
+import 'package:flutter_application_1/WidgetsPersonalizados/Mapa.dart';
 import 'package:flutter_application_1/screens/reservasUsuario.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 
 class ChatBotPage extends StatefulWidget {
+  const ChatBotPage({super.key});
+
   @override
   _ChatBotPageState createState() => _ChatBotPageState();
 }
@@ -13,7 +16,7 @@ class _ChatBotPageState extends State<ChatBotPage> {
   final List<Map<String, dynamic>> _messages = [];
   final String witAiToken = 'NXI4QFXBAW6JV7TPWT3VBQZ7EU2PAOA4';
   List<String> options = [];
-  final TextEditingController _messageController = TextEditingController(); // Controlador para limpiar el campo
+  final TextEditingController _messageController = TextEditingController();
 
   void _sendMessage(String message) async {
     setState(() {
@@ -21,11 +24,10 @@ class _ChatBotPageState extends State<ChatBotPage> {
       _messageController.clear();
     });
 
-
     String botResponse = await _getChatbotResponse(message);
     setState(() {
       _messages.insert(0, {'data': 0, 'message': botResponse});
-      
+
       options = [];
 
       if (botResponse.contains("reservar")) {
@@ -77,20 +79,21 @@ class _ChatBotPageState extends State<ChatBotPage> {
   }
 
   void _handleOptionClick(String option) {
-  if (option == "Para hoy" || option == "Para mañana" || option == "Para esta semana") {
-    Navigator.push(
-      context,
-      MaterialPageRoute(builder: (context) => OpenStreetMapScreen()),
-    );
-  } else if (option == "Cancelar una reserva") {
-    Navigator.push(
-      context,
-      MaterialPageRoute(builder: (context) => ReservasUsuario()),
-    );
-  } else {
-    _sendMessage(option);
+    if (option == "Para hoy" || option == "Para mañana" || option == "Para esta semana") {
+      Navigator.push(
+        context,
+        MaterialPageRoute(builder: (context) => OpenStreetMapScreen()),
+      );
+    } else if (option == "Cancelar una reserva") {
+      Navigator.push(
+        context,
+        MaterialPageRoute(builder: (context) => ReservasUsuario()),
+      );
+    } else {
+      _sendMessage(option);
+    }
   }
-}
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -122,8 +125,8 @@ class _ChatBotPageState extends State<ChatBotPage> {
                                     children: options.map<Widget>((option) {
                                       return Padding(
                                         padding: const EdgeInsets.symmetric(horizontal: 4.0),
-                                        child: TextButton(
-                                          style: TextButton.styleFrom(
+                                        child: ElevatedButton(
+                                          style: ElevatedButton.styleFrom(
                                             backgroundColor: Colors.green[200],
                                             padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
                                           ),

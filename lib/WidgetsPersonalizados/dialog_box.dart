@@ -5,7 +5,7 @@ class BoxDialog extends StatelessWidget {
   final VoidCallback onCancel;
   final String message;
 
-  BoxDialog({
+  const BoxDialog({
     super.key,
     required this.onCancel,
     required this.message,

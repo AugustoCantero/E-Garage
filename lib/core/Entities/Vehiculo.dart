@@ -17,11 +17,11 @@ class Vehiculo {
   //Metodo para mandar los datos hacia firestore
   Map<String, dynamic> toFireStore() {
     return {
-      'userId': this.userId,
-      'marca': this.marca,
-      'modelo': this.modelo,
-      'patente': this.patente,
-      'color': this.color
+      'userId': userId,
+      'marca': marca,
+      'modelo': modelo,
+      'patente': patente,
+      'color': color
     };
   }
 

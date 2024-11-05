@@ -27,7 +27,7 @@ android {
     }
 
     defaultConfig {
-        applicationId "e.g.db.voratium.android"
+        applicationId "com.example.e_garage"
         minSdkVersion 23  // Cambia esto a 23
         targetSdkVersion 33  // Cambia esto a 33 o la versión que estés utilizando
         versionCode flutter.versionCode

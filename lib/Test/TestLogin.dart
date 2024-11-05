@@ -1,7 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_application_1/core/Providers/user_provider.dart';
-import 'package:flutter_application_1/screens/screen_principal.dart';
 import 'package:flutter_application_1/screens/todasLasReservas.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
@@ -9,14 +8,14 @@ import 'package:go_router/go_router.dart';
 class Logintro extends ConsumerWidget {
   static const String name = 'LoginOtro';
 
-  const Logintro({Key? key}) : super(key: key);
+  const Logintro({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    String _email = '';
-    String _clave = '';
+    String email = '';
+    String clave = '';
     final db = FirebaseFirestore.instance;
-    final ValueNotifier<bool> _showPassword = ValueNotifier<bool>(false);
+    final ValueNotifier<bool> showPassword = ValueNotifier<bool>(false);
 
     return Scaffold(
       backgroundColor: Colors.black,
@@ -40,13 +39,13 @@ class Logintro extends ConsumerWidget {
               style: const TextStyle(color: Colors.white),
               decoration: const InputDecoration(labelText: 'EMAIL'),
               onChanged: (value) {
-                _email = value;
+                email = value;
               },
             ),
 
             // PASS
             ValueListenableBuilder<bool>(
-              valueListenable: _showPassword,
+              valueListenable: showPassword,
               builder: (context, value, child) {
                 return TextField(
                   style: const TextStyle(color: Colors.white),
@@ -59,12 +58,12 @@ class Logintro extends ConsumerWidget {
                         color: Colors.white,
                       ),
                       onPressed: () {
-                        _showPassword.value = !value;
+                        showPassword.value = !value;
                       },
                     ),
                   ),
                   onChanged: (value) {
-                    _clave = value;
+                    clave = value;
                   },
                 );
               },
@@ -104,7 +103,7 @@ class Logintro extends ConsumerWidget {
                     // Realizar la consulta a Firestore para obtener el usuario con el correo electrónico especificado
                     QuerySnapshot querySnapshot = await db
                         .collection("users")
-                        .where("email", isEqualTo: _email)
+                        .where("email", isEqualTo: email)
                         .get();
 
                     if (querySnapshot.docs.isNotEmpty) {
@@ -122,9 +121,9 @@ class Logintro extends ConsumerWidget {
 
                         if (userEmail != null && userPassword != null) {
                           // Verificar si el correo electrónico ingresado coincide con el almacenado
-                          if (userEmail == _email) {
+                          if (userEmail == email) {
                             // Verificar si la contraseña ingresada coincide con la almacenada
-                            if (userPassword == _clave) {
+                            if (userPassword == clave) {
                               ref.read(usuarioProvider.notifier).setUsuario(
                                   userData['id'],
                                   userData['nombre'],
