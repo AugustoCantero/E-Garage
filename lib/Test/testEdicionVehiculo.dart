@@ -65,8 +65,6 @@ class EditarDatosAutoState extends ConsumerState<EditarDatosAuto> {
     if (querySnap1.docs.isNotEmpty) {
       DocumentSnapshot userVehiculoDoc = querySnap1.docs.first;
       await userVehiculoDoc.reference.delete();
-    } else {
-      print('No se encontró ningún usuario asociado al vehículo.');
     }
   }
 
