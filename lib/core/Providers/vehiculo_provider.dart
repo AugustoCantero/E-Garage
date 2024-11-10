@@ -1,5 +1,6 @@
 import 'package:flutter_application_1/core/Entities/Vehiculo.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 
 final vehiculoProvider =
     StateNotifierProvider<vehiculoNotifier, Vehiculo>((ref) {
@@ -23,5 +24,14 @@ class vehiculoNotifier extends StateNotifier<Vehiculo> {
       color: vehiculo.color,
       userId: vehiculo.userId,
     );
+  }
+
+  Future<void> updateVehiculoInFirestore(
+      String patente, String modelo, String marca) async {
+    FirebaseFirestore db = FirebaseFirestore.instance;
+    await db.collection('Vehiculos').doc(patente).update({
+      'modelo': modelo,
+      'marca': marca,
+    });
   }
 }

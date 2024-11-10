@@ -8,7 +8,7 @@ class Usuario {
   String apellido;
   String dni;
   String telefono;
-  bool? esAdmin;
+  bool esAdmin;
 
   Usuario(
       {required this.id,
@@ -18,7 +18,7 @@ class Usuario {
       required this.apellido,
       required this.dni,
       required this.telefono,
-      this.esAdmin});
+      this.esAdmin = false});
 
   Map<String, dynamic> toFirestore() {
     return {
@@ -29,7 +29,8 @@ class Usuario {
       "apellido": apellido,
       "dni": dni,
       "telefono": telefono,
-      'esAdmin': false
+      'esAdmin':
+          esAdmin ?? false, // Asegúrate de asignar false si esAdmin es null
     };
   }
 
@@ -46,7 +47,7 @@ class Usuario {
         apellido: data?['apellido'],
         dni: data?['dni'],
         telefono: data?['telefono'],
-        esAdmin: data?['esAdmin']);
+        esAdmin: data?['esAdmin'] ?? false); // Si esAdmin es null, asigna false
   }
 
   Usuario copywith(
@@ -66,6 +67,7 @@ class Usuario {
         apellido: apellido ?? this.apellido,
         dni: dni ?? this.dni,
         telefono: telefono ?? this.telefono,
-        esAdmin: esAdmin ?? false);
+        esAdmin:
+            esAdmin ?? this.esAdmin ?? false); // Usa false si esAdmin es null
   }
 }

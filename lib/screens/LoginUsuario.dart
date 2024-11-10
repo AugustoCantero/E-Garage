@@ -62,12 +62,14 @@ class LoginUsuario extends ConsumerWidget {
                   onPressed: () {
                     Navigator.push(
                       context,
-                      MaterialPageRoute(builder: (context) => OpenStreetMapScreen()),
+                      MaterialPageRoute(
+                          builder: (context) => OpenStreetMapScreen()),
                     );
                   },
                   style: OutlinedButton.styleFrom(
                     side: const BorderSide(color: Colors.white),
-                    padding: const EdgeInsets.symmetric(horizontal: 50, vertical: 20),
+                    padding: const EdgeInsets.symmetric(
+                        horizontal: 50, vertical: 20),
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(30),
                     ),

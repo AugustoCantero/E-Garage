@@ -6,7 +6,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter_application_1/core/Providers/user_provider.dart';
 
 class TEST_EDICION_CUENTA extends ConsumerWidget {
-  static final String name = "TEST_EDICION_CUENTA";
+  static final String name = "editarDatos";
   const TEST_EDICION_CUENTA({super.key});
 
   @override
@@ -75,7 +75,6 @@ class TEST_EDICION_CUENTA extends ConsumerWidget {
 
                 // Regresar a la pantalla anterior
                 context.goNamed('/login');
-                
               },
               child: const Text('Eliminar cuenta'),
             ),

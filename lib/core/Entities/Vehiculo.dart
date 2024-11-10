@@ -14,7 +14,7 @@ class Vehiculo {
       required this.patente,
       required this.color});
 
-  //Metodo para mandar los datos hacia firestore
+  // Método para mandar los datos hacia Firestore
   Map<String, dynamic> toFireStore() {
     return {
       'userId': userId,
@@ -25,19 +25,19 @@ class Vehiculo {
     };
   }
 
-  //Metodo para trear los datos del vhiculo desde Firestore
+  // Método para traer los datos del vehículo desde Firestore
   factory Vehiculo.fromFirestore(
     DocumentSnapshot<Map<String, dynamic>> snapshot,
     SnapshotOptions? options,
   ) {
     final data = snapshot.data();
-
     return Vehiculo(
-        userId: data?['userId'],
-        marca: data?['marca'],
-        modelo: data?['modelo'],
-        patente: data?['patente'],
-        color: data?['color']);
+      userId: data?['userId'],
+      marca: data?['marca'],
+      modelo: data?['modelo'],
+      patente: data?['patente'],
+      color: data?['color'],
+    );
   }
 
   Vehiculo copywith(
@@ -64,12 +64,3 @@ class Vehiculo {
     );
   }
 }
-
-// Método para convertir un Map a Vehiculo
- 
-
-/*enum TipoVehiculo {
-  Auto,
-  Camioneta,
-  Moto,
-}*/

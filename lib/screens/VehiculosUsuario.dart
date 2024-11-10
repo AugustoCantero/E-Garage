@@ -1,8 +1,10 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_application_1/Test/testEdicionVehiculo.dart';
 import 'package:flutter_application_1/WidgetsPersonalizados/BotonAtras.dart';
 import 'package:flutter_application_1/core/Entities/Vehiculo.dart';
 import 'package:flutter_application_1/core/Providers/user_provider.dart';
+import 'package:flutter_application_1/core/Providers/vehiculo_provider.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
@@ -61,7 +63,8 @@ class vehiculosUsuarioState extends ConsumerState<vehiculosUsuario> {
           ),
           BackButtonWidget(
             onPressed: () {
-              context.goNamed('HomeUser'); // Usa el nombre definido en GoRoute
+              context
+                  .goNamed('editarDatos'); // Usa el nombre definido en GoRoute
             },
           )
         ],
@@ -121,7 +124,10 @@ class _ListView extends ConsumerWidget {
                             style: const TextStyle(color: Colors.white70),
                           ),
                           onTap: () {
-                            Navigator.pop(context, elVehiculo);
+                            ref
+                                .read(vehiculoProvider.notifier)
+                                .setVehiculo(elVehiculo);
+                            context.goNamed(EditarDatosAuto.name);
                           },
                         ),
                       );

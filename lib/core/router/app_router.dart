@@ -1,7 +1,7 @@
-
 import 'package:flutter_application_1/WidgetsPersonalizados/Aprobado.dart';
 import 'package:flutter_application_1/WidgetsPersonalizados/MercadoPago.dart';
 import 'package:flutter_application_1/WidgetsPersonalizados/PantallaPagos.dart';
+import 'package:flutter_application_1/screens/EditarDatos.dart';
 import 'package:flutter_application_1/screens/LoginAdministrador.dart';
 import 'package:flutter_application_1/screens/ReservaSeleccionVehic.dart';
 import 'package:flutter_application_1/screens/AgregarVehiculo.dart';
@@ -19,16 +19,16 @@ import 'package:flutter_application_1/screens/PantallaSeleccion.dart';
 import 'package:flutter_application_1/screens/todasLasReservas.dart';
 import 'package:go_router/go_router.dart';
 
-final GoRouter appRouter = GoRouter(initialLocation: '/intro', routes: [
+final GoRouter appRouter = GoRouter(initialLocation: '/selection', routes: [
   GoRoute(
     path: '/intro',
     builder: (context, state) => const IntroScreen(),
   ),
- GoRoute(
-  name: 'SelectionScreen', // Asigna un nombre a la ruta
-  path: '/selection',
-  builder: (context, state) => const SelectionScreen(),
-),
+  GoRoute(
+    name: 'SelectionScreen', // Asigna un nombre a la ruta
+    path: '/selection',
+    builder: (context, state) => const SelectionScreen(),
+  ),
   GoRoute(
     path: '/registro',
     builder: (context, state) => const RegistroScreen(),
@@ -37,8 +37,8 @@ final GoRouter appRouter = GoRouter(initialLocation: '/intro', routes: [
     path: '/registro-usuario',
     builder: (context, state) => const RegistroUsuarioScreen(),
   ),
-  
- /*  GoRoute(
+
+  /*  GoRoute(
       path: '/Screenlogin',
       builder: (context, state) => const ScreenPrincipal(),
       name: ScreenPrincipal.nombre), */
@@ -48,9 +48,10 @@ final GoRouter appRouter = GoRouter(initialLocation: '/intro', routes: [
     name: todasLasReservas.nombre,
   ),
   GoRoute(
-    path: '/TEST_EDICION_CUENTA',
-    builder: (context, state) => const TEST_EDICION_CUENTA(),
-    name: TEST_EDICION_CUENTA.name,
+    path: '/EditarDatosAuto',
+    builder: (context, state) => const EditarDatosAuto(),
+    name: EditarDatosAuto.name,
+    //descomentar por si se quiere probar TEST_EDICION_CUENTA.name,
   ),
   GoRoute(
     path: '/HomeUser',
@@ -78,9 +79,9 @@ final GoRouter appRouter = GoRouter(initialLocation: '/intro', routes: [
     name: testAdminScreen.name,
   ),
   GoRoute(
-    path: '/EditarDatosAuto',
-    builder: (context, state) => const EditarDatosAuto(),
-    name: EditarDatosAuto.name,
+    path: '/EditarDatos',
+    builder: (context, state) => const EditarDatosScreen(),
+    name: EditarDatosScreen.name,
   ),
   GoRoute(
     path: '/ReservationScreen',
@@ -92,17 +93,17 @@ final GoRouter appRouter = GoRouter(initialLocation: '/intro', routes: [
     builder: (context, state) => const GestionVehiculosScreen(),
     name: GestionVehiculosScreen.name,
   ),
- GoRoute(
+  GoRoute(
     path: '/MercadoPagoScreen',
     builder: (context, state) => MercadoPagoScreen(),
     name: MercadoPagoScreen.name,
   ),
   GoRoute(
-      path: '/',
-      builder: (context, state) => const PagoScreen(),
-    ),
-    GoRoute(
-      path: '/aprobado',
-      builder: (context, state) => const AprobadoScreen(),
-    ),
+    path: '/',
+    builder: (context, state) => const PagoScreen(),
+  ),
+  GoRoute(
+    path: '/aprobado',
+    builder: (context, state) => const AprobadoScreen(),
+  ),
 ]);

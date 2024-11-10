@@ -8,6 +8,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
 class EditarDatosScreen extends ConsumerWidget {
+  static final String name = "editarDatos";
   const EditarDatosScreen({super.key});
 
   Future<void> _eliminarCuenta(BuildContext context, WidgetRef ref) async {
@@ -38,6 +39,16 @@ class EditarDatosScreen extends ConsumerWidget {
     // Si el usuario confirma la eliminación
     if (confirmacion == true) {
       try {
+        QuerySnapshot vehiculosSnapshot = await db
+            .collection('Vehiculos')
+            .where('userId', isEqualTo: usuario.id)
+            .get();
+
+        // Eliminar cada documento encontrado
+        for (DocumentSnapshot vehiculoDoc in vehiculosSnapshot.docs) {
+          await vehiculoDoc.reference.delete();
+        }
+
         // Eliminar la cuenta de Firebase
         await db.collection('users').doc(usuario.id).delete();
 
@@ -45,7 +56,8 @@ class EditarDatosScreen extends ConsumerWidget {
         ref.read(usuarioProvider.notifier).clearUsuario();
 
         // Redirigir a la pantalla de inicio de sesión
-        context.goNamed('SelectionScreen'); // Cambia esto por la ruta de tu pantalla de inicio de sesión
+        context.goNamed(
+            'SelectionScreen'); // Cambia esto por la ruta de tu pantalla de inicio de sesión
       } catch (e) {
         // Manejar errores al eliminar la cuenta
         ScaffoldMessenger.of(context).showSnackBar(
@@ -147,16 +159,51 @@ class EditarDatosScreen extends ConsumerWidget {
                       'Confirmar Contraseña', confirmPasswordController, null),
                   const SizedBox(height: 30),
                   ElevatedButton(
-                    onPressed: () {
+                    onPressed: () async {
                       if (isPasswordValid &&
                           passwordController.text ==
                               confirmPasswordController.text) {
-                        ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
-                            content: Text('Datos guardados exitosamente.')));
+                        final db = FirebaseFirestore.instance;
+                        final usuario = ref.read(usuarioProvider);
+
+                        try {
+                          // Actualizar datos en Firebase
+                          await db.collection('users').doc(usuario.id).update({
+                            'nombre': nombreController.text,
+                            'apellido': apellidoController.text,
+                            'email': emailController.text,
+                            'password': passwordController.text,
+                          });
+
+                          // Actualizar el estado del usuario en el provider con los nuevos datos
+                          ref.read(usuarioProvider.notifier).setUsuario(
+                                usuario.id,
+                                nombreController.text,
+                                apellidoController.text,
+                                emailController.text,
+                                passwordController.text,
+                                usuario.dni,
+                                usuario.telefono,
+                                usuario.esAdmin,
+                              );
+
+                          // Mostrar mensaje de éxito
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            const SnackBar(
+                                content: Text('Datos guardados exitosamente.')),
+                          );
+                        } catch (e) {
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            SnackBar(
+                                content: Text('Error al guardar cambios: $e')),
+                          );
+                        }
                       } else {
-                        ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
-                            content: Text(
-                                'Verifique la contraseña y su confirmación.')));
+                        ScaffoldMessenger.of(context)
+                            .showSnackBar(const SnackBar(
+                          content: Text(
+                              'Verifique la contraseña y su confirmación.'),
+                        ));
                       }
                     },
                     child: const Text("Guardar Cambios"),
@@ -188,7 +235,7 @@ class EditarDatosScreen extends ConsumerWidget {
             left: 20,
             child: BackButtonWidget(
               onPressed: () {
-                context.pop();
+                context.goNamed('HomeUser');
               },
             ),
           ),

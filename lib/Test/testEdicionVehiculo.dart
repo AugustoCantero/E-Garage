@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_application_1/core/Entities/Vehiculo.dart';
 import 'package:flutter_application_1/core/Providers/vehiculo_provider.dart';
 import 'package:flutter_application_1/screens/VehiculosUsuario.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -17,6 +18,7 @@ class EditarDatosAutoState extends ConsumerState<EditarDatosAuto> {
   late TextEditingController patenteController;
   late TextEditingController modeloController;
   late TextEditingController marcaController;
+  late TextEditingController colorController;
 
   @override
   void initState() {
@@ -25,40 +27,77 @@ class EditarDatosAutoState extends ConsumerState<EditarDatosAuto> {
     patenteController = TextEditingController(text: vehiculo.patente);
     modeloController = TextEditingController(text: vehiculo.modelo);
     marcaController = TextEditingController(text: vehiculo.marca);
+    colorController = TextEditingController(text: vehiculo.color);
   }
 
   @override
   void dispose() {
-    // Asegúrate de liberar los controladores
     patenteController.dispose();
     modeloController.dispose();
     marcaController.dispose();
     super.dispose();
   }
 
+  Future<void> _guardarCambios(Vehiculo vehiculo) async {
+    final db = FirebaseFirestore.instance;
+    try {
+      // Obtener los valores del controlador
+      String patente = patenteController.text;
+      String modelo = modeloController.text;
+      String marca = marcaController.text;
+      String color = colorController.text;
+
+      // Buscar el documento que tiene el campo `patente` igual a `vehiculo.patente`
+      QuerySnapshot querySnap = await db
+          .collection('Vehiculos')
+          .where('patente', isEqualTo: vehiculo.patente)
+          .get();
+
+      if (querySnap.docs.isNotEmpty) {
+        DocumentSnapshot doc = querySnap.docs.first;
+        await doc.reference.update({
+          'modelo': modelo,
+          'marca': marca,
+          'patente': patente,
+          'color': color,
+        });
+
+        // Actualizar el estado en el provider
+        final updatedVehiculo = Vehiculo(
+          patente: patente,
+          marca: marca,
+          modelo: modelo,
+          color: color,
+          userId: vehiculo.userId,
+        );
+        ref.read(vehiculoProvider.notifier).setVehiculo(updatedVehiculo);
+
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('Datos guardados exitosamente.')),
+        );
+      } else {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('Documento no encontrado.')),
+        );
+      }
+    } catch (e) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Error al guardar cambios: $e')),
+      );
+    }
+  }
+
   Future<void> _eliminarAuto() async {
     FirebaseFirestore db = FirebaseFirestore.instance;
+    String patente = patenteController.text;
 
-    // Aquí obtenemos el valor del TextEditingController
-    String patente =
-        patenteController.text; // Obtenemos el texto de patenteController
+    // Eliminar el vehículo de Firestore
+    await db.collection('Vehiculos').doc(patente).delete();
 
-    await db
-        .collection('Vehiculos')
-        .where('patente', isEqualTo: patente) // Usamos el valor de patente
-        .get()
-        .then((querySnapshot) {
-      if (querySnapshot.docs.isNotEmpty) {
-        querySnapshot.docs.first.reference.delete();
-      } else {
-        print('No se encontró ningún vehículo con esa patente.');
-      }
-    });
-
-    // También debes asegurarte de usar el texto correcto aquí
+    // También eliminar la relación en UsuariosVehiculos
     QuerySnapshot querySnap1 = await db
         .collection('UsuariosVehiculos')
-        .where('idVehiculo', isEqualTo: patente) // Y aquí también
+        .where('idVehiculo', isEqualTo: patente)
         .limit(1)
         .get();
 
@@ -112,7 +151,18 @@ class EditarDatosAutoState extends ConsumerState<EditarDatosAuto> {
             Center(
               child: ElevatedButton(
                 onPressed: () async {
-                  await _eliminarAuto(); // Llamar al método sin pasarle parámetros
+                  await _guardarCambios(
+                      vehiculo); // Guardar cambios en Firestore y el provider
+                  context.goNamed(vehiculosUsuario.name);
+                },
+                child: const Text("Guardar cambios"),
+              ),
+            ),
+            const SizedBox(height: 10),
+            Center(
+              child: ElevatedButton(
+                onPressed: () async {
+                  await _eliminarAuto(); // Eliminar el vehículo
                   context.goNamed(vehiculosUsuario.name);
                 },
                 child: const Text("Eliminar auto"),
