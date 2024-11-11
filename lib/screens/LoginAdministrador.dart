@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_application_1/WidgetsPersonalizados/MenuAdministrador.dart';
 import 'package:flutter_application_1/core/Providers/user_provider.dart';
 import 'package:flutter_application_1/WidgetsPersonalizados/Mapa.dart';
+import 'package:flutter_application_1/screens/ListaGarages.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 class AdminHomePage extends ConsumerWidget {
@@ -52,7 +53,7 @@ class AdminHomePage extends ConsumerWidget {
                   onPressed: () {
                     Navigator.push(
                       context,
-                      MaterialPageRoute(builder: (context) => OpenStreetMapScreen()),
+                      MaterialPageRoute(builder: (context) => ListaGarages()),
                     );
                   },
                   style: OutlinedButton.styleFrom(
