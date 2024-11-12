@@ -31,12 +31,22 @@ dependencies:
   shared_preferences: ^2.0.6
   table_calendar: ^3.0.0
   url_launcher: ^6.3.1
+  flutter_bloc: ^8.1.6
+  equatable: ^2.0.5
+  firebase_messaging: ^15.1.4
+  flutter_local_notifications: ^18.0.0
   
 
 dev_dependencies:
   flutter_lints: ^5.0.0
   flutter_test:
     sdk: flutter
+
+flutter_launcher_icons:
+  android: 'launcher_icon'
+  ios: true
+  image_path: 'assets/logos.jpeg'
+  min_sdk_android: 21
 
 flutter:
   uses-material-design: true
