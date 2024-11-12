@@ -1,12 +1,16 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_application_1/WidgetsPersonalizados/BotonAtras.dart';
 import 'package:flutter_application_1/WidgetsPersonalizados/MenuUsuario.dart';
 import 'package:flutter_application_1/WidgetsPersonalizados/BotonBot.dart';
+import 'package:flutter_application_1/core/Providers/reservaGarage.dart';
+import 'package:flutter_application_1/screens/LoginUsuario.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:url_launcher/url_launcher.dart';
+import 'package:go_router/go_router.dart';
 
-
-class MetodoPagoScreen extends StatefulWidget {
+class MetodoPagoScreen extends ConsumerStatefulWidget {
   static const String routename = 'MetodoPagoScreen';
   const MetodoPagoScreen({super.key});
 
@@ -14,7 +18,7 @@ class MetodoPagoScreen extends StatefulWidget {
   _MetodoPagoScreenState createState() => _MetodoPagoScreenState();
 }
 
-class _MetodoPagoScreenState extends State<MetodoPagoScreen> {
+class _MetodoPagoScreenState extends ConsumerState<MetodoPagoScreen> {
   int _selectedOption = -1; // Ninguna opción seleccionada por defecto
 
   void _onOptionSelected(int option) {
@@ -23,9 +27,22 @@ class _MetodoPagoScreenState extends State<MetodoPagoScreen> {
     });
   }
 
+  Future<void> _guardarReserva() async {
+    final db = FirebaseFirestore.instance;
+    final ReservaCargada = ref.watch(reservaEnGarageProvider);
+
+    db
+        .collection('Reservas')
+        .doc(ReservaCargada.id)
+        .set(ReservaCargada.toFirestore());
+  }
+
   Future<void> _confirmSelection() async {
     if (_selectedOption == 0) {
-      Navigator.pushNamed(context, '/efectivoScreen'); // Redirige a Efectivo
+      //COMENTADO SOLO PARA PROBAR LA RESERVA
+      //Navigator.pushNamed(context, '/efectivoScreen'); // Redirige a Efectivo
+      await _guardarReserva();
+      context.goNamed(LoginUsuario.name);
     } else if (_selectedOption == 1) {
       Navigator.pushNamed(context, '/modoScreen'); // Redirige a MODO
     } else if (_selectedOption == 2) {
@@ -39,25 +56,26 @@ class _MetodoPagoScreenState extends State<MetodoPagoScreen> {
 
   Future<void> _launchMercadoPagoURL() async {
     final dio = Dio();
-    try{
-    Response<Map> response = await dio.post('http://127.0.0.1:8080/create_preferences');
-    //response = await dio.post('http://127.0.0.1:8080/create_preferences');
-    var res = response.data;
-    String? url = res?["url"];
-    if (url != null) {
-      if (await canLaunch(url)) {
-        await launch(url);
+    try {
+      Response<Map> response =
+          await dio.post('http://127.0.0.1:8080/create_preferences');
+      //response = await dio.post('http://127.0.0.1:8080/create_preferences');
+      var res = response.data;
+      String? url = res?["url"];
+      if (url != null) {
+        if (await canLaunch(url)) {
+          await launch(url);
+        } else {
+          throw 'No se pudo abrir el enlace $url';
+        }
       } else {
-        throw 'No se pudo abrir el enlace $url';
+        print("URL no disponible en la respuesta.");
       }
-      } else {
-      print("URL no disponible en la respuesta.");
-    }
     } catch (e) {
-    print("Error al abrir la URL: $e");
+      print("Error al abrir la URL: $e");
+    }
   }
-}
-   /*  print(res?["url"]);
+  /*  print(res?["url"]);
     if (context.mounted) {
       context.go('/aprobado', extra: {
     'url': res?["url"],
@@ -132,7 +150,8 @@ class _MetodoPagoScreenState extends State<MetodoPagoScreen> {
                 onPressed: _confirmSelection,
                 style: ElevatedButton.styleFrom(
                   backgroundColor: Colors.white,
-                  padding: const EdgeInsets.symmetric(horizontal: 40, vertical: 12),
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 40, vertical: 12),
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(20),
                   ),
@@ -167,7 +186,8 @@ class _MetodoPagoScreenState extends State<MetodoPagoScreen> {
     );
   }
 
-  Widget _buildPaymentOption({required int index, required String label, required String imagePath}) {
+  Widget _buildPaymentOption(
+      {required int index, required String label, required String imagePath}) {
     return GestureDetector(
       onTap: () => _onOptionSelected(index),
       child: Container(
@@ -205,7 +225,9 @@ class _MetodoPagoScreenState extends State<MetodoPagoScreen> {
               ),
             ),
             Icon(
-              _selectedOption == index ? Icons.check_circle : Icons.circle_outlined,
+              _selectedOption == index
+                  ? Icons.check_circle
+                  : Icons.circle_outlined,
               color: _selectedOption == index ? Colors.blue : Colors.white,
             ),
           ],

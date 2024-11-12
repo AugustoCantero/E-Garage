@@ -3,6 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_application_1/WidgetsPersonalizados/BotonAtras.dart';
 import 'package:flutter_application_1/WidgetsPersonalizados/MenuUsuario.dart';
 import 'package:flutter_application_1/core/Entities/Reserva.dart';
+import 'package:flutter_application_1/core/Providers/reservaGarage.dart';
+import 'package:flutter_application_1/core/Providers/reserva_provider.dart';
 import 'package:flutter_application_1/core/Providers/vehiculo_provider.dart';
 import 'package:flutter_application_1/screens/MetodoDePago.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -20,7 +22,7 @@ class ReservationScreen extends ConsumerStatefulWidget {
 
 class Garage {
   // Tengo que llenar esta array con las reservas
-
+  final String idGarage = 'PruebaIdGarage';
   final List<Reserva> reservations; // Lista de reservas
   final int totalSpaces; // Total de espacios disponibles en el garage
 
@@ -282,17 +284,23 @@ class _ReservationScreenState extends ConsumerState<ReservationScreen> {
                     if (selectedDate != null &&
                         startTime != null &&
                         endTime != null) {
-                      final reserva = Reserva(
-                        startTime: startTime!,
-                        endTime: endTime!,
-                        elvehiculo: vehiculoState,
-                        usuarioId: vehiculoState.userId!,
-                      );
+                      //MOMENTANEAMENTE ESTO VA A IR ACA, LA IDEA ES QUE SE GENERE TODO UNA VEZ CONFIRMADO EL PAGO.
+                      DocumentReference docRef =
+                          db.collection('Reservas').doc();
+                      String idParaReserva = docRef.id;
+                      //--------------------------------------------------------------------------------------------
 
-                      await db
-                          .collection('Reservas')
-                          .doc()
-                          .set(reserva.toFirestore());
+                      final reserva = Reserva(
+                          id: idParaReserva,
+                          startTime: startTime!,
+                          endTime: endTime!,
+                          elvehiculo: vehiculoState,
+                          usuarioId: vehiculoState.userId!,
+                          garajeId: garage.idGarage);
+
+                      ref
+                          .read(reservaEnGarageProvider.notifier)
+                          .setReserva(reserva);
 
                       Navigator.push(
                         context,

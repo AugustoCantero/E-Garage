@@ -148,6 +148,8 @@ class EditarDatosAutoState extends ConsumerState<EditarDatosAuto> {
             const SizedBox(height: 10),
             _buildEditableField(context, 'Marca', marcaController),
             const SizedBox(height: 10),
+            _buildEditableField(context, 'Color', colorController),
+            const SizedBox(height: 10),
             Center(
               child: ElevatedButton(
                 onPressed: () async {
