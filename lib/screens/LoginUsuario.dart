@@ -4,7 +4,13 @@ import 'package:flutter_application_1/WidgetsPersonalizados/MenuUsuario.dart';
 import 'package:flutter_application_1/WidgetsPersonalizados/BotonBot.dart';
 import 'package:flutter_application_1/core/Providers/user_provider.dart';
 import 'package:flutter_application_1/WidgetsPersonalizados/Mapa.dart';
+import 'package:flutter_application_1/services/bloc/notifications_bloc.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import 'package:flutter_application_1/preferencias/pref_usuarios.dart';
+
+
 
 class LoginUsuario extends ConsumerWidget {
   static const String name = "HomeUser";
@@ -12,6 +18,9 @@ class LoginUsuario extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    context.read<NotificationsBloc>().requestPermission();
+    var prefs = PreferenciasUsuario();
+    print('TOKEN: ' + prefs.token);
     final usuario = ref.watch(usuarioProvider);
 
     return Scaffold(
