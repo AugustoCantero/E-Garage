@@ -6,6 +6,7 @@ import 'package:flutter_application_1/WidgetsPersonalizados/MenuUsuario.dart';
 import 'package:flutter_application_1/core/Entities/Reserva.dart';
 import 'package:flutter_application_1/core/Providers/user_provider.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:intl/intl.dart';
 
 class ReservasUsuario extends ConsumerStatefulWidget {
   const ReservasUsuario({super.key});
@@ -54,6 +55,11 @@ class _ReservasUsuarioState extends ConsumerState<ReservasUsuario> {
                       color: Colors.white,
                     ),
                   ),
+                ),
+                const SizedBox(height: 20),
+                // Usa Expanded para que el ListView ocupe el espacio restante
+                const Expanded(
+                  child: _ListView(),
                 ),
               ],
             ),
@@ -107,9 +113,15 @@ class _ListView extends ConsumerWidget {
               return Card(
                 color: Colors.grey[800],
                 child: ListTile(
-                  title: Text('Lote: ${reserva.startTime}'),
+                  title: Text(
+                    'Fecha inicio: ${DateFormat('dd-MM-yyyy HH:mm').format(reserva.startTime)}\n'
+                    'Fecha fin: ${DateFormat('dd-MM-yyyy HH:mm').format(reserva.endTime)}',
+                    style: TextStyle(color: Colors.white),
+                  ),
                   subtitle: Text(
-                      'Fecha fin: ${reserva.endTime}, Modelo: ${reserva.elvehiculo.modelo}, patente: ${reserva.elvehiculo.marca}'),
+                    'Marca: ${reserva.elvehiculo.marca}, Modelo: ${reserva.elvehiculo.modelo}, Patente: ${reserva.elvehiculo.patente}',
+                    style: TextStyle(color: Colors.white70),
+                  ),
                 ),
               );
             },

@@ -341,6 +341,8 @@ class _ReservationScreenState extends ConsumerState<ReservationScreen> {
                           valorFraccionAlMomentoDeReserva:
                               VALOR_FRACCION_5_MINUTOS);
 
+                      print(reserva.toString());
+
                       ref
                           .read(reservaEnGarageProvider.notifier)
                           .setReserva(reserva);

@@ -22,7 +22,7 @@ class reservaNotifier extends StateNotifier<Reserva> {
           garajeId: '999999',
           usuarioId: '999999999',
           duracionEstadia: -5.0,
-          medioDePago: '',
+          medioDePago: 'MercadoPago',
           monto: -1,
           valorHoraAlMomentoDeReserva: 1000000,
           valorFraccionAlMomentoDeReserva: 100000000,
