@@ -17,7 +17,7 @@ class BotLogoButton extends StatelessWidget {
           );
         },
         backgroundColor: const Color.fromARGB(0, 33, 149, 243),
-        child: Image.asset('assets/images/bot.png'),
+        child: Image.asset('assets/images/logo_chatbot.png'),
       ),
     );
   }
