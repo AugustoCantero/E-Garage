@@ -1,20 +1,27 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_application_1/core/Providers/garage_provider.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import 'package:latlong2/latlong.dart';
 
-class GarageDetailDialog extends StatelessWidget {
+class GarageDetailDialog extends ConsumerWidget {
+  final String id;
+  final LatLng location;
   final String name;
   final String imagePath;
   final String details;
 
   const GarageDetailDialog({
     super.key,
+    required this.id,
+    required this.location,
     required this.name,
     required this.imagePath,
     required this.details,
   });
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     return Stack(
       children: [
         Positioned.fill(
@@ -66,6 +73,18 @@ class GarageDetailDialog extends StatelessWidget {
                 const SizedBox(height: 20),
                 ElevatedButton(
                   onPressed: () {
+                    ref.read(garageProvider.notifier).setGarage(this.id,
+                        this.location, this.name, this.imagePath, this.details);
+                    // Obtener el estado actualizado del provider
+                    final garageState = ref.read(garageProvider);
+
+                    // Imprimir los datos del garage
+                    print('Garage ID: ${garageState.id}');
+                    print('Location: ${garageState.location}');
+                    print('Name: ${garageState.name}');
+                    print('Image Path: ${garageState.imagePath}');
+                    print('Details: ${garageState.details}');
+
                     context.goNamed('ReservationSelectVehicule');
                   },
                   style: ElevatedButton.styleFrom(

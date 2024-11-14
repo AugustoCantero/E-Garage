@@ -10,17 +10,21 @@ final reservaEnGarageProvider =
 class reservaNotifier extends StateNotifier<Reserva> {
   reservaNotifier()
       : super(Reserva(
-            id: 'ERROR',
-            startTime: DateTime(1999, 1, 1, 01, 00, 00),
-            endTime: DateTime(1999, 1, 1, 23, 59, 59),
-            elvehiculo: Vehiculo(
-                userId: 'userId',
-                marca: 'marca',
-                modelo: 'modelo',
-                patente: 'patente',
-                color: 'color'),
-            garajeId: '1',
-            usuarioId: '1'));
+          id: 'ERROR',
+          startTime: DateTime(1999, 1, 1, 01, 00, 00),
+          endTime: DateTime(1999, 1, 1, 23, 59, 59),
+          elvehiculo: Vehiculo(
+              userId: 'userId',
+              marca: 'marca',
+              modelo: 'modelo',
+              patente: 'patente',
+              color: 'color'),
+          garajeId: '999999',
+          usuarioId: '999999999',
+          medioDePago: '',
+          monto: -1,
+          estaPago: false,
+        ));
 
   void setReserva(Reserva reserva) {
     state = state.copywith(
@@ -29,23 +33,29 @@ class reservaNotifier extends StateNotifier<Reserva> {
         endTime: reserva.endTime,
         elvehiculo: reserva.elvehiculo,
         usuarioId: reserva.usuarioId,
-        garajeId: reserva.garajeId);
+        garajeId: reserva.garajeId,
+        fueAlGarage: reserva.fueAlGarage,
+        seRetiro: reserva.seRetiro);
   }
 
   // Método para limpiar los datos del usuario (cierre de sesión)
   void clearReserva() {
     state = Reserva(
-      id: 'LIMPIEZA',
-      startTime: DateTime(1999, 1, 1, 01, 00, 00),
-      endTime: DateTime(1999, 1, 1, 01, 00, 00),
-      elvehiculo: Vehiculo(
-          userId: 'userId',
-          marca: 'marca',
-          modelo: 'modelo',
-          patente: 'patente',
-          color: 'color'),
-      usuarioId: '',
-      garajeId: '',
-    );
+        id: 'LIMPIEZA',
+        startTime: DateTime(1999, 1, 1, 01, 00, 00),
+        endTime: DateTime(1999, 1, 1, 01, 00, 00),
+        elvehiculo: Vehiculo(
+            userId: 'userId',
+            marca: 'marca',
+            modelo: 'modelo',
+            patente: 'patente',
+            color: 'color'),
+        usuarioId: '',
+        garajeId: '',
+        medioDePago: 'Efectivo',
+        estaPago: false,
+        monto: -1,
+        fueAlGarage: false,
+        seRetiro: false);
   }
 }

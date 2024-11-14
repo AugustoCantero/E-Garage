@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_application_1/WidgetsPersonalizados/GarageMarker.dart';
 import 'package:flutter_map/flutter_map.dart';
@@ -23,9 +24,13 @@ class _OpenStreetMapScreenState extends State<OpenStreetMapScreen> {
   List<LatLng> _routePoints = [];
   Marker? _currentLocationMarker;
   Marker? _searchResultMarker;
+  final db = FirebaseFirestore.instance;
+  List<GarageMarker> garageMarkers = [];
 
+  // SE COMENTO PORQUE YA NO VA A ESTAR HARDCODEADO EL GARAGE.
+  // SE VA A TRAER DE FIREBASE DESDE AHORA.
   // Lista de garages con marcadores
-  final List<GarageMarker> garageMarkers = [
+  /*final List<GarageMarker> garageMarkers = [
     GarageMarker(
       location: LatLng(-34.6035711449937, -58.377600745441114),
       name: 'Garage Odeon',
@@ -44,7 +49,7 @@ class _OpenStreetMapScreenState extends State<OpenStreetMapScreen> {
       imagePath: 'assets/images/garage3.png',
       details: 'Ubicación: Sur, Precio: 7/hora, Servicio de lavado incluido',
     ),
-  ];
+  ];*/
 
   @override
   void initState() {
@@ -52,6 +57,30 @@ class _OpenStreetMapScreenState extends State<OpenStreetMapScreen> {
     _requestLocationPermission();
     _mapController = MapController();
     _setInitialLocation();
+    _obtenerGaragesDeBase();
+  }
+
+  // Llenar losGarages con instancias de GarageMarker
+  Future<void> _obtenerGaragesDeBase() async {
+    QuerySnapshot<Map<String, dynamic>> snapshot =
+        await db.collection('GaragePrueba').get();
+
+    List<GarageMarker> garages = snapshot.docs.map((doc) {
+      var data = doc.data();
+      var location = data['location']; // Esto es un GeoPoint (LatLng)
+
+      return GarageMarker(
+        id: data['id'] ?? '',
+        location: LatLng(location.latitude, location.longitude),
+        name: data['name'] ?? '',
+        imagePath: data['imagePath'] ?? '',
+        details: data['details'] ?? '',
+      );
+    }).toList();
+
+    setState(() {
+      garageMarkers = garages;
+    });
   }
 
   // Solicita permisos
@@ -224,9 +253,7 @@ class _OpenStreetMapScreenState extends State<OpenStreetMapScreen> {
                 markers: [
                   if (_currentLocationMarker != null) _currentLocationMarker!,
                   if (_searchResultMarker != null) _searchResultMarker!,
-                  ...garageMarkers
-                      .map((garage) => garage.buildMarker(context))
-                      ,
+                  ...garageMarkers.map((garage) => garage.buildMarker(context)),
                 ],
               ),
             ],

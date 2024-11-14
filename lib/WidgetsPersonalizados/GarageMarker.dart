@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_application_1/WidgetsPersonalizados/GarageDetailDialog.dart';
+import 'package:flutter_application_1/WidgetsPersonalizados/garageDetailDialog.dart';
 import 'package:flutter_map/flutter_map.dart';
 import 'package:latlong2/latlong.dart';
 
@@ -8,8 +8,10 @@ class GarageMarker {
   final String name;
   final String imagePath;
   final String details;
+  final String id;
 
   GarageMarker({
+    required this.id,
     required this.location,
     required this.name,
     required this.imagePath,
@@ -43,6 +45,8 @@ class GarageMarker {
       pageBuilder: (context, anim1, anim2) {
         return Center(
           child: GarageDetailDialog(
+            id: id,
+            location: location,
             name: name,
             imagePath: imagePath,
             details: details,
@@ -50,5 +54,21 @@ class GarageMarker {
         );
       },
     );
+  }
+
+  GarageMarker copywith({
+    String? id,
+    LatLng? location,
+    String? imagePath,
+    String? details,
+    String? name,
+  }) {
+    return GarageMarker(
+      id: id ?? this.id,
+      location: location ?? this.location,
+      imagePath: imagePath ?? this.imagePath,
+      details: details ?? this.details,
+      name: name ?? this.name,
+    ); // Usa false si esAdmin es null
   }
 }

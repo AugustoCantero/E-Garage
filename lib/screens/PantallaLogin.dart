@@ -35,7 +35,8 @@ class LoginScreen extends ConsumerWidget {
             const SizedBox(height: 50),
             _buildTextField('Usuario', (value) => _email = value),
             const SizedBox(height: 20),
-            _buildTextField('Password', (value) => _clave = value, obscureText: true),
+            _buildTextField('Password', (value) => _clave = value,
+                obscureText: true),
             const SizedBox(height: 50),
           ],
         ),
@@ -51,7 +52,8 @@ class LoginScreen extends ConsumerWidget {
               },
             ),
             IconButton(
-              icon: const Icon(Icons.fingerprint, color: Colors.white, size: 40),
+              icon:
+                  const Icon(Icons.fingerprint, color: Colors.white, size: 40),
               onPressed: () async {
                 await _authenticate(context, ref);
               },
@@ -107,7 +109,8 @@ class LoginScreen extends ConsumerWidget {
 
       if (querySnapshot.docs.isNotEmpty) {
         QueryDocumentSnapshot userDocument = querySnapshot.docs.first;
-        Map<String, dynamic>? userData = userDocument.data() as Map<String, dynamic>?;
+        Map<String, dynamic>? userData =
+            userDocument.data() as Map<String, dynamic>?;
 
         if (userData != null) {
           String? userEmail = userData['email'] as String?;

@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_application_1/WidgetsPersonalizados/BotonAtras.dart';
 import 'package:flutter_application_1/WidgetsPersonalizados/MenuUsuario.dart';
 import 'package:flutter_application_1/core/Entities/Reserva.dart';
+import 'package:flutter_application_1/core/Providers/garage_provider.dart';
 import 'package:flutter_application_1/core/Providers/reservaGarage.dart';
 import 'package:flutter_application_1/core/Providers/reserva_provider.dart';
 import 'package:flutter_application_1/core/Providers/vehiculo_provider.dart';
@@ -210,6 +211,7 @@ class _ReservationScreenState extends ConsumerState<ReservationScreen> {
   @override
   Widget build(BuildContext context) {
     final vehiculoState = ref.watch(vehiculoProvider);
+    final garageSeleccionado = ref.watch(garageProvider);
     final db = FirebaseFirestore.instance;
 
     return GestureDetector(
@@ -296,7 +298,12 @@ class _ReservationScreenState extends ConsumerState<ReservationScreen> {
                           endTime: endTime!,
                           elvehiculo: vehiculoState,
                           usuarioId: vehiculoState.userId!,
-                          garajeId: garage.idGarage);
+                          garajeId: garageSeleccionado.id,
+                          medioDePago: 'Efectivo',
+                          estaPago: false,
+                          monto: 100,
+                          fueAlGarage: false,
+                          seRetiro: false);
 
                       ref
                           .read(reservaEnGarageProvider.notifier)

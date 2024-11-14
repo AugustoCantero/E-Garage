@@ -4,6 +4,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_application_1/WidgetsPersonalizados/BotonAtras.dart';
 import 'package:flutter_application_1/WidgetsPersonalizados/MenuUsuario.dart';
 import 'package:flutter_application_1/WidgetsPersonalizados/BotonBot.dart';
+import 'package:flutter_application_1/core/Entities/Garage.dart';
+import 'package:flutter_application_1/core/Providers/garage_provider.dart';
 import 'package:flutter_application_1/core/Providers/reservaGarage.dart';
 import 'package:flutter_application_1/screens/LoginUsuario.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
