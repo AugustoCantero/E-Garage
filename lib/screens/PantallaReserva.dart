@@ -97,6 +97,10 @@ class _ReservationScreenState extends ConsumerState<ReservationScreen> {
   DateTime? selectedDate;
   DateTime? startTime;
   DateTime? endTime;
+  double? totalHoras;
+  double? importeAbonar;
+  final int VALOR_HORA = 500;
+  final int VALOR_FRACCION_5_MINUTOS = 100;
 
   @override
   void initState() {
@@ -204,6 +208,24 @@ class _ReservationScreenState extends ConsumerState<ReservationScreen> {
     if (picked != null) {
       setState(() {
         endTime = picked;
+        calculateTotalMinutes();
+        calcularImporteAbonar();
+      });
+    }
+  }
+
+  calculateTotalMinutes() {
+    if (startTime != null && endTime != null) {
+      setState(() {
+        totalHoras = (endTime!.difference(startTime!).inMinutes / 60);
+      });
+    }
+  }
+
+  calcularImporteAbonar() {
+    if (totalHoras != null) {
+      setState(() {
+        importeAbonar = (totalHoras! * VALOR_HORA);
       });
     }
   }
@@ -281,6 +303,16 @@ class _ReservationScreenState extends ConsumerState<ReservationScreen> {
                   ),
                 ),
                 const SizedBox(height: 32),
+                Text(
+                  'Total de horas: ${totalHoras}',
+                  style: const TextStyle(color: Colors.white),
+                ),
+                const SizedBox(height: 32),
+                Text(
+                  'Importe a abonar: ${importeAbonar}',
+                  style: const TextStyle(color: Colors.white),
+                ),
+                const SizedBox(height: 32),
                 ElevatedButton(
                   onPressed: () async {
                     if (selectedDate != null &&
@@ -299,11 +331,15 @@ class _ReservationScreenState extends ConsumerState<ReservationScreen> {
                           elvehiculo: vehiculoState,
                           usuarioId: vehiculoState.userId!,
                           garajeId: garageSeleccionado.id,
+                          duracionEstadia: totalHoras!,
                           medioDePago: 'Efectivo',
                           estaPago: false,
-                          monto: 100,
                           fueAlGarage: false,
-                          seRetiro: false);
+                          seRetiro: false,
+                          monto: importeAbonar!,
+                          valorHoraAlMomentoDeReserva: VALOR_HORA,
+                          valorFraccionAlMomentoDeReserva:
+                              VALOR_FRACCION_5_MINUTOS);
 
                       ref
                           .read(reservaEnGarageProvider.notifier)

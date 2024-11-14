@@ -5,6 +5,7 @@ import 'package:flutter_application_1/WidgetsPersonalizados/BotonAtras.dart';
 import 'package:flutter_application_1/WidgetsPersonalizados/MenuUsuario.dart';
 import 'package:flutter_application_1/WidgetsPersonalizados/BotonBot.dart';
 import 'package:flutter_application_1/core/Entities/Garage.dart';
+import 'package:flutter_application_1/core/Entities/Reserva.dart';
 import 'package:flutter_application_1/core/Providers/garage_provider.dart';
 import 'package:flutter_application_1/core/Providers/reservaGarage.dart';
 import 'package:flutter_application_1/screens/LoginUsuario.dart';
@@ -31,7 +32,9 @@ class _MetodoPagoScreenState extends ConsumerState<MetodoPagoScreen> {
 
   Future<void> _guardarReserva() async {
     final db = FirebaseFirestore.instance;
-    final ReservaCargada = ref.watch(reservaEnGarageProvider);
+    Reserva ReservaCargada = ref.watch(reservaEnGarageProvider);
+
+    print(ReservaCargada.toString());
 
     db
         .collection('Reservas')

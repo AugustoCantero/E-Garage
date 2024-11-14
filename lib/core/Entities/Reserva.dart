@@ -10,6 +10,9 @@ class Reserva {
   String usuarioId;
   String medioDePago;
   double monto;
+  int valorHoraAlMomentoDeReserva;
+  int valorFraccionAlMomentoDeReserva;
+  double duracionEstadia;
   bool estaPago;
   bool? fueAlGarage;
   bool? seRetiro;
@@ -22,7 +25,10 @@ class Reserva {
     required this.usuarioId,
     required this.garajeId,
     required this.medioDePago,
+    required this.valorHoraAlMomentoDeReserva,
+    required this.valorFraccionAlMomentoDeReserva,
     required this.monto,
+    required this.duracionEstadia,
     required this.estaPago,
     this.fueAlGarage,
     this.seRetiro,
@@ -39,7 +45,10 @@ class Reserva {
       usuarioId: data['idUsuario'],
       garajeId: data['garajeId'],
       medioDePago: data['medioDePago'],
+      valorHoraAlMomentoDeReserva: data['valorHoraAlMomentoDeReserva'],
+      valorFraccionAlMomentoDeReserva: data['valorFraccionAlMomentoDeReserva'],
       monto: data['monto'],
+      duracionEstadia: data['duracionEstadia'],
       estaPago: data['estaPago'],
       fueAlGarage: data['fueAlGarage'],
       seRetiro: data['seRetiro'],
@@ -61,6 +70,9 @@ class Reserva {
       'garajeId': garajeId,
       'medioDePago': medioDePago,
       'monto': monto,
+      'valorHoraAlMomentoDeReserva': valorHoraAlMomentoDeReserva,
+      'valorFraccionAlMomentoDeReserva': valorFraccionAlMomentoDeReserva,
+      'duracionEstadia': duracionEstadia,
       'estaPago': estaPago,
       'fueAlGarage': fueAlGarage,
       'seRetiro': seRetiro,
@@ -76,6 +88,9 @@ class Reserva {
     String? usuarioId,
     String? medioDePago,
     double? monto,
+    int? valorHoraAlMomentoDeReserva,
+    int? valorFraccionAlMomentoDeReserva,
+    double? duracionEstadia,
     bool? estaPago,
     bool? fueAlGarage,
     bool? seRetiro,
@@ -89,9 +104,25 @@ class Reserva {
       garajeId: garajeId ?? this.garajeId,
       medioDePago: medioDePago ?? this.medioDePago,
       monto: monto ?? this.monto,
+      valorHoraAlMomentoDeReserva:
+          valorHoraAlMomentoDeReserva ?? this.valorHoraAlMomentoDeReserva,
+      valorFraccionAlMomentoDeReserva: valorFraccionAlMomentoDeReserva ??
+          this.valorFraccionAlMomentoDeReserva,
+      duracionEstadia: duracionEstadia ?? this.duracionEstadia,
       estaPago: estaPago ?? this.estaPago,
       fueAlGarage: fueAlGarage ?? this.fueAlGarage,
       seRetiro: seRetiro ?? this.seRetiro,
     );
+  }
+
+  @override
+  String toString() {
+    return 'Reserva{id: $id, startTime: $startTime, endTime: $endTime, '
+        'elvehiculo: ${elvehiculo.toString()}, garajeId: $garajeId, '
+        'usuarioId: $usuarioId, medioDePago: $medioDePago, monto: $monto, '
+        'valorHoraAlMomentoDeReserva: $valorHoraAlMomentoDeReserva, '
+        'valorFraccionAlMomentoDeReserva: $valorFraccionAlMomentoDeReserva, '
+        'duracionEstadia: $duracionEstadia, estaPago: $estaPago, '
+        'fueAlGarage: $fueAlGarage, seRetiro: $seRetiro}';
   }
 }

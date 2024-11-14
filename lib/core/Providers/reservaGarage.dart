@@ -21,8 +21,11 @@ class reservaNotifier extends StateNotifier<Reserva> {
               color: 'color'),
           garajeId: '999999',
           usuarioId: '999999999',
+          duracionEstadia: -5.0,
           medioDePago: '',
           monto: -1,
+          valorHoraAlMomentoDeReserva: 1000000,
+          valorFraccionAlMomentoDeReserva: 100000000,
           estaPago: false,
         ));
 
@@ -35,27 +38,37 @@ class reservaNotifier extends StateNotifier<Reserva> {
         usuarioId: reserva.usuarioId,
         garajeId: reserva.garajeId,
         fueAlGarage: reserva.fueAlGarage,
-        seRetiro: reserva.seRetiro);
+        seRetiro: reserva.seRetiro,
+        monto: reserva.monto,
+        estaPago: false,
+        duracionEstadia: reserva.duracionEstadia,
+        valorHoraAlMomentoDeReserva: reserva.valorHoraAlMomentoDeReserva,
+        valorFraccionAlMomentoDeReserva:
+            reserva.valorFraccionAlMomentoDeReserva);
   }
 
   // Método para limpiar los datos del usuario (cierre de sesión)
   void clearReserva() {
     state = Reserva(
-        id: 'LIMPIEZA',
-        startTime: DateTime(1999, 1, 1, 01, 00, 00),
-        endTime: DateTime(1999, 1, 1, 01, 00, 00),
-        elvehiculo: Vehiculo(
-            userId: 'userId',
-            marca: 'marca',
-            modelo: 'modelo',
-            patente: 'patente',
-            color: 'color'),
-        usuarioId: '',
-        garajeId: '',
-        medioDePago: 'Efectivo',
-        estaPago: false,
-        monto: -1,
-        fueAlGarage: false,
-        seRetiro: false);
+      id: 'LIMPIEZA PROVIDER',
+      startTime: DateTime(1999, 1, 1, 01, 00, 00),
+      endTime: DateTime(1999, 1, 1, 01, 00, 00),
+      elvehiculo: Vehiculo(
+          userId: 'userId',
+          marca: 'marca',
+          modelo: 'modelo',
+          patente: 'patente',
+          color: 'color'),
+      usuarioId: '',
+      garajeId: '',
+      fueAlGarage: false,
+      seRetiro: false,
+      monto: -1,
+      duracionEstadia: -5.0,
+      medioDePago: 'Efectivo',
+      estaPago: false,
+      valorHoraAlMomentoDeReserva: -9999999,
+      valorFraccionAlMomentoDeReserva: -99999999,
+    );
   }
 }
