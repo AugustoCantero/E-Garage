@@ -1,4 +1,3 @@
-
 import 'package:flutter/material.dart';
 import 'package:flutter_application_1/WidgetsPersonalizados/Mapa.dart';
 import 'package:flutter_application_1/screens/reservasUsuario.dart';
@@ -25,18 +24,24 @@ class _ChatBotPageState extends State<ChatBotPage> {
     });
 
     String botResponse = await _getChatbotResponse(message);
+
+    List<String> opcionesBot = [];
+
+    if (botResponse.contains("reservar")) {
+      opcionesBot = ["Para hoy", "Para mañana", "Para esta semana"];
+    } else if (botResponse.contains("cancelar")) {
+      opcionesBot = ["Cancelar reserva actual", "No cancelar"];
+    } else {
+      opcionesBot = [
+        "Reservar un espacio",
+        "Consultar precio",
+        "Cancelar una reserva"
+      ];
+    }
+
     setState(() {
-      _messages.insert(0, {'data': 0, 'message': botResponse});
-
-      options = [];
-
-      if (botResponse.contains("reservar")) {
-        options = ["Para hoy", "Para mañana", "Para esta semana"];
-      } else if (botResponse.contains("cancelar")) {
-        options = ["Cancelar reserva actual", "No cancelar"];
-      } else {
-        options = ["Reservar un espacio", "Consultar precio", "Cancelar una reserva"];
-      }
+      _messages.insert(
+          0, {'data': 0, 'message': botResponse, 'options': opcionesBot});
     });
   }
 
@@ -79,7 +84,9 @@ class _ChatBotPageState extends State<ChatBotPage> {
   }
 
   void _handleOptionClick(String option) {
-    if (option == "Para hoy" || option == "Para mañana" || option == "Para esta semana") {
+    if (option == "Para hoy" ||
+        option == "Para mañana" ||
+        option == "Para esta semana") {
       Navigator.push(
         context,
         MaterialPageRoute(builder: (context) => OpenStreetMapScreen()),
@@ -120,20 +127,26 @@ class _ChatBotPageState extends State<ChatBotPage> {
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
                                 Text(_messages[index]['message']),
-                                if (isBotMessage && options.isNotEmpty)
+                                if (_messages[index]['options'] != null &&
+                                    _messages[index]['options'].isNotEmpty)
                                   Wrap(
-                                    children: options.map<Widget>((option) {
+                                    children: _messages[index]['options']
+                                        .map<Widget>((option) {
                                       return Padding(
-                                        padding: const EdgeInsets.symmetric(horizontal: 4.0),
+                                        padding: const EdgeInsets.symmetric(
+                                            horizontal: 4.0),
                                         child: ElevatedButton(
                                           style: ElevatedButton.styleFrom(
                                             backgroundColor: Colors.green[200],
-                                            padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+                                            padding: const EdgeInsets.symmetric(
+                                                horizontal: 10, vertical: 5),
                                           ),
                                           onPressed: () {
                                             _handleOptionClick(option);
                                           },
-                                          child: Text(option, style: const TextStyle(color: Colors.black)),
+                                          child: Text(option,
+                                              style: const TextStyle(
+                                                  color: Colors.black)),
                                         ),
                                       );
                                     }).toList(),
