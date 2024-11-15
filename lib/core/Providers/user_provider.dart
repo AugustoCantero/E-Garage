@@ -15,10 +15,19 @@ class UsuarioNotifier extends StateNotifier<Usuario> {
             apellido: '',
             dni: '',
             telefono: '',
+            token: '',
             esAdmin: false));
 
-  void setUsuario(String id, String nombre, String apellido, String email,
-      String password, String dni, String telefono, bool esAdmin) {
+  void setUsuario(
+      String id,
+      String nombre,
+      String apellido,
+      String email,
+      String password,
+      String dni,
+      String telefono,
+      String token,
+      bool esAdmin) {
     state = state.copywith(
         id: id,
         nombre: nombre,
@@ -27,6 +36,7 @@ class UsuarioNotifier extends StateNotifier<Usuario> {
         email: email,
         dni: dni,
         telefono: telefono,
+        token: token,
         esAdmin: esAdmin);
   }
 
@@ -40,8 +50,8 @@ class UsuarioNotifier extends StateNotifier<Usuario> {
       apellido: '',
       dni: '',
       telefono: '',
+      token: '',
       esAdmin: false,
     );
   }
 }
-

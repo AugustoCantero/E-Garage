@@ -1,4 +1,4 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
+import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:flutter_application_1/WidgetsPersonalizados/MenuUsuario.dart';
 import 'package:flutter_application_1/WidgetsPersonalizados/BotonBot.dart';
@@ -7,10 +7,8 @@ import 'package:flutter_application_1/WidgetsPersonalizados/Mapa.dart';
 import 'package:flutter_application_1/services/bloc/notifications_bloc.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 import 'package:flutter_application_1/preferencias/pref_usuarios.dart';
-
-
+import 'package:http/http.dart' as http;
 
 class LoginUsuario extends ConsumerWidget {
   static const String name = "HomeUser";
@@ -21,6 +19,7 @@ class LoginUsuario extends ConsumerWidget {
     context.read<NotificationsBloc>().requestPermission();
     var prefs = PreferenciasUsuario();
     print('TOKEN: ' + prefs.token);
+
     final usuario = ref.watch(usuarioProvider);
 
     return Scaffold(
@@ -70,6 +69,22 @@ class LoginUsuario extends ConsumerWidget {
                 const SizedBox(height: 50),
                 OutlinedButton(
                   onPressed: () {
+///////////////////////////////Prueba Token////////////////////////////////
+                    try {
+                      http.post(Uri.parse('https://backnoti.onrender.com'),
+                          headers: {"Content-type": "application/json"},
+                          body: jsonEncode({
+                            //aca en vez del token hardcode iria la variable token de arriba
+                            "token": [usuario.token],
+                            "data": {
+                              "title": "busqueda",
+                              "body": "elegi tu garage"
+                            }
+                          }));
+                      print(usuario.token);
+                    } catch (e) {}
+///////////////////////////////prueba token/////////////////////////////////
+
                     Navigator.push(
                       context,
                       MaterialPageRoute(

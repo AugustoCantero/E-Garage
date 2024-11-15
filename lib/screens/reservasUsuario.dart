@@ -1,11 +1,14 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_application_1/Test/testModificacionReserva.dart';
 import 'package:flutter_application_1/WidgetsPersonalizados/BotonAtras.dart';
 import 'package:flutter_application_1/WidgetsPersonalizados/BotonBot.dart';
 import 'package:flutter_application_1/WidgetsPersonalizados/MenuUsuario.dart';
 import 'package:flutter_application_1/core/Entities/Reserva.dart';
+import 'package:flutter_application_1/core/Providers/reservaGarage.dart';
 import 'package:flutter_application_1/core/Providers/user_provider.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
 
 class ReservasUsuario extends ConsumerStatefulWidget {
@@ -122,6 +125,12 @@ class _ListView extends ConsumerWidget {
                     'Marca: ${reserva.elvehiculo.marca}, Modelo: ${reserva.elvehiculo.modelo}, Patente: ${reserva.elvehiculo.patente}',
                     style: TextStyle(color: Colors.white70),
                   ),
+                  onTap: () {
+                    ref
+                        .read(reservaEnGarageProvider.notifier)
+                        .setReserva(listaReservas[index]);
+                    context.goNamed(editarReserva.name);
+                  },
                 ),
               );
             },

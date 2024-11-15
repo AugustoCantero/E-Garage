@@ -9,6 +9,7 @@ class Usuario {
   String dni;
   String telefono;
   bool esAdmin;
+  String? token;
 
   Usuario(
       {required this.id,
@@ -18,6 +19,7 @@ class Usuario {
       required this.apellido,
       required this.dni,
       required this.telefono,
+      this.token,
       this.esAdmin = false});
 
   Map<String, dynamic> toFirestore() {
@@ -29,6 +31,7 @@ class Usuario {
       "apellido": apellido,
       "dni": dni,
       "telefono": telefono,
+      "token": token,
       'esAdmin':
           esAdmin ?? false, // Asegúrate de asignar false si esAdmin es null
     };
@@ -47,6 +50,7 @@ class Usuario {
         apellido: data?['apellido'],
         dni: data?['dni'],
         telefono: data?['telefono'],
+        token: data?['token'],
         esAdmin: data?['esAdmin'] ?? false); // Si esAdmin es null, asigna false
   }
 
@@ -58,6 +62,7 @@ class Usuario {
       String? apellido,
       String? dni,
       String? telefono,
+      String? token,
       bool? esAdmin}) {
     return Usuario(
         id: id ?? this.id,
@@ -67,6 +72,7 @@ class Usuario {
         apellido: apellido ?? this.apellido,
         dni: dni ?? this.dni,
         telefono: telefono ?? this.telefono,
+        token: token ?? this.token,
         esAdmin:
             esAdmin ?? this.esAdmin ?? false); // Usa false si esAdmin es null
   }

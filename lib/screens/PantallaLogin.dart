@@ -2,12 +2,14 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_application_1/WidgetsPersonalizados/BotonAtras.dart';
 import 'package:flutter_application_1/core/Providers/user_provider.dart';
+import 'package:flutter_application_1/preferencias/pref_usuarios.dart';
 import 'package:flutter_application_1/screens/LoginAdministrador.dart';
 import 'package:flutter_application_1/screens/LoginUsuario.dart';
+import 'package:flutter_application_1/services/bloc/notifications_bloc.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:local_auth/local_auth.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
 class LoginScreen extends ConsumerWidget {
   LoginScreen({super.key});
@@ -18,6 +20,8 @@ class LoginScreen extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    context.read<NotificationsBloc>().requestPermission();
+
     return Scaffold(
       backgroundColor: Colors.black,
       body: Padding(
@@ -117,6 +121,12 @@ class LoginScreen extends ConsumerWidget {
           String? userPassword = userData['password'] as String?;
 
           if (userEmail == _email && userPassword == _clave) {
+            if (userData['token'] == null) {
+              var prefs = PreferenciasUsuario();
+              final datos = await db.collection('users').doc(userData['id']);
+              datos.update({'token': prefs.token});
+            }
+
             ref.read(usuarioProvider.notifier).setUsuario(
                 userData['id'],
                 userData['nombre'],
@@ -125,10 +135,8 @@ class LoginScreen extends ConsumerWidget {
                 userData['password'],
                 userData['dni'],
                 userData['telefono'],
+                userData['token'],
                 userData['esAdmin']);
-
-            final prefs = await SharedPreferences.getInstance();
-            await prefs.setString('authToken', userData['email']);
 
             if (userData['esAdmin'] == false) {
               context.goNamed(LoginUsuario.name);

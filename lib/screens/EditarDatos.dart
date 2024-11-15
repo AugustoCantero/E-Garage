@@ -184,6 +184,7 @@ class EditarDatosScreen extends ConsumerWidget {
                                 passwordController.text,
                                 usuario.dni,
                                 usuario.telefono,
+                                usuario.token!,
                                 usuario.esAdmin,
                               );
 

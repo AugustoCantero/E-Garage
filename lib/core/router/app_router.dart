@@ -1,3 +1,4 @@
+import 'package:flutter_application_1/Test/testModificacionReserva.dart';
 import 'package:flutter_application_1/WidgetsPersonalizados/Aprobado.dart';
 import 'package:flutter_application_1/WidgetsPersonalizados/MercadoPago.dart';
 import 'package:flutter_application_1/WidgetsPersonalizados/PantallaPagos.dart';
@@ -105,5 +106,10 @@ final GoRouter appRouter = GoRouter(initialLocation: '/selection', routes: [
   GoRoute(
     path: '/aprobado',
     builder: (context, state) => const AprobadoScreen(),
+  ),
+  GoRoute(
+    path: '/editarReserva', // La ruta que usas en la navegación
+    builder: (context, state) => editarReserva(),
+    name: editarReserva.name,
   ),
 ]);
