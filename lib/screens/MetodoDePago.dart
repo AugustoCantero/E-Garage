@@ -1,17 +1,18 @@
+import 'dart:convert';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_application_1/WidgetsPersonalizados/BotonAtras.dart';
 import 'package:flutter_application_1/WidgetsPersonalizados/MenuUsuario.dart';
 import 'package:flutter_application_1/WidgetsPersonalizados/BotonBot.dart';
-import 'package:flutter_application_1/core/Entities/Garage.dart';
 import 'package:flutter_application_1/core/Entities/Reserva.dart';
-import 'package:flutter_application_1/core/Providers/garage_provider.dart';
 import 'package:flutter_application_1/core/Providers/reservaGarage.dart';
+import 'package:flutter_application_1/core/Providers/user_provider.dart';
 import 'package:flutter_application_1/screens/LoginUsuario.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:go_router/go_router.dart';
+import 'package:http/http.dart' as http;
 
 class MetodoPagoScreen extends ConsumerStatefulWidget {
   static const String routename = 'MetodoPagoScreen';
@@ -47,6 +48,26 @@ class _MetodoPagoScreenState extends ConsumerState<MetodoPagoScreen> {
       //COMENTADO SOLO PARA PROBAR LA RESERVA
       //Navigator.pushNamed(context, '/efectivoScreen'); // Redirige a Efectivo
       await _guardarReserva();
+
+      Reserva ReservaCargada = ref.watch(reservaEnGarageProvider);
+      final usuario = ref.read(usuarioProvider);
+///////////////////////////////Prueba Token////////////////////////////////
+      try {
+        http.post(Uri.parse('https://backnoti.onrender.com'),
+            headers: {"Content-type": "application/json"},
+            body: jsonEncode({
+              //aca en vez del token hardcode iria la variable token de arriba
+              "token": [usuario.token],
+              "data": {
+                "title": "Reservaste!!",
+                "body": "Fecha: ${ReservaCargada.startTime}\n"
+                    "Monto: ${ReservaCargada.monto}"
+              }
+            }));
+        print(usuario.token);
+      } catch (e) {}
+///////////////////////////////prueba token/////////////////////////////////
+
       context.goNamed(LoginUsuario.name);
     } else if (_selectedOption == 1) {
       Navigator.pushNamed(context, '/modoScreen'); // Redirige a MODO

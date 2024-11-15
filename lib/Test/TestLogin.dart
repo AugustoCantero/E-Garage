@@ -132,6 +132,7 @@ class Logintro extends ConsumerWidget {
                                   userData['password'],
                                   userData['dni'],
                                   userData['telefono'],
+                                  userData['token'],
                                   userData['esAdmin']);
 
                               if (userData['esAdmin'] == true) {

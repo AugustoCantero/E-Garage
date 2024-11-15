@@ -57,6 +57,7 @@ class TEST_EDICION_CUENTA extends ConsumerWidget {
                       usuario.password,
                       usuario.telefono,
                       usuario.dni,
+                      usuario.token!,
                       usuario.esAdmin = false,
                     );
 
