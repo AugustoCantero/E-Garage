@@ -93,9 +93,9 @@ class _MetodoPagoScreenState extends ConsumerState<MetodoPagoScreen> {
               //aca en vez del token hardcode iria la variable token de arriba
               "token": [usuario.token, tokenAdmin],
               "data": {
-                "title": "Reservaste!!",
-                "body": "Fecha: ${ReservaCargada.startTime}\n"
-                    "Monto: ${ReservaCargada.monto}"
+                "title": "Reserva Realizada",
+                "body": "Se realizo una reserva para la fecha: ${ReservaCargada.startTime}\n"
+                    "por un monto de: ${ReservaCargada.monto}"
               }
             }));
         print(usuario.token);
