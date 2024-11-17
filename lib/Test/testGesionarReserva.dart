@@ -1,5 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_application_1/Test/test_modif_reserva.dart';
+import 'package:flutter_application_1/WidgetsPersonalizados/BotonAtras.dart';
 import 'package:flutter_application_1/core/Entities/Reserva.dart';
 import 'package:flutter_application_1/core/Providers/reservaGarage.dart';
 import 'package:flutter_application_1/core/router/app_router.dart';
@@ -27,7 +29,16 @@ class editarReserva extends ConsumerWidget {
         children: [
           const SizedBox(height: 20),
           Center(
-            child: Text('MODIFICAR RESERVA'),
+            child: Text('OPCIONES DE RESERVA'),
+          ),
+          const SizedBox(height: 20),
+          Center(
+            child: ElevatedButton(
+              onPressed: () {
+                context.goNamed(ModificacionReservationScreen.name);
+              }, // Aquí puedes agregar la lógica para modificar la reserva
+              child: const Text("Modificar reserva"),
+            ),
           ),
           const SizedBox(height: 20),
           Center(
@@ -39,15 +50,12 @@ class editarReserva extends ConsumerWidget {
               child: const Text("Cancelar Reserva"),
             ),
           ),
-          const SizedBox(height: 20),
-          Center(
-            child: ElevatedButton(
-              onPressed:
-                  () {}, // Aquí puedes agregar la lógica para modificar la reserva
-              child: const Text("Modificar reserva"),
-            ),
-          ),
         ],
+      ),
+      floatingActionButton: BackButtonWidget(
+        onPressed: () {
+          context.goNamed(LoginUsuario.name);
+        },
       ),
     );
   }

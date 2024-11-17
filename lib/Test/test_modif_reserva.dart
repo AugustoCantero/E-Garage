@@ -1,24 +1,27 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_application_1/Test/testGesionarReserva.dart';
 import 'package:flutter_application_1/WidgetsPersonalizados/BotonAtras.dart';
 import 'package:flutter_application_1/WidgetsPersonalizados/MenuUsuario.dart';
 import 'package:flutter_application_1/core/Entities/Reserva.dart';
+import 'package:flutter_application_1/core/Entities/Usuario.dart';
+import 'package:flutter_application_1/core/Entities/Vehiculo.dart';
 import 'package:flutter_application_1/core/Providers/garage_provider.dart';
 import 'package:flutter_application_1/core/Providers/reservaGarage.dart';
-import 'package:flutter_application_1/core/Providers/reserva_provider.dart';
+import 'package:flutter_application_1/core/Providers/user_provider.dart';
 import 'package:flutter_application_1/core/Providers/vehiculo_provider.dart';
-import 'package:flutter_application_1/screens/MetodoDePago.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
 
-class ReservationScreen extends ConsumerStatefulWidget {
-  static const String name = "ReservationScreen";
+class ModificacionReservationScreen extends ConsumerStatefulWidget {
+  static const String name = "ModificacionReservationScreen";
 
-  const ReservationScreen({super.key});
+  const ModificacionReservationScreen({super.key});
 
   @override
-  _ReservationScreenState createState() => _ReservationScreenState();
+  _ModificacionReservationScreenState createState() =>
+      _ModificacionReservationScreenState();
 }
 
 class Garage {
@@ -91,7 +94,8 @@ class Garage {
   }
 }
 
-class _ReservationScreenState extends ConsumerState<ReservationScreen> {
+class _ModificacionReservationScreenState
+    extends ConsumerState<ModificacionReservationScreen> {
   List<Reserva> lasReservas = [];
   final Garage garage = Garage();
   DateTime? selectedDate;
@@ -101,11 +105,16 @@ class _ReservationScreenState extends ConsumerState<ReservationScreen> {
   double? importeAbonar = 0.0;
   final int VALOR_HORA = 500;
   final int VALOR_FRACCION_5_MINUTOS = 100;
+  final db = FirebaseFirestore.instance;
+  String? nombreGarage;
+  String? direccionGarage;
+  String? selectedVehicle;
+  Vehiculo? vehiculoSeleccionado;
 
-  @override
   void initState() {
     super.initState();
     _fetchReservas();
+    _obtenerDatosGarage(db);
   }
 
   Future<void> _fetchReservas() async {
@@ -230,11 +239,83 @@ class _ReservationScreenState extends ConsumerState<ReservationScreen> {
     }
   }
 
+  Future<void> _obtenerDatosGarage(FirebaseFirestore db) async {
+    print('Entre');
+    DocumentSnapshot<Map<String, dynamic>> documentGarage =
+        await db.collection('GaragePrueba').doc('bRe87UgleeGpBlC1wSUv').get();
+
+    setState(() {
+      nombreGarage = documentGarage.data()!['name'];
+      direccionGarage = documentGarage.data()!['Direccion'];
+    });
+
+    print('sali');
+  }
+
+  void _showVehiclePicker(BuildContext context, Usuario usuarioLogueado) {
+    final db = FirebaseFirestore.instance;
+
+    showModalBottomSheet(
+      context: context,
+      builder: (BuildContext context) {
+        return Container(
+          height: 300, // Definir altura de la ventana emergente
+          child: FutureBuilder<QuerySnapshot<Map<String, dynamic>>>(
+            future: db
+                .collection('Vehiculos')
+                .where('userId', isEqualTo: usuarioLogueado.id)
+                .get(), // Obtener datos de Firestore
+            builder: (BuildContext context,
+                AsyncSnapshot<QuerySnapshot<Map<String, dynamic>>> snapshot) {
+              if (snapshot.connectionState == ConnectionState.waiting) {
+                return Center(child: CircularProgressIndicator());
+              } else if (snapshot.hasError) {
+                return Center(child: Text('Error al cargar vehículos'));
+              } else if (!snapshot.hasData || snapshot.data!.docs.isEmpty) {
+                return Center(child: Text('No se encontraron vehículos'));
+              }
+
+              // Mostrar la lista de vehículos
+              List<DocumentSnapshot<Map<String, dynamic>>> vehicles =
+                  snapshot.data!.docs;
+
+              return ListView.builder(
+                itemCount: vehicles.length,
+                itemBuilder: (BuildContext context, int index) {
+                  // Crear el objeto Vehiculo usando fromFirestore
+                  final vehiculo =
+                      Vehiculo.fromFirestore(vehicles[index], null);
+
+                  return ListTile(
+                    title: Text(vehiculo.patente ??
+                        'Sin patente'), // Usar el campo marca
+                    subtitle: Text(vehiculo.modelo ?? 'Sin Modelo'),
+                    trailing: Text(vehiculo.marca ?? 'Sin Marca'),
+                    // Mostrar modelo
+                    onTap: () {
+                      setState(() {
+                        selectedVehicle = vehiculo
+                            .marca; // Guardar el nombre del vehículo seleccionado
+                        vehiculoSeleccionado = vehiculo;
+                      });
+                      Navigator.pop(context); // Cerrar la ventana modal
+                    },
+                  );
+                },
+              );
+            },
+          ),
+        );
+      },
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     final vehiculoState = ref.watch(vehiculoProvider);
     final garageSeleccionado = ref.watch(garageProvider);
-    final db = FirebaseFirestore.instance;
+    final userLogueado = ref.watch(usuarioProvider);
+    final reservaAModificar = ref.watch(reservaEnGarageProvider);
 
     return GestureDetector(
       onTap: () {
@@ -255,13 +336,9 @@ class _ReservationScreenState extends ConsumerState<ReservationScreen> {
               mainAxisAlignment: MainAxisAlignment.center,
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
-                Image.asset(
-                  'assets/images/car_logo.png',
-                  height: 100, // Tamaño más pequeño para el auto
-                ),
                 const SizedBox(height: 10),
                 const Text(
-                  'Reservar Garage',
+                  'Modificar Reserva \n\n Reserva actual',
                   style: TextStyle(
                     color: Colors.white,
                     fontSize: 24, // Ajusta el tamaño del texto
@@ -269,7 +346,44 @@ class _ReservationScreenState extends ConsumerState<ReservationScreen> {
                   ),
                   textAlign: TextAlign.center,
                 ),
-                const SizedBox(height: 20),
+                const SizedBox(height: 15),
+                Text(
+                  'Vehiculo: ${reservaAModificar.elvehiculo.marca} ${reservaAModificar.elvehiculo.modelo} patente: ${reservaAModificar.elvehiculo.patente} \n'
+                  'Garage: ${nombreGarage}\n'
+                  'Direccion: ${direccionGarage}\n'
+                  'Fecha inicio: ${DateFormat('dd-MM-yyyy HH:mm').format(reservaAModificar.startTime)}\n'
+                  'Fecha fin: ${DateFormat('dd-MM-yyyy HH:mm').format(reservaAModificar.endTime)}\n'
+                  'cantidad de horas: ${reservaAModificar.duracionEstadia} \n'
+                  'Costo estadia: ${reservaAModificar.monto}',
+                  style: const TextStyle(color: Colors.white),
+                ),
+                const SizedBox(height: 50),
+                Text(
+                  '¿QUE DESEA CAMBIAR DE LA RESERVA?',
+                  style: const TextStyle(color: Colors.white),
+                ),
+                const SizedBox(height: 30),
+                ElevatedButton(
+                  onPressed: () {
+                    if (userLogueado != null) {
+                      _showVehiclePicker(context, userLogueado);
+                    } else {
+                      // Manejar el caso cuando usuarioState es null
+                      print('Usuario no encontrado');
+                    }
+                  },
+                  style: ElevatedButton.styleFrom(backgroundColor: Colors.blue),
+                  child: Container(
+                    decoration: BoxDecoration(),
+                    child: Text(
+                      vehiculoSeleccionado == null
+                          ? 'Seleccionar Vehículo'
+                          : 'Vehículo: ${vehiculoSeleccionado!.patente}',
+                      style: const TextStyle(color: Colors.white, fontSize: 15),
+                    ),
+                  ),
+                ),
+                const SizedBox(height: 16),
                 ElevatedButton(
                   onPressed: () => selectDate(context),
                   style: ElevatedButton.styleFrom(backgroundColor: Colors.blue),
@@ -302,12 +416,12 @@ class _ReservationScreenState extends ConsumerState<ReservationScreen> {
                     style: const TextStyle(color: Colors.white),
                   ),
                 ),
-                const SizedBox(height: 32),
+                const SizedBox(height: 20),
                 Text(
                   'Total de horas: ${totalHoras}',
                   style: const TextStyle(color: Colors.white),
                 ),
-                const SizedBox(height: 32),
+                const SizedBox(height: 20),
                 Text(
                   'Importe a abonar: ${importeAbonar}',
                   style: const TextStyle(color: Colors.white),
@@ -315,7 +429,7 @@ class _ReservationScreenState extends ConsumerState<ReservationScreen> {
                 const SizedBox(height: 32),
                 ElevatedButton(
                   onPressed: () async {
-                    if (selectedDate != null &&
+                    /*  if (selectedDate != null &&
                         startTime != null &&
                         endTime != null) {
                       //MOMENTANEAMENTE ESTO VA A IR ACA, LA IDEA ES QUE SE GENERE TODO UNA VEZ CONFIRMADO EL PAGO.
@@ -358,7 +472,7 @@ class _ReservationScreenState extends ConsumerState<ReservationScreen> {
                         const SnackBar(
                             content: Text('Seleccione una fecha y un lote')),
                       );
-                    }
+                    }*/
                   },
                   style: ElevatedButton.styleFrom(
                     backgroundColor: Colors.green,
@@ -378,7 +492,7 @@ class _ReservationScreenState extends ConsumerState<ReservationScreen> {
         ),
         floatingActionButton: BackButtonWidget(
           onPressed: () {
-            context.goNamed('ReservationSelectVehicule');
+            context.goNamed(editarReserva.name);
           },
         ),
         floatingActionButtonLocation: FloatingActionButtonLocation.startFloat,

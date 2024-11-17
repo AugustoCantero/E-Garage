@@ -24,6 +24,7 @@ class MetodoPagoScreen extends ConsumerStatefulWidget {
 
 class _MetodoPagoScreenState extends ConsumerState<MetodoPagoScreen> {
   int _selectedOption = -1; // Ninguna opción seleccionada por defecto
+  final db = FirebaseFirestore.instance;
 
   void _onOptionSelected(int option) {
     setState(() {
@@ -32,7 +33,6 @@ class _MetodoPagoScreenState extends ConsumerState<MetodoPagoScreen> {
   }
 
   Future<void> _guardarReserva() async {
-    final db = FirebaseFirestore.instance;
     Reserva ReservaCargada = ref.watch(reservaEnGarageProvider);
 
     print(ReservaCargada.toString());
@@ -43,21 +43,55 @@ class _MetodoPagoScreenState extends ConsumerState<MetodoPagoScreen> {
         .set(ReservaCargada.toFirestore());
   }
 
+  Future<String> _recuperarTokenAdmin() async {
+    Reserva ReservaCargada2 = ref.watch(reservaEnGarageProvider);
+
+    QuerySnapshot documento = await db
+        .collection('adminGarage')
+        .where('idGarage', isEqualTo: ReservaCargada2.garajeId)
+        .get();
+
+    print(documento);
+
+    if (documento.docs.isEmpty) {
+      print('No trajo nada');
+    } else {
+      print('Ahora trajo');
+    }
+
+    DocumentSnapshot docReserva = documento.docs.first;
+
+    String idUserAdmin = docReserva['idUserAdmin'];
+
+    DocumentSnapshot documentoAdmin =
+        await db.collection('users').doc(idUserAdmin).get();
+
+    String tokenAdmin = documentoAdmin['token'];
+
+    return tokenAdmin;
+  }
+
   Future<void> _confirmSelection() async {
     if (_selectedOption == 0) {
       //COMENTADO SOLO PARA PROBAR LA RESERVA
       //Navigator.pushNamed(context, '/efectivoScreen'); // Redirige a Efectivo
       await _guardarReserva();
+      String tokenAdmin = await _recuperarTokenAdmin();
 
       Reserva ReservaCargada = ref.watch(reservaEnGarageProvider);
       final usuario = ref.read(usuarioProvider);
+
+      print('**************ACA VIENE EL TOKEN DEL ADMIN**********************');
+      print(tokenAdmin);
+      print('**************   FIN    **********************');
+
 ///////////////////////////////Prueba Token////////////////////////////////
       try {
         http.post(Uri.parse('https://backnoti.onrender.com'),
             headers: {"Content-type": "application/json"},
             body: jsonEncode({
               //aca en vez del token hardcode iria la variable token de arriba
-              "token": [usuario.token],
+              "token": [usuario.token, tokenAdmin],
               "data": {
                 "title": "Reservaste!!",
                 "body": "Fecha: ${ReservaCargada.startTime}\n"
