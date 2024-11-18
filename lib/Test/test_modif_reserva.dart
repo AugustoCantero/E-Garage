@@ -338,7 +338,7 @@ class _ModificacionReservationScreenState
               children: [
                 const SizedBox(height: 10),
                 const Text(
-                  'Modificar Reserva \n\n Reserva actual',
+                  'Modificar Reserva \n',
                   style: TextStyle(
                     color: Colors.white,
                     fontSize: 24, // Ajusta el tamaño del texto
@@ -347,22 +347,6 @@ class _ModificacionReservationScreenState
                   textAlign: TextAlign.center,
                 ),
                 const SizedBox(height: 15),
-                Text(
-                  'Vehiculo: ${reservaAModificar.elvehiculo.marca} ${reservaAModificar.elvehiculo.modelo} patente: ${reservaAModificar.elvehiculo.patente} \n'
-                  'Garage: ${nombreGarage}\n'
-                  'Direccion: ${direccionGarage}\n'
-                  'Fecha inicio: ${DateFormat('dd-MM-yyyy HH:mm').format(reservaAModificar.startTime)}\n'
-                  'Fecha fin: ${DateFormat('dd-MM-yyyy HH:mm').format(reservaAModificar.endTime)}\n'
-                  'cantidad de horas: ${reservaAModificar.duracionEstadia} \n'
-                  'Costo estadia: ${reservaAModificar.monto}',
-                  style: const TextStyle(color: Colors.white),
-                ),
-                const SizedBox(height: 50),
-                Text(
-                  '¿QUE DESEA CAMBIAR DE LA RESERVA?',
-                  style: const TextStyle(color: Colors.white),
-                ),
-                const SizedBox(height: 30),
                 ElevatedButton(
                   onPressed: () {
                     if (userLogueado != null) {

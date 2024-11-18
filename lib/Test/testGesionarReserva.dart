@@ -12,7 +12,8 @@ import 'package:flutter_application_1/screens/LoginUsuario.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:http/http.dart' as http;
-
+import 'package:intl/intl.dart';
+import 'dart:math';
 
 class editarReserva extends ConsumerWidget {
   static final String name = 'editarReserva';
@@ -24,52 +25,42 @@ class editarReserva extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     Reserva ReservaCargada = ref.watch(reservaEnGarageProvider);
-    
 
     Future<void> _cancelarReserva() async {
-    await db.collection('Reservas').doc(ReservaCargada.id).delete();
+      await db.collection('Reservas').doc(ReservaCargada.id).delete();
     }
-
 
     Future<String> _recuperarTokenAdmin() async {
-    Reserva ReservaCargada2 = ref.watch(reservaEnGarageProvider);
+      Reserva ReservaCargada2 = ref.watch(reservaEnGarageProvider);
 
-    QuerySnapshot documento = await db
-        .collection('adminGarage')
-        .where('idGarage', isEqualTo: ReservaCargada2.garajeId)
-        .get();
+      QuerySnapshot documento = await db
+          .collection('adminGarage')
+          .where('idGarage', isEqualTo: ReservaCargada2.garajeId)
+          .get();
 
-    print(documento);
+      print(documento);
 
-    if (documento.docs.isEmpty) {
-      print('No trajo nada');
-    } else {
-      print('Ahora trajo');
-    }
+      if (documento.docs.isEmpty) {
+        print('No trajo nada');
+      } else {
+        print('Ahora trajo');
+      }
 
-    DocumentSnapshot docReserva = documento.docs.first;
+      DocumentSnapshot docReserva = documento.docs.first;
+      String idUserAdmin = docReserva['idUserAdmin'];
+      DocumentSnapshot documentoAdmin =
+          await db.collection('users').doc(idUserAdmin).get();
 
-    String idUserAdmin = docReserva['idUserAdmin'];
+      String tokenAdmin = documentoAdmin['token'];
 
-    DocumentSnapshot documentoAdmin =
-        await db.collection('users').doc(idUserAdmin).get();
-
-    String tokenAdmin = documentoAdmin['token'];
-
-    return tokenAdmin;
+      return tokenAdmin;
     }
 
     Future<void> _enviarNotificaciones() async {
       String tokenAdmin = await _recuperarTokenAdmin();
-
       Reserva ReservaCargada = ref.watch(reservaEnGarageProvider);
       final usuario = ref.read(usuarioProvider);
-//////////////////////////////////borrar despues///////////////////////////////////////////////
-      print('**************ACA VIENE EL TOKEN DEL ADMIN**********************');
-      print(tokenAdmin);
-      print('**************   FIN    **********************');
 
-///////////////////////////////Prueba Token////////////////////////////////
       try {
         http.post(Uri.parse('https://backnoti.onrender.com'),
             headers: {"Content-type": "application/json"},
@@ -78,23 +69,41 @@ class editarReserva extends ConsumerWidget {
               "token": [usuario.token, tokenAdmin],
               "data": {
                 "title": "Reserva Cancelada",
-                "body": "La reserva para la Fecha: ${ReservaCargada.startTime}\n"
-                    "Monto: ${ReservaCargada.monto}\n"
-                    "fue cancelada"
+                "body":
+                    "La reserva para la Fecha: ${ReservaCargada.startTime}\n"
+                        "Monto: ${ReservaCargada.monto}\n"
+                        "fue cancelada"
               }
             }));
       } catch (e) {}
+    }
 
+    String _formatDuracion(double duracion) {
+      final int horas = duracion.floor();
+      final int minutos = ((duracion - horas) * 60).round();
+      return '${horas.toString().padLeft(2, '0')}:${minutos.toString().padLeft(2, '0')}';
     }
 
     return Scaffold(
       body: Column(
         children: [
-          const SizedBox(height: 20),
+          const SizedBox(height: 30),
           Center(
-            child: Text('OPCIONES DE RESERVA'),
+            child: Text('DATOS DE LA RESERVA'),
           ),
-          const SizedBox(height: 20),
+          const SizedBox(height: 30),
+          Center(
+              child: Text(
+            'Vehiculo: ${ReservaCargada.elvehiculo.marca} ${ReservaCargada.elvehiculo.modelo} patente: ${ReservaCargada.elvehiculo.patente} \n'
+            // 'Garage: ${nombreGarage}\n'
+            //'Direccion: ${direccionGarage}\n'
+            'Fecha inicio: ${DateFormat('dd-MM-yyyy HH:mm').format(ReservaCargada.startTime)}\n'
+            'Fecha fin: ${DateFormat('dd-MM-yyyy HH:mm').format(ReservaCargada.endTime)}\n'
+            'Duración de estadía: ${_formatDuracion(ReservaCargada.duracionEstadia)} \n'
+            'Costo estadia: ${ReservaCargada.monto}',
+            //style: const TextStyle(color: Colors.white),
+          )),
+          const SizedBox(height: 30),
           Center(
             child: ElevatedButton(
               onPressed: () {
@@ -108,7 +117,7 @@ class editarReserva extends ConsumerWidget {
             child: ElevatedButton(
               onPressed: () async {
                 await _cancelarReserva();
-                await  _enviarNotificaciones();
+                await _enviarNotificaciones();
                 context.goNamed(LoginUsuario.name);
               }, // Aquí llamas a la función _cancelarReserva
               child: const Text("Cancelar Reserva"),

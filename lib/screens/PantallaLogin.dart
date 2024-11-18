@@ -37,7 +37,7 @@ class LoginScreen extends ConsumerWidget {
               ),
             ),
             const SizedBox(height: 50),
-            _buildTextField('Usuario', (value) => _email = value),
+            _buildTextField('Email', (value) => _email = value),
             const SizedBox(height: 20),
             _buildTextField('Password', (value) => _clave = value,
                 obscureText: true),
