@@ -61,27 +61,36 @@ class _OpenStreetMapScreenState extends State<OpenStreetMapScreen> {
   }
 
   // Llenar losGarages con instancias de GarageMarker
-  Future<void> _obtenerGaragesDeBase() async {
+Future<void> _obtenerGaragesDeBase() async {
+  try {
     QuerySnapshot<Map<String, dynamic>> snapshot =
-        await db.collection('GaragePrueba').get();
+        await db.collection('garages').get();
 
     List<GarageMarker> garages = snapshot.docs.map((doc) {
       var data = doc.data();
-      var location = data['location']; // Esto es un GeoPoint (LatLng)
+      var lat = data['latitude'];
+      var lon = data['longitude'];
 
-      return GarageMarker(
-        id: data['id'] ?? '',
-        location: LatLng(location.latitude, location.longitude),
-        name: data['name'] ?? '',
-        imagePath: data['imagePath'] ?? '',
-        details: data['details'] ?? '',
-      );
-    }).toList();
+      if (lat != null && lon != null) {
+        return GarageMarker(
+          id: data['id'] ?? '',
+          location: LatLng(lat, lon),
+          name: data['nombre'] ?? 'Garage',
+          imagePath: data['imagePath'] ?? '',
+          details: data['direccion'] ?? '',
+        );
+      } else {
+        return null;
+      }
+    }).whereType<GarageMarker>().toList();
 
     setState(() {
       garageMarkers = garages;
     });
+  } catch (e) {
+    print('Error al obtener garages de Firebase: $e');
   }
+}
 
   // Solicita permisos
   Future<void> _requestLocationPermission() async {

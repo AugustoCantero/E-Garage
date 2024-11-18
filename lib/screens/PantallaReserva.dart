@@ -7,6 +7,7 @@ import 'package:flutter_application_1/core/Providers/garage_provider.dart';
 import 'package:flutter_application_1/core/Providers/reservaGarage.dart';
 import 'package:flutter_application_1/core/Providers/reserva_provider.dart';
 import 'package:flutter_application_1/core/Providers/vehiculo_provider.dart';
+import 'package:flutter_application_1/services/mercado_pago_service.dart';
 import 'package:flutter_application_1/screens/MetodoDePago.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
@@ -318,45 +319,45 @@ class _ReservationScreenState extends ConsumerState<ReservationScreen> {
                     if (selectedDate != null &&
                         startTime != null &&
                         endTime != null) {
-                      //MOMENTANEAMENTE ESTO VA A IR ACA, LA IDEA ES QUE SE GENERE TODO UNA VEZ CONFIRMADO EL PAGO.
                       DocumentReference docRef =
                           db.collection('Reservas').doc();
                       String idParaReserva = docRef.id;
-                      //--------------------------------------------------------------------------------------------
 
                       final reserva = Reserva(
-                          id: idParaReserva,
-                          startTime: startTime!,
-                          endTime: endTime!,
-                          elvehiculo: vehiculoState,
-                          usuarioId: vehiculoState.userId!,
-                          garajeId: garageSeleccionado.id,
-                          duracionEstadia: totalHoras!,
-                          medioDePago: 'Efectivo',
-                          estaPago: false,
-                          fueAlGarage: false,
-                          seRetiro: false,
-                          monto: importeAbonar!,
-                          valorHoraAlMomentoDeReserva: VALOR_HORA,
-                          valorFraccionAlMomentoDeReserva:
-                              VALOR_FRACCION_5_MINUTOS);
+                        id: idParaReserva,
+                        startTime: startTime!,
+                        endTime: endTime!,
+                        elvehiculo: vehiculoState,
+                        usuarioId: vehiculoState.userId!,
+                        garajeId: garageSeleccionado.id,
+                        duracionEstadia: totalHoras!,
+                        medioDePago: 'Pendiente',
+                        estaPago: false,
+                        fueAlGarage: false,
+                        seRetiro: false,
+                        monto: importeAbonar!,
+                        valorHoraAlMomentoDeReserva: VALOR_HORA,
+                        valorFraccionAlMomentoDeReserva:
+                            VALOR_FRACCION_5_MINUTOS,
+                      );
 
-                      print(reserva.toString());
-
+                      // Guardar la reserva en el estado (Provider)
                       ref
                           .read(reservaEnGarageProvider.notifier)
                           .setReserva(reserva);
 
+                      // Dirigir a la pantalla de selección de método de pago
                       Navigator.push(
                         context,
                         MaterialPageRoute(
                           builder: (context) => MetodoPagoScreen(),
                         ),
-                      );
+                      );;
                     } else {
                       ScaffoldMessenger.of(context).showSnackBar(
                         const SnackBar(
-                            content: Text('Seleccione una fecha y un lote')),
+                            content:
+                                Text('Seleccione una fecha y un lote válido.')),
                       );
                     }
                   },
@@ -367,10 +368,8 @@ class _ReservationScreenState extends ConsumerState<ReservationScreen> {
                     shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(20)),
                   ),
-                  child: const Text(
-                    'Reservar',
-                    style: TextStyle(color: Colors.white, fontSize: 16),
-                  ),
+                  child: const Text('Reservar',
+                      style: TextStyle(color: Colors.white, fontSize: 16)),
                 ),
               ],
             ),

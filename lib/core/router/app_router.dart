@@ -1,6 +1,5 @@
 import 'package:flutter_application_1/Test/testModificacionReserva.dart';
 import 'package:flutter_application_1/WidgetsPersonalizados/Aprobado.dart';
-import 'package:flutter_application_1/WidgetsPersonalizados/MercadoPago.dart';
 import 'package:flutter_application_1/WidgetsPersonalizados/PantallaPagos.dart';
 import 'package:flutter_application_1/screens/EditarDatos.dart';
 import 'package:flutter_application_1/screens/LoginAdministrador.dart';
@@ -93,11 +92,6 @@ final GoRouter appRouter = GoRouter(initialLocation: '/selection', routes: [
     path: '/ReservationSelectVehicule',
     builder: (context, state) => const GestionVehiculosScreen(),
     name: GestionVehiculosScreen.name,
-  ),
-  GoRoute(
-    path: '/MercadoPagoScreen',
-    builder: (context, state) => MercadoPagoScreen(),
-    name: MercadoPagoScreen.name,
   ),
   GoRoute(
     path: '/',

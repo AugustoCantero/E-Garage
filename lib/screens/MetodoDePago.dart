@@ -69,8 +69,6 @@ class _MetodoPagoScreenState extends ConsumerState<MetodoPagoScreen> {
 ///////////////////////////////prueba token/////////////////////////////////
 
       context.goNamed(LoginUsuario.name);
-    } else if (_selectedOption == 1) {
-      Navigator.pushNamed(context, '/modoScreen'); // Redirige a MODO
     } else if (_selectedOption == 2) {
       await _launchMercadoPagoURL(); // Redirige a URL de Mercado Pago
     } else {
@@ -80,38 +78,47 @@ class _MetodoPagoScreenState extends ConsumerState<MetodoPagoScreen> {
     }
   }
 
-  Future<void> _launchMercadoPagoURL() async {
-    final dio = Dio();
-    try {
-      Response<Map> response =
-          await dio.post('http://127.0.0.1:8080/create_preferences');
-      //response = await dio.post('http://127.0.0.1:8080/create_preferences');
-      var res = response.data;
-      String? url = res?["url"];
-      if (url != null) {
-        if (await canLaunch(url)) {
-          await launch(url);
-        } else {
-          throw 'No se pudo abrir el enlace $url';
-        }
-      } else {
-        print("URL no disponible en la respuesta.");
-      }
-    } catch (e) {
-      print("Error al abrir la URL: $e");
-    }
-  }
-  /*  print(res?["url"]);
-    if (context.mounted) {
-      context.go('/aprobado', extra: {
-    'url': res?["url"],
-  });
-}
-    } catch (e){
-      print(e);
-    }
-  } */
+ Future<void> _launchMercadoPagoURL() async {
+  final dio = Dio();
+  final reserva = ref.watch(reservaEnGarageProvider);
 
+  if (reserva.monto == null || reserva.monto <= 0) {
+    ScaffoldMessenger.of(context).showSnackBar(
+      const SnackBar(content: Text('El importe de la reserva es inválido.')),
+    );
+    return;
+  }
+
+  try {
+    // Crear la preferencia de pago usando el monto real de la reserva
+    Response<Map> response = await dio.post(
+      'http://127.0.0.1:8080/create_preferences',
+      data: {
+        "title": "Reserva de Estacionamiento",
+        "quantity": 1,
+        "unit_price": reserva.monto,
+      },
+    );
+
+    var res = response.data;
+    String? url = res?["url"];
+
+    if (url != null) {
+      if (await canLaunch(url)) {
+        await launch(url);
+      } else {
+        throw 'No se pudo abrir el enlace $url';
+      }
+    } else {
+      print("URL no disponible en la respuesta.");
+    }
+  } catch (e) {
+    print("Error al abrir la URL: $e");
+    ScaffoldMessenger.of(context).showSnackBar(
+      const SnackBar(content: Text('Error al iniciar el pago con MercadoPago')),
+    );
+  }
+}
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -158,11 +165,6 @@ class _MetodoPagoScreenState extends ConsumerState<MetodoPagoScreen> {
                     index: 0,
                     label: "Efectivo",
                     imagePath: 'assets/images/efectivo.png',
-                  ),
-                  _buildPaymentOption(
-                    index: 1,
-                    label: "MODO",
-                    imagePath: 'assets/images/modo.png',
                   ),
                   _buildPaymentOption(
                     index: 2,
