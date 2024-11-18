@@ -1,5 +1,9 @@
+// ignore_for_file: use_build_context_synchronously
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_application_1/WidgetsPersonalizados/BotonAtras.dart';
+import 'package:flutter_application_1/WidgetsPersonalizados/MenuUsuario.dart';
 import 'package:flutter_application_1/core/Entities/Vehiculo.dart';
 import 'package:flutter_application_1/core/Providers/vehiculo_provider.dart';
 import 'package:flutter_application_1/screens/VehiculosUsuario.dart';
@@ -41,13 +45,11 @@ class EditarDatosAutoState extends ConsumerState<EditarDatosAuto> {
   Future<void> _guardarCambios(Vehiculo vehiculo) async {
     final db = FirebaseFirestore.instance;
     try {
-      // Obtener los valores del controlador
       String patente = patenteController.text;
       String modelo = modeloController.text;
       String marca = marcaController.text;
       String color = colorController.text;
 
-      // Buscar el documento que tiene el campo `patente` igual a `vehiculo.patente`
       QuerySnapshot querySnap = await db
           .collection('Vehiculos')
           .where('patente', isEqualTo: vehiculo.patente)
@@ -62,7 +64,6 @@ class EditarDatosAutoState extends ConsumerState<EditarDatosAuto> {
           'color': color,
         });
 
-        // Actualizar el estado en el provider
         final updatedVehiculo = Vehiculo(
           patente: patente,
           marca: marca,
@@ -88,24 +89,73 @@ class EditarDatosAutoState extends ConsumerState<EditarDatosAuto> {
   }
 
   Future<void> _eliminarAuto() async {
-    FirebaseFirestore db = FirebaseFirestore.instance;
-    String patente = patenteController.text;
+  final db = FirebaseFirestore.instance;
+  String patente = patenteController.text;
 
-    // Eliminar el vehículo de Firestore
-    await db.collection('Vehiculos').doc(patente).delete();
+  final confirmacion = await showDialog<bool>(
+    context: context, 
+    builder: (BuildContext context) {
+      return AlertDialog(
+        title: const Text('¿Quieres eliminar tu vehículo?'),
+        content: const Text('Esta acción no se puede deshacer.'),
+        actions: <Widget>[
+          TextButton(
+            child: const Text('Sí'),
+            onPressed: () => Navigator.of(context).pop(true), 
+          ),
+          TextButton(
+            child: const Text('No'),
+            onPressed: () => Navigator.of(context).pop(false), 
+          ),
+        ],
+      );
+    },
+    );
+if(confirmacion == true) {
+  try {
+    QuerySnapshot vehiculosSnap = await db
+        .collection('Vehiculos')
+        .where('patente', isEqualTo: patente)
+        .limit(1)
+        .get();
 
-    // También eliminar la relación en UsuariosVehiculos
-    QuerySnapshot querySnap1 = await db
+    if (vehiculosSnap.docs.isNotEmpty) {
+      await vehiculosSnap.docs.first.reference.delete();
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Vehículo eliminado correctamente.')),
+      );
+    } else {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Vehículo no encontrado.')),
+      );
+      return;
+    }
+
+    QuerySnapshot userVehiculosSnap = await db
         .collection('UsuariosVehiculos')
         .where('idVehiculo', isEqualTo: patente)
         .limit(1)
         .get();
 
-    if (querySnap1.docs.isNotEmpty) {
-      DocumentSnapshot userVehiculoDoc = querySnap1.docs.first;
-      await userVehiculoDoc.reference.delete();
+    if (userVehiculosSnap.docs.isNotEmpty) {
+      await userVehiculosSnap.docs.first.reference.delete();
+    } else {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('No se encontró relación usuario-vehículo.'),
+        ),
+      );
     }
+
+    ref.read(vehiculoProvider.notifier).clearVehiculo();
+    context.push('/vehiculosUsuario');
+  } catch (e) {
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(content: Text('Error al eliminar vehículo: $e')),
+    );
   }
+  }
+}
 
   @override
   Widget build(BuildContext context) {
@@ -116,28 +166,35 @@ class EditarDatosAutoState extends ConsumerState<EditarDatosAuto> {
       appBar: AppBar(
         backgroundColor: Colors.black,
         elevation: 0,
-        leading: IconButton(
-          icon: const Icon(Icons.menu, color: Colors.white),
-          onPressed: () {
-            Scaffold.of(context).openDrawer();
+        leading: Builder(
+          builder: (context) {
+            return IconButton(
+              icon: const Icon(Icons.menu, color: Colors.white),
+              onPressed: () {
+                Scaffold.of(context).openDrawer();
+              },
+            );
           },
         ),
       ),
-      body: Padding(
-        padding: const EdgeInsets.all(20.0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Center(
-              child: Image.asset(
-                'assets/images/car_logo.png',
-                height: 100,
-              ),
-            ),
+      drawer: const MenuUsuario(),
+      body: Stack(
+        children: [
+          SingleChildScrollView(
+            child: Padding(
+              padding: const EdgeInsets.all(16.0),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  const SizedBox(height: 30),
+                  Image.asset(
+                    'assets/images/car_logo.png',
+                    height: 100,
+                  ),
             const SizedBox(height: 20),
             const Center(
               child: Text(
-                'EDITAR VEHICULO',
+                'EDITAR VEHÍCULO',
                 style: TextStyle(fontSize: 32, color: Colors.white),
               ),
             ),
@@ -153,9 +210,8 @@ class EditarDatosAutoState extends ConsumerState<EditarDatosAuto> {
             Center(
               child: ElevatedButton(
                 onPressed: () async {
-                  await _guardarCambios(
-                      vehiculo); // Guardar cambios en Firestore y el provider
-                  context.goNamed(vehiculosUsuario.name);
+                  await _guardarCambios(vehiculo); 
+                  context.push('/vehiculosUsuario');
                 },
                 child: const Text("Guardar cambios"),
               ),
@@ -164,26 +220,31 @@ class EditarDatosAutoState extends ConsumerState<EditarDatosAuto> {
             Center(
               child: ElevatedButton(
                 onPressed: () async {
-                  await _eliminarAuto(); // Eliminar el vehículo
-                  context.goNamed(vehiculosUsuario.name);
+                  await _eliminarAuto();
                 },
-                child: const Text("Eliminar auto"),
+                style: ElevatedButton.styleFrom(
+                      backgroundColor: const Color.fromARGB(191, 152, 12, 2),
+                    ),
+                child: const Text("Eliminar vehículo",
+                style: TextStyle(color: Colors.white),),
               ),
             ),
-            const Spacer(),
-            Align(
-              alignment: Alignment.bottomLeft,
-              child: IconButton(
-                icon: const Icon(Icons.arrow_back, color: Colors.white),
-                onPressed: () {
-                  context.goNamed(vehiculosUsuario.name);
-                },
+                ],
               ),
             ),
+          ),
+            Positioned(
+            bottom: 20,
+            left: 20,
+            child: BackButtonWidget(
+              onPressed: () {
+                context.push('/vehiculosUsuario');
+              },
+            ),
+          ),
           ],
         ),
-      ),
-    );
+      );
   }
 
   Widget _buildEditableField(

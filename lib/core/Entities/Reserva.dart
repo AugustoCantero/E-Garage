@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter_application_1/core/Entities/Vehiculo.dart';
+import 'package:intl/intl.dart';
 
 class Reserva {
   String id;
@@ -124,5 +125,12 @@ class Reserva {
         'valorFraccionAlMomentoDeReserva: $valorFraccionAlMomentoDeReserva, '
         'duracionEstadia: $duracionEstadia, estaPago: $estaPago, '
         'fueAlGarage: $fueAlGarage, seRetiro: $seRetiro}';
+  }
+
+  String infoReserva() {
+    return 'Reserva para vehículo ${elvehiculo.patente}\n'
+    'Fecha inicio: ${DateFormat('dd-MM-yyyy HH:mm').format(startTime)}\n'
+    'Fecha fin: ${DateFormat('dd-MM-yyyy HH:mm').format(endTime)}\n'
+    'Costo estadia: $monto';
   }
 }

@@ -1,17 +1,22 @@
+// ignore_for_file: library_private_types_in_public_api, file_names, non_constant_identifier_names
+
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_application_1/WidgetsPersonalizados/Mapa.dart';
-import 'package:flutter_application_1/screens/reservasUsuario.dart';
+import 'package:flutter_application_1/core/Entities/Reserva.dart';
+import 'package:flutter_application_1/core/Providers/user_provider.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 
-class ChatBotPage extends StatefulWidget {
+class ChatBotPage extends ConsumerStatefulWidget {
   const ChatBotPage({super.key});
 
   @override
   _ChatBotPageState createState() => _ChatBotPageState();
 }
 
-class _ChatBotPageState extends State<ChatBotPage> {
+class _ChatBotPageState extends ConsumerState<ChatBotPage> {
   final List<Map<String, dynamic>> _messages = [];
   final String witAiToken = 'NXI4QFXBAW6JV7TPWT3VBQZ7EU2PAOA4';
   List<String> options = [];
@@ -33,9 +38,11 @@ class _ChatBotPageState extends State<ChatBotPage> {
       opcionesBot = ["Cancelar reserva actual", "No cancelar"];
     } else {
       opcionesBot = [
+        "Consultar garajes afiliados",
+        "Consultar mis reservas",
         "Reservar un espacio",
-        "Consultar precio",
-        "Cancelar una reserva"
+        "Cancelar una reserva",
+        
       ];
     }
 
@@ -63,14 +70,36 @@ class _ChatBotPageState extends State<ChatBotPage> {
     }
   }
 
+  Future<List<Map<String, dynamic>>> _obtenerGarajes() async {
+    try {
+      QuerySnapshot snapshot = await FirebaseFirestore.instance.collection('garages').get();
+      return snapshot.docs.map((doc) => doc.data() as Map<String, dynamic>).toList();
+    } catch (e) {
+      print("Error al obtener garajes afiliados: $e");
+      return [];
+    }
+  }
+
+  Future<List<Reserva>> _obtenerReservas (String usuarioId) async {
+    List <Reserva> reservas = [];
+    final QuerySnapshot = await FirebaseFirestore.instance
+    .collection('Reservas')
+    .where('idUsuario', isEqualTo: usuarioId)
+    .where('seRetiro', isEqualTo: false)
+    .get();
+
+    for (var doc in QuerySnapshot.docs) {
+      reservas.add(Reserva.fromFirestore(doc));
+    }
+    return reservas;
+  }
+
   String _parseWitResponse(Map<String, dynamic> data) {
     if (data['intents'] != null && data['intents'].isNotEmpty) {
       String intent = data['intents'][0]['name'];
       switch (intent) {
         case 'reservar_espacio':
           return "¿Para cuándo te gustaría reservar?";
-        case 'consultar_precio':
-          return "Los precios comienzan desde 10 por hora.";
         case 'cancelar_reserva':
           return "¿Estás seguro de que deseas cancelar la reserva?";
         case 'saludo':
@@ -83,19 +112,33 @@ class _ChatBotPageState extends State<ChatBotPage> {
     }
   }
 
-  void _handleOptionClick(String option) {
+  void _handleOptionClick(String option) async {
     if (option == "Para hoy" ||
         option == "Para mañana" ||
         option == "Para esta semana") {
-      Navigator.push(
-        context,
-        MaterialPageRoute(builder: (context) => OpenStreetMapScreen()),
-      );
+      context.push('/mapa');
     } else if (option == "Cancelar una reserva") {
-      Navigator.push(
-        context,
-        MaterialPageRoute(builder: (context) => ReservasUsuario()),
-      );
+      context.push('/reservasUsuario');
+    } else if (option == "Consultar garajes afiliados") {
+      List<Map<String, dynamic>> garages = await _obtenerGarajes();
+      String garajesInfo = "Garajes afiliados : \n";
+      for (var garage in garages) {
+        garajesInfo += "Nombre: ${garage['nombre']}\nDireccion: ${garage['direccion']}\n\n";
+      }
+      setState(() {
+        _messages.insert(0, {'data': 0, 'message': garajesInfo});
+      });
+
+    } 
+    else if (option == "Consultar mis reservas") {
+      final usuario = ref.read(usuarioProvider);
+      List<Reserva> reservas = await _obtenerReservas(usuario.id);
+      String reservasMessage = reservas.isEmpty
+      ? "No tienes reservas activas"
+      : reservas.map((reserva) => reserva.infoReserva()).join("\n\n");
+      setState(() {
+        _messages.insert(0, {'data': 0, 'message': reservasMessage});
+      });
     } else {
       _sendMessage(option);
     }

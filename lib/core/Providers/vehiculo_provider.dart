@@ -1,3 +1,5 @@
+// ignore_for_file: camel_case_types
+
 import 'package:flutter_application_1/core/Entities/Vehiculo.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -33,5 +35,15 @@ class vehiculoNotifier extends StateNotifier<Vehiculo> {
       'modelo': modelo,
       'marca': marca,
     });
+  }
+
+  void clearVehiculo() {
+    state = Vehiculo(
+      userId: '', 
+      marca: '', 
+      modelo: '', 
+      patente: '', 
+      color: ''
+    );
   }
 }
