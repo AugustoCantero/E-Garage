@@ -211,7 +211,7 @@ class _TestAgregarVehiculos extends ConsumerState<AgregarVehiculos> {
         ),
         floatingActionButton: BackButtonWidget(
           onPressed: () {
-            context.goNamed('ReservationSelectVehicule');
+            context.pop();
           },
         ),
         floatingActionButtonLocation: FloatingActionButtonLocation.startFloat,
