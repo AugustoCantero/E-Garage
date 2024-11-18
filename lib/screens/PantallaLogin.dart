@@ -20,7 +20,7 @@ class LoginScreen extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    
+    context.read<NotificationsBloc>().requestPermission();
 
     return Scaffold(
       backgroundColor: Colors.black,
@@ -121,7 +121,6 @@ class LoginScreen extends ConsumerWidget {
           String? userPassword = userData['password'] as String?;
 
           if (userEmail == _email && userPassword == _clave) {
-            context.read<NotificationsBloc>().requestPermission();
             if (userData['token'] == null) {
               var prefs = PreferenciasUsuario();
               final datos = await db.collection('users').doc(userData['id']);
