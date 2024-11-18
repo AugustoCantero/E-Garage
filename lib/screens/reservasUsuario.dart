@@ -1,6 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_application_1/Test/testModificacionReserva.dart';
+import 'package:flutter_application_1/Test/testGesionarReserva.dart';
 import 'package:flutter_application_1/WidgetsPersonalizados/BotonAtras.dart';
 import 'package:flutter_application_1/WidgetsPersonalizados/BotonBot.dart';
 import 'package:flutter_application_1/WidgetsPersonalizados/MenuUsuario.dart';
