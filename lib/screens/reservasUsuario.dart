@@ -85,6 +85,7 @@ class _ListView extends ConsumerWidget {
     QuerySnapshot<Map<String, dynamic>> snapshot = await firestore
         .collection('Reservas')
         .where('elvehiculo.idDuenio', isEqualTo: usuarioState.id)
+        .where('seRetiro', isEqualTo: false)
         .get();
 
     return snapshot.docs.map((doc) {

@@ -116,7 +116,7 @@ class _GestionVehiculosScreenState
                 const Text(
                   'GESTION DE VEHICULOS',
                   style: TextStyle(
-                    fontSize: 32,
+                    fontSize: 30,
                     color: Colors.white,
                   ),
                 ),
