@@ -92,6 +92,11 @@ class EditarDatosScreen extends ConsumerWidget {
       return hasUppercase && hasLowercase && hasDigit && hasMinLength;
     }
 
+    bool validateEmail(String email) {
+      final emailRegex = RegExp(r'^[^@]+@[^@]+\.[^@]+$');
+      return emailRegex.hasMatch(email);
+    }
+
     return Scaffold(
       backgroundColor: Colors.black,
       appBar: AppBar(

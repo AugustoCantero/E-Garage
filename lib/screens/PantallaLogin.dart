@@ -121,9 +121,12 @@ class LoginScreen extends ConsumerWidget {
           String? userPassword = userData['password'] as String?;
 
           if (userEmail == _email && userPassword == _clave) {
-            if (userData['token'] == null) {
+            if (userData['token'] == null ||
+                userData['token'].toString().isEmpty) {
               var prefs = PreferenciasUsuario();
+
               final datos = await db.collection('users').doc(userData['id']);
+
               datos.update({'token': prefs.token});
             }
 
