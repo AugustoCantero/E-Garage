@@ -51,7 +51,11 @@ class _MetodoPagoScreenState extends ConsumerState<MetodoPagoScreen> {
         .where('idGarage', isEqualTo: ReservaCargada2.garajeId)
         .get();
 
+
+      print('*******************DOCUMENTO****************************');
+
     print(documento);
+      print('*******************DOCUMENTO****************************');
 
     if (documento.docs.isEmpty) {
       print('No trajo nada');
@@ -60,11 +64,11 @@ class _MetodoPagoScreenState extends ConsumerState<MetodoPagoScreen> {
     }
 
     DocumentSnapshot docReserva = documento.docs.first;
-
-    String idUserAdmin = docReserva['idUserAdmin'];
+    print(docReserva.id);
+    String idUserAdmin = docReserva['idAdmin'];
 
     DocumentSnapshot documentoAdmin =
-        await db.collection('users').doc(idUserAdmin).get();
+        await db.collection('duenos').doc(idUserAdmin).get();
 
     String tokenAdmin = documentoAdmin['token'];
 
