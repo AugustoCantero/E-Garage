@@ -46,14 +46,16 @@ class editarReserva extends ConsumerWidget {
         print('Ahora trajo');
       }
 
-      DocumentSnapshot docReserva = documento.docs.first;
-      String idUserAdmin = docReserva['idUserAdmin'];
-      DocumentSnapshot documentoAdmin =
-          await db.collection('users').doc(idUserAdmin).get();
+       DocumentSnapshot docReserva = documento.docs.first;
+    print(docReserva.id);
+    String idUserAdmin = docReserva['idAdmin'];
 
-      String tokenAdmin = documentoAdmin['token'];
+    DocumentSnapshot documentoAdmin =
+        await db.collection('duenos').doc(idUserAdmin).get();
 
-      return tokenAdmin;
+    String tokenAdmin = documentoAdmin['token'];
+
+    return tokenAdmin;
     }
 
     Future<void> _enviarNotificaciones() async {
