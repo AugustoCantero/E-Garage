@@ -67,7 +67,7 @@ class SelectionScreen extends StatelessWidget {
                 ),
               ),
               child: const Text(
-                'REGISTER',
+                'REGISTRATE',
                 style: TextStyle(color: Colors.white, fontSize: 20),
               ),
             ),
