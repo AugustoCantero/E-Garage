@@ -232,13 +232,6 @@ class EditarDatosScreen extends ConsumerWidget {
                   ),
                   const SizedBox(height: 20),
                   ElevatedButton(
-                    onPressed: () {
-                      context.goNamed(vehiculosUsuario.name);
-                    },
-                    child: const Text("Mis vehículos"),
-                  ),
-                  const SizedBox(height: 20),
-                  ElevatedButton(
                     onPressed: () => _eliminarCuenta(context, ref),
                     style: ElevatedButton.styleFrom(
                       backgroundColor: const Color.fromARGB(191, 152, 12, 2),

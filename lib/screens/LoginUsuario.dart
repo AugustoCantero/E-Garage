@@ -69,22 +69,6 @@ class LoginUsuario extends ConsumerWidget {
                 const SizedBox(height: 50),
                 OutlinedButton(
                   onPressed: () {
-///////////////////////////////Prueba Token////////////////////////////////
-                    try {
-                      http.post(Uri.parse('https://backnoti.onrender.com'),
-                          headers: {"Content-type": "application/json"},
-                          body: jsonEncode({
-                            //aca en vez del token hardcode iria la variable token de arriba
-                            "token": [usuario.token],
-                            "data": {
-                              "title": "busqueda",
-                              "body": "elegi tu garage"
-                            }
-                          }));
-                      print(usuario.token);
-                    } catch (e) {}
-///////////////////////////////prueba token/////////////////////////////////
-
                     Navigator.push(
                       context,
                       MaterialPageRoute(

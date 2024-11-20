@@ -44,6 +44,27 @@ class MenuUsuario extends ConsumerWidget {
                 );
               },
             ),
+
+            /*const SizedBox(height: 20),
+                  ElevatedButton(
+                    onPressed: () {
+                      context.goNamed(vehiculosUsuario.name);
+                    },
+                    child: const Text("Mis vehículos"),
+                  ),*/ 
+                  ListTile(
+              leading: const Icon(Icons.car_rental, size: 40, color: Colors.black),
+              title: const Text('Mis Vehiculos',
+                  style: TextStyle(fontSize: 18)),
+              onTap: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                      builder: (context) => const ReservasUsuario()),
+                );
+              },
+            ),
+            
             ListTile(
               leading: const Icon(Icons.timer, size: 40, color: Colors.black),
               title: const Text('Gestión de Reservas',
