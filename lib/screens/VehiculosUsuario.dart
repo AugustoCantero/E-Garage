@@ -63,8 +63,7 @@ class vehiculosUsuarioState extends ConsumerState<vehiculosUsuario> {
           ),
           BackButtonWidget(
             onPressed: () {
-              context
-                  .goNamed('editarDatos'); // Usa el nombre definido en GoRoute
+              context.pop(); // Usa el nombre definido en GoRoute
             },
           )
         ],

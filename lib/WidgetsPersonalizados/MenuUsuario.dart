@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_application_1/core/Providers/user_provider.dart';
 import 'package:flutter_application_1/screens/EditarDatos.dart';
+import 'package:flutter_application_1/screens/VehiculosUsuario.dart';
 import 'package:flutter_application_1/screens/reservasUsuario.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
@@ -51,6 +52,7 @@ class MenuUsuario extends ConsumerWidget {
                       context.goNamed(vehiculosUsuario.name);
                     },
                     child: const Text("Mis vehículos"),
+                    vehiculosUsuario
                   ),*/ 
                   ListTile(
               leading: const Icon(Icons.car_rental, size: 40, color: Colors.black),
@@ -60,7 +62,7 @@ class MenuUsuario extends ConsumerWidget {
                 Navigator.push(
                   context,
                   MaterialPageRoute(
-                      builder: (context) => const ReservasUsuario()),
+                      builder: (context) => const vehiculosUsuario()),
                 );
               },
             ),
