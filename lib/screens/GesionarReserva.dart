@@ -46,16 +46,16 @@ class editarReserva extends ConsumerWidget {
         print('Ahora trajo');
       }
 
-       DocumentSnapshot docReserva = documento.docs.first;
-    print(docReserva.id);
-    String idUserAdmin = docReserva['idAdmin'];
+      DocumentSnapshot docReserva = documento.docs.first;
+      print(docReserva.id);
+      String idUserAdmin = docReserva['idAdmin'];
 
-    DocumentSnapshot documentoAdmin =
-        await db.collection('duenos').doc(idUserAdmin).get();
+      DocumentSnapshot documentoAdmin =
+          await db.collection('duenos').doc(idUserAdmin).get();
 
-    String tokenAdmin = documentoAdmin['token'];
+      String tokenAdmin = documentoAdmin['token'];
 
-    return tokenAdmin;
+      return tokenAdmin;
     }
 
     Future<void> _enviarNotificaciones() async {
@@ -87,26 +87,34 @@ class editarReserva extends ConsumerWidget {
     }
 
     return Scaffold(
+      backgroundColor: Colors.black,
       body: Column(
         children: [
-          const SizedBox(height: 30),
+          const SizedBox(height: 50),
           Center(
-            child: Text('DATOS DE LA RESERVA'),
+            child: Text(
+              'DATOS DE LA RESERVA',
+              textAlign: TextAlign.center,
+              style: TextStyle(color: Colors.white, fontSize: 24),
+            ),
           ),
-          const SizedBox(height: 30),
+          const SizedBox(height: 20),
           Center(
               child: Text(
-            'Vehiculo: ${ReservaCargada.elvehiculo.marca} ${ReservaCargada.elvehiculo.modelo} patente: ${ReservaCargada.elvehiculo.patente} \n'
+            'Vehiculo: ${ReservaCargada.elvehiculo.marca} ${ReservaCargada.elvehiculo.modelo}\n'
+            'patente: ${ReservaCargada.elvehiculo.patente} \n'
             // 'Garage: ${nombreGarage}\n'
             //'Direccion: ${direccionGarage}\n'
             'Fecha inicio: ${DateFormat('dd-MM-yyyy HH:mm').format(ReservaCargada.startTime)}\n'
             'Fecha fin: ${DateFormat('dd-MM-yyyy HH:mm').format(ReservaCargada.endTime)}\n'
             'Duración de estadía: ${_formatDuracion(ReservaCargada.duracionEstadia)} \n'
             'Costo estadia: ${ReservaCargada.monto}',
+            textAlign: TextAlign.left,
+            style: TextStyle(color: Colors.white),
             //style: const TextStyle(color: Colors.white),
           )),
           const SizedBox(height: 30),
-          Center(
+          /*Center(
             child: ElevatedButton(
               onPressed: () {
                 context.goNamed(ModificacionReservationScreen.name);
@@ -114,7 +122,7 @@ class editarReserva extends ConsumerWidget {
               child: const Text("Modificar reserva"),
             ),
           ),
-          const SizedBox(height: 20),
+          const SizedBox(height: 20),*/
           Center(
             child: ElevatedButton(
               onPressed: () async {

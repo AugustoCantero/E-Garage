@@ -99,6 +99,7 @@ class _ReservationScreenState extends ConsumerState<ReservationScreen> {
   DateTime? startTime;
   DateTime? endTime;
   double? totalHoras = 0.0;
+  String? tiempoEstadia;
   double? importeAbonar = 0.0;
   final int VALOR_HORA = 500;
   final int VALOR_FRACCION_5_MINUTOS = 100;
@@ -219,8 +220,17 @@ class _ReservationScreenState extends ConsumerState<ReservationScreen> {
     if (startTime != null && endTime != null) {
       setState(() {
         totalHoras = (endTime!.difference(startTime!).inMinutes / 60);
+        tiempoEstadia = _formatDuracion(totalHoras!);
       });
+
+      //'Duración de estadía: ${_formatDuracion(ReservaCargada.duracionEstadia)} \n'
     }
+  }
+
+  String _formatDuracion(double duracion) {
+    final int horas = duracion.floor();
+    final int minutos = ((duracion - horas) * 60).round();
+    return '${horas.toString().padLeft(2, '0')}:${minutos.toString().padLeft(2, '0')}';
   }
 
   calcularImporteAbonar() {
@@ -305,7 +315,7 @@ class _ReservationScreenState extends ConsumerState<ReservationScreen> {
                 ),
                 const SizedBox(height: 32),
                 Text(
-                  'Total de horas: ${totalHoras}',
+                  'Total de horas: ${tiempoEstadia ?? '00:00'}',
                   style: const TextStyle(color: Colors.white),
                 ),
                 const SizedBox(height: 32),
@@ -352,7 +362,8 @@ class _ReservationScreenState extends ConsumerState<ReservationScreen> {
                         MaterialPageRoute(
                           builder: (context) => MetodoPagoScreen(),
                         ),
-                      );;
+                      );
+                      ;
                     } else {
                       ScaffoldMessenger.of(context).showSnackBar(
                         const SnackBar(
