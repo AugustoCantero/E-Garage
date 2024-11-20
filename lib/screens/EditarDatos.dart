@@ -159,6 +159,15 @@ class EditarDatosScreen extends ConsumerWidget {
                   const SizedBox(height: 30),
                   ElevatedButton(
                     onPressed: () async {
+                      if (!validateEmail(emailController.text)) {
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          const SnackBar(
+                              content:
+                                  Text('Por favor ingrese un correo válido.')),
+                        );
+                        return;
+                      }
+
                       if (isPasswordValid &&
                           passwordController.text ==
                               confirmPasswordController.text) {
