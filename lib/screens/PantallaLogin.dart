@@ -3,11 +3,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter_application_1/WidgetsPersonalizados/BotonAtras.dart';
 import 'package:flutter_application_1/core/Providers/user_provider.dart';
 import 'package:flutter_application_1/preferencias/pref_usuarios.dart';
-import 'package:flutter_application_1/screens/LoginAdministrador.dart';
 import 'package:flutter_application_1/screens/LoginUsuario.dart';
 import 'package:flutter_application_1/services/bloc/notifications_bloc.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:go_router/go_router.dart';
 import 'package:local_auth/local_auth.dart';
 
@@ -143,9 +143,7 @@ class LoginScreen extends ConsumerWidget {
 
             if (userData['esAdmin'] == false) {
               context.goNamed(LoginUsuario.name);
-            } else {
-              context.goNamed(AdminHomePage.name);
-            }
+            } 
           } else {
             _showErrorSnackbar(context, 'Contraseña incorrecta.');
           }
@@ -161,24 +159,70 @@ class LoginScreen extends ConsumerWidget {
   }
 
   Future<void> _authenticate(BuildContext context, WidgetRef ref) async {
-    bool authenticated = false;
-    try {
-      authenticated = await auth.authenticate(
-        localizedReason: 'Autentícate para acceder',
-        options: const AuthenticationOptions(
-          biometricOnly: true,
-          useErrorDialogs: true,
-          stickyAuth: true,
-        ),
-      );
+  final FlutterSecureStorage storage = FlutterSecureStorage();
+  bool authenticated = false;
 
-      if (authenticated) {
-        validarCredenciales(context, ref);
+  try {
+    authenticated = await auth.authenticate(
+      localizedReason: 'Autentícate para acceder',
+      options: const AuthenticationOptions(
+        biometricOnly: true,
+        useErrorDialogs: true,
+        stickyAuth: true,
+      ),
+    );
+
+    if (authenticated) {
+      // Recuperar las credenciales almacenadas
+      String? email = await storage.read(key: 'email');
+      String? password = await storage.read(key: 'password');
+
+      if (email != null && password != null) {
+        // Validar usuario con las credenciales recuperadas
+        QuerySnapshot querySnapshot = await db
+            .collection("users")
+            .where("email", isEqualTo: email)
+            .get();
+
+        if (querySnapshot.docs.isNotEmpty) {
+          Map<String, dynamic> userData =
+              querySnapshot.docs.first.data() as Map<String, dynamic>;
+
+          if (userData['email'] == email && userData['password'] == password) {
+            ref.read(usuarioProvider.notifier).setUsuario(
+                  userData['id'],
+                  userData['nombre'],
+                  userData['apellido'],
+                  userData['email'],
+                  userData['password'],
+                  userData['dni'],
+                  userData['telefono'],
+                  userData['token'],
+                  userData['esAdmin'],
+                );
+
+            // Redirigir según el tipo de usuario
+            if (userData['esAdmin'] == false) {
+              context.goNamed(LoginUsuario.name);
+            } 
+          } else {
+            _showErrorSnackbar(context, 'Error de autenticación.');
+          }
+        } else {
+          _showErrorSnackbar(context, 'Usuario no encontrado.');
+        }
+      } else {
+        _showErrorSnackbar(
+          context,
+          'No se encontraron credenciales almacenadas.',
+        );
       }
-    } catch (e) {
-      _showErrorSnackbar(context, 'Error de autenticación biométrica: $e');
     }
+  } catch (e) {
+    _showErrorSnackbar(context, 'Error de autenticación biométrica: $e');
   }
+}
+
 
   void _showErrorSnackbar(BuildContext context, String message) {
     ScaffoldMessenger.of(context).showSnackBar(SnackBar(

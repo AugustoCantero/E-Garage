@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_application_1/WidgetsPersonalizados/BiometriaService.dart';
 import 'package:flutter_application_1/WidgetsPersonalizados/BotonAtras.dart';
 import 'package:flutter_application_1/WidgetsPersonalizados/MenuUsuario.dart';
 import 'package:flutter_application_1/core/Providers/user_provider.dart';
@@ -15,7 +16,6 @@ class EditarDatosScreen extends ConsumerWidget {
     final usuario = ref.read(usuarioProvider);
     final db = FirebaseFirestore.instance;
 
-    // Diálogo de confirmación para eliminar la cuenta
     final confirmacion = await showDialog<bool>(
       context: context,
       builder: (BuildContext context) {
@@ -36,7 +36,6 @@ class EditarDatosScreen extends ConsumerWidget {
       },
     );
 
-    // Si el usuario confirma la eliminación
     if (confirmacion == true) {
       try {
         QuerySnapshot vehiculosSnapshot = await db
@@ -44,22 +43,16 @@ class EditarDatosScreen extends ConsumerWidget {
             .where('userId', isEqualTo: usuario.id)
             .get();
 
-        // Eliminar cada documento encontrado
         for (DocumentSnapshot vehiculoDoc in vehiculosSnapshot.docs) {
           await vehiculoDoc.reference.delete();
         }
 
-        // Eliminar la cuenta de Firebase
         await db.collection('users').doc(usuario.id).delete();
 
-        // Limpiar el estado de usuario y token de autenticación
         ref.read(usuarioProvider.notifier).clearUsuario();
 
-        // Redirigir a la pantalla de inicio de sesión
-        context.goNamed(
-            'SelectionScreen'); // Cambia esto por la ruta de tu pantalla de inicio de sesión
+        context.goNamed('SelectionScreen');
       } catch (e) {
-        // Manejar errores al eliminar la cuenta
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(content: Text('Error al eliminar cuenta: $e')),
         );
@@ -70,6 +63,7 @@ class EditarDatosScreen extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final usuario = ref.watch(usuarioProvider);
+    final BiometriaService biometriaService = BiometriaService();
 
     final TextEditingController nombreController =
         TextEditingController(text: usuario.nombre);
@@ -217,6 +211,28 @@ class EditarDatosScreen extends ConsumerWidget {
                   const SizedBox(height: 20),
                   ElevatedButton(
                     onPressed: () {
+                      biometriaService.registrarHuella(
+                        context,
+                        usuario.id,
+                        {
+                          'email': emailController.text,
+                          'password': passwordController.text,
+                        },
+                      );
+                    },
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: Colors.blue,
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 30, vertical: 15),
+                    ),
+                    child: const Text(
+                      "Habilitar Huella Digital",
+                      style: TextStyle(color: Colors.white, fontSize: 16),
+                    ),
+                  ),
+                  const SizedBox(height: 20),
+                  ElevatedButton(
+                    onPressed: () {
                       context.goNamed(vehiculosUsuario.name);
                     },
                     child: const Text("Mis vehículos"),
@@ -241,7 +257,7 @@ class EditarDatosScreen extends ConsumerWidget {
             left: 20,
             child: BackButtonWidget(
               onPressed: () {
-                context.goNamed('HomeUser');
+                context.push('/HomeUser');
               },
             ),
           ),
