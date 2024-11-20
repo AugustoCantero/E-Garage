@@ -1,14 +1,12 @@
-import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:flutter_application_1/WidgetsPersonalizados/MenuUsuario.dart';
 import 'package:flutter_application_1/WidgetsPersonalizados/BotonBot.dart';
 import 'package:flutter_application_1/core/Providers/user_provider.dart';
-import 'package:flutter_application_1/WidgetsPersonalizados/Mapa.dart';
 import 'package:flutter_application_1/services/bloc/notifications_bloc.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_application_1/preferencias/pref_usuarios.dart';
-import 'package:http/http.dart' as http;
+import 'package:go_router/go_router.dart';
 
 class LoginUsuario extends ConsumerWidget {
   static const String name = "HomeUser";
@@ -69,11 +67,7 @@ class LoginUsuario extends ConsumerWidget {
                 const SizedBox(height: 50),
                 OutlinedButton(
                   onPressed: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                          builder: (context) => OpenStreetMapScreen()),
-                    );
+                    context.push('/mapa');
                   },
                   style: OutlinedButton.styleFrom(
                     side: const BorderSide(color: Colors.white),

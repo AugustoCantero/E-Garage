@@ -1,3 +1,5 @@
+// ignore_for_file: camel_case_types
+
 import 'package:flutter_application_1/core/Entities/Reserva.dart';
 import 'package:flutter_application_1/core/Entities/Vehiculo.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -47,7 +49,6 @@ class reservaNotifier extends StateNotifier<Reserva> {
             reserva.valorFraccionAlMomentoDeReserva);
   }
 
-  // Método para limpiar los datos del usuario (cierre de sesión)
   void clearReserva() {
     state = Reserva(
       id: 'LIMPIEZA PROVIDER',

@@ -107,7 +107,10 @@ class _MetodoPagoScreenState extends ConsumerState<MetodoPagoScreen> {
 ///////////////////////////////prueba token/////////////////////////////////
 
       context.goNamed(LoginUsuario.name);
-    } else if (_selectedOption == 2) {
+    } else if(_selectedOption == 1){
+      context.push('/HomeUser');
+    }
+    else if (_selectedOption == 2) {
       await _launchMercadoPagoURL(); // Redirige a URL de Mercado Pago
     } else {
       ScaffoldMessenger.of(context).showSnackBar(
@@ -241,11 +244,6 @@ class _MetodoPagoScreenState extends ConsumerState<MetodoPagoScreen> {
                 Navigator.pop(context);
               },
             ),
-          ),
-          const Positioned(
-            bottom: 20,
-            right: 20,
-            child: BotLogoButton(),
           ),
         ],
       ),

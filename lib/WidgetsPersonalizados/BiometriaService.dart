@@ -1,3 +1,5 @@
+// ignore_for_file: use_build_context_synchronously
+
 import 'package:flutter/material.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -10,7 +12,6 @@ class BiometriaService {
 
   Future<void> registrarHuella(BuildContext context, String userId, Map<String, String> userCredentials) async {
     try {
-      // Verificar soporte y autenticar para registrar huella
       bool authenticated = await _auth.authenticate(
         localizedReason: 'Registra tu huella para acceder con ella',
         options: const AuthenticationOptions(
@@ -21,11 +22,9 @@ class BiometriaService {
       );
 
       if (authenticated) {
-        // Guardar credenciales de usuario en almacenamiento seguro
         await _storage.write(key: 'email', value: userCredentials['email']);
         await _storage.write(key: 'password', value: userCredentials['password']);
 
-        // Actualizar estado de biometría en Firestore
         await _db.collection('users').doc(userId).update({
           'biometriaHabilitada': true,
         });
@@ -43,7 +42,6 @@ class BiometriaService {
 
   Future<void> validarCredenciales(BuildContext context, Function onUserAuthenticated) async {
     try {
-      // Recuperar credenciales almacenadas
       final email = await _storage.read(key: 'email');
       final password = await _storage.read(key: 'password');
 
@@ -54,7 +52,6 @@ class BiometriaService {
         return;
       }
 
-      // Buscar usuario en Firestore
       final query = await _db.collection('users').where('email', isEqualTo: email).get();
       if (query.docs.isEmpty) {
         ScaffoldMessenger.of(context).showSnackBar(
@@ -66,9 +63,7 @@ class BiometriaService {
       final userDoc = query.docs.first;
       final userData = userDoc.data();
 
-      // Validar contraseña
       if (userData['password'] == password) {
-        // Invocar el callback al autenticar al usuario
         onUserAuthenticated(userDoc.id, userData);
       } else {
         ScaffoldMessenger.of(context).showSnackBar(

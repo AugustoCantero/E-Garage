@@ -40,7 +40,6 @@ class UsuarioNotifier extends StateNotifier<Usuario> {
         esAdmin: esAdmin);
   }
 
-  // Método para limpiar los datos del usuario (cierre de sesión)
   void clearUsuario() {
     state = Usuario(
       id: '',

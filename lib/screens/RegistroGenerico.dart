@@ -1,9 +1,11 @@
+// ignore_for_file: library_private_types_in_public_api, use_build_context_synchronously
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_application_1/WidgetsPersonalizados/BotonAtras.dart';
 import 'package:flutter_application_1/core/Entities/Usuario.dart';
-import 'package:flutter_application_1/screens/PantallaSeleccion.dart';
+import 'package:go_router/go_router.dart';
 
 class RegistroGenericoScreen extends StatefulWidget {
   const RegistroGenericoScreen({super.key});
@@ -78,7 +80,6 @@ class _RegistroGenericoScreen extends State<RegistroGenericoScreen> {
         ),
       ),
       
-      // Align buttons at the bottom
       floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
       floatingActionButton: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -98,10 +99,7 @@ class _RegistroGenericoScreen extends State<RegistroGenericoScreen> {
                   if (_isPasswordValid) {
                     bool isSaved = await _guardarUsuario();
                     if (isSaved) {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(builder: (context) => const SelectionScreen()),
-                      );
+                      context.push('/selection');
                     }
                   } else {
                     ScaffoldMessenger.of(context).showSnackBar(const SnackBar(

@@ -1,9 +1,10 @@
+// ignore_for_file: must_be_immutable, use_build_context_synchronously
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_application_1/WidgetsPersonalizados/BotonAtras.dart';
 import 'package:flutter_application_1/core/Providers/user_provider.dart';
 import 'package:flutter_application_1/preferencias/pref_usuarios.dart';
-import 'package:flutter_application_1/screens/LoginUsuario.dart';
 import 'package:flutter_application_1/services/bloc/notifications_bloc.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -142,7 +143,7 @@ class LoginScreen extends ConsumerWidget {
                 userData['esAdmin']);
 
             if (userData['esAdmin'] == false) {
-              context.goNamed(LoginUsuario.name);
+              context.push('/HomeUser');
             } 
           } else {
             _showErrorSnackbar(context, 'Contraseña incorrecta.');
@@ -173,12 +174,10 @@ class LoginScreen extends ConsumerWidget {
     );
 
     if (authenticated) {
-      // Recuperar las credenciales almacenadas
       String? email = await storage.read(key: 'email');
       String? password = await storage.read(key: 'password');
 
       if (email != null && password != null) {
-        // Validar usuario con las credenciales recuperadas
         QuerySnapshot querySnapshot = await db
             .collection("users")
             .where("email", isEqualTo: email)
@@ -201,9 +200,8 @@ class LoginScreen extends ConsumerWidget {
                   userData['esAdmin'],
                 );
 
-            // Redirigir según el tipo de usuario
             if (userData['esAdmin'] == false) {
-              context.goNamed(LoginUsuario.name);
+              context.push('/HomeUser');
             } 
           } else {
             _showErrorSnackbar(context, 'Error de autenticación.');

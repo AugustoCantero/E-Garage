@@ -1,10 +1,11 @@
+// ignore_for_file: use_build_context_synchronously
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_application_1/WidgetsPersonalizados/BiometriaService.dart';
 import 'package:flutter_application_1/WidgetsPersonalizados/BotonAtras.dart';
 import 'package:flutter_application_1/WidgetsPersonalizados/MenuUsuario.dart';
 import 'package:flutter_application_1/core/Providers/user_provider.dart';
-import 'package:flutter_application_1/screens/VehiculosUsuario.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
@@ -51,7 +52,7 @@ class EditarDatosScreen extends ConsumerWidget {
 
         ref.read(usuarioProvider.notifier).clearUsuario();
 
-        context.goNamed('SelectionScreen');
+        context.push('/selection');
       } catch (e) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(content: Text('Error al eliminar cuenta: $e')),
@@ -175,7 +176,6 @@ class EditarDatosScreen extends ConsumerWidget {
                         final usuario = ref.read(usuarioProvider);
 
                         try {
-                          // Actualizar datos en Firebase
                           await db.collection('users').doc(usuario.id).update({
                             'nombre': nombreController.text,
                             'apellido': apellidoController.text,
@@ -183,7 +183,6 @@ class EditarDatosScreen extends ConsumerWidget {
                             'password': passwordController.text,
                           });
 
-                          // Actualizar el estado del usuario en el provider con los nuevos datos
                           ref.read(usuarioProvider.notifier).setUsuario(
                                 usuario.id,
                                 nombreController.text,
@@ -196,7 +195,6 @@ class EditarDatosScreen extends ConsumerWidget {
                                 usuario.esAdmin,
                               );
 
-                          // Mostrar mensaje de éxito
                           ScaffoldMessenger.of(context).showSnackBar(
                             const SnackBar(
                                 content: Text('Datos guardados exitosamente.')),

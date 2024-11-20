@@ -50,7 +50,7 @@ class GarageDetailDialog extends ConsumerWidget {
             child: Column(
               mainAxisSize: MainAxisSize.min,
               children: [
-                Image.asset(imagePath, height: 150, fit: BoxFit.cover),
+                // Image.asset(imagePath, height: 150, fit: BoxFit.cover),
                 const SizedBox(height: 20),
                 Text(
                   name,
@@ -75,7 +75,6 @@ class GarageDetailDialog extends ConsumerWidget {
                   onPressed: () {
                     ref.read(garageProvider.notifier).setGarage(this.id,
                         this.location, this.name, this.imagePath, this.details);
-                    // Obtener el estado actualizado del provider
                     final garageState = ref.read(garageProvider);
 
                     // Imprimir los datos del garage
@@ -85,7 +84,7 @@ class GarageDetailDialog extends ConsumerWidget {
                     print('Image Path: ${garageState.imagePath}');
                     print('Details: ${garageState.details}');
 
-                    context.goNamed('ReservationSelectVehicule');
+                    context.push('/ReservationSelectVehicule');
                   },
                   style: ElevatedButton.styleFrom(
                     backgroundColor: Colors.green,

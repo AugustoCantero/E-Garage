@@ -1,3 +1,5 @@
+// ignore_for_file: library_private_types_in_public_api, non_constant_identifier_names
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_application_1/WidgetsPersonalizados/BotonAtras.dart';
@@ -5,10 +7,7 @@ import 'package:flutter_application_1/WidgetsPersonalizados/MenuUsuario.dart';
 import 'package:flutter_application_1/core/Entities/Reserva.dart';
 import 'package:flutter_application_1/core/Providers/garage_provider.dart';
 import 'package:flutter_application_1/core/Providers/reservaGarage.dart';
-import 'package:flutter_application_1/core/Providers/reserva_provider.dart';
 import 'package:flutter_application_1/core/Providers/vehiculo_provider.dart';
-import 'package:flutter_application_1/services/mercado_pago_service.dart';
-import 'package:flutter_application_1/screens/MetodoDePago.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
@@ -23,23 +22,20 @@ class ReservationScreen extends ConsumerStatefulWidget {
 }
 
 class Garage {
-  // Tengo que llenar esta array con las reservas
   final String idGarage = 'PruebaIdGarage';
-  final List<Reserva> reservations; // Lista de reservas
-  final int totalSpaces; // Total de espacios disponibles en el garage
+  final List<Reserva> reservations; 
+  final int totalSpaces; 
 
   Garage(
       {this.totalSpaces = 3,
       List<Reserva>?
-          reservasIngresadas}) // Inicializa reservations // Asigna 3 como valor por defecto
+          reservasIngresadas}) 
       : reservations = reservasIngresadas ?? [];
 
-  // Verifica la disponibilidad en un rango dado
   bool isAvailable(DateTime start, DateTime end) {
     int occupiedSpaces = 0;
 
     for (var reservation in reservations) {
-      // Contar reservas que se solapan con el rango
       if ((start.isBefore(reservation.endTime) &&
           end.isAfter(reservation.startTime))) {
         occupiedSpaces++;
@@ -47,19 +43,18 @@ class Garage {
     }
 
     return occupiedSpaces <
-        totalSpaces; // Devuelve true si hay al menos un espacio disponible
+        totalSpaces;
   }
 
   List<DateTime> getAvailableTimes(DateTime selectedDate) {
     List<DateTime> times = [];
-    DateTime now = DateTime.now(); // Obtener la hora actual
+    DateTime now = DateTime.now();
 
     for (int hour = 0; hour < 24; hour++) {
       for (int minute = 0; minute < 60; minute += 30) {
         DateTime time = DateTime(selectedDate.year, selectedDate.month,
             selectedDate.day, hour, minute);
 
-        // Solo agregar el tiempo si es después de la hora actual y está disponible
         if (time.isAfter(now) || time.isAtSameMomentAs(now)) {
           if (isAvailable(time, time.add(Duration(minutes: 30)))) {
             times.add(time);
@@ -73,15 +68,11 @@ class Garage {
   List<DateTime> getAvailableDepartureTimes(
       DateTime selectedDate, DateTime startTime) {
     List<DateTime> times = [];
-    // Inicia desde la misma hora que se seleccionó para el inicio.
     for (int hour = startTime.hour; hour < 24; hour++) {
       for (int minute = 0; minute < 60; minute += 30) {
         DateTime time = DateTime(selectedDate.year, selectedDate.month,
             selectedDate.day, hour, minute);
-        // Permitir seleccionar la hora de fin justo después de la hora de inicio
         if (time.isAfter(startTime)) {
-          // Cambiar isAtSameMomentAs a isAfter
-          // Verificar que la hora de fin seleccionada no se superponga con las reservas existentes
           if (isAvailable(startTime, time)) {
             times.add(time);
           }
@@ -222,8 +213,6 @@ class _ReservationScreenState extends ConsumerState<ReservationScreen> {
         totalHoras = (endTime!.difference(startTime!).inMinutes / 60);
         tiempoEstadia = _formatDuracion(totalHoras!);
       });
-
-      //'Duración de estadía: ${_formatDuracion(ReservaCargada.duracionEstadia)} \n'
     }
   }
 
@@ -268,14 +257,14 @@ class _ReservationScreenState extends ConsumerState<ReservationScreen> {
               children: [
                 Image.asset(
                   'assets/images/car_logo.png',
-                  height: 100, // Tamaño más pequeño para el auto
+                  height: 100,
                 ),
                 const SizedBox(height: 10),
                 const Text(
                   'Reservar Garage',
                   style: TextStyle(
                     color: Colors.white,
-                    fontSize: 24, // Ajusta el tamaño del texto
+                    fontSize: 24,
                     fontWeight: FontWeight.bold,
                   ),
                   textAlign: TextAlign.center,
@@ -320,7 +309,7 @@ class _ReservationScreenState extends ConsumerState<ReservationScreen> {
                 ),
                 const SizedBox(height: 32),
                 Text(
-                  'Importe a abonar: ${importeAbonar}',
+                  'Importe a abonar: $importeAbonar',
                   style: const TextStyle(color: Colors.white),
                 ),
                 const SizedBox(height: 32),
@@ -351,19 +340,11 @@ class _ReservationScreenState extends ConsumerState<ReservationScreen> {
                             VALOR_FRACCION_5_MINUTOS,
                       );
 
-                      // Guardar la reserva en el estado (Provider)
                       ref
                           .read(reservaEnGarageProvider.notifier)
                           .setReserva(reserva);
 
-                      // Dirigir a la pantalla de selección de método de pago
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => MetodoPagoScreen(),
-                        ),
-                      );
-                      ;
+                      context.push('/metodoPago');
                     } else {
                       ScaffoldMessenger.of(context).showSnackBar(
                         const SnackBar(
@@ -388,7 +369,7 @@ class _ReservationScreenState extends ConsumerState<ReservationScreen> {
         ),
         floatingActionButton: BackButtonWidget(
           onPressed: () {
-            context.goNamed('ReservationSelectVehicule');
+            context.push('/ReservationSelectVehicule');
           },
         ),
         floatingActionButtonLocation: FloatingActionButtonLocation.startFloat,

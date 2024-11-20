@@ -1,3 +1,5 @@
+// ignore_for_file: library_private_types_in_public_api, use_build_context_synchronously
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_application_1/WidgetsPersonalizados/BotonAtras.dart';
@@ -5,7 +7,6 @@ import 'package:flutter_application_1/core/Entities/Usuario.dart';
 import 'package:flutter_application_1/core/Entities/Vehiculo.dart';
 import 'package:flutter_application_1/core/Entities/usuarioVehiculos.dart';
 import 'package:flutter_application_1/core/Providers/user_provider.dart';
-import 'package:flutter_application_1/screens/VehiculosUsuario.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
@@ -107,8 +108,7 @@ class _TestAgregarVehiculos extends ConsumerState<AgregarVehiculos> {
             duration: Duration(seconds: 3),
           ),
         );
-
-        context.goNamed(vehiculosUsuario.name);
+        context.push('/vehiculosUsuario');
       } catch (e) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
@@ -211,11 +211,7 @@ class _TestAgregarVehiculos extends ConsumerState<AgregarVehiculos> {
         ),
         floatingActionButton: BackButtonWidget(
           onPressed: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                          builder: (context) => vehiculosUsuario()),
-                    );
+                    context.push('/vehiculosUsuario');
                   }
                   )
       ),

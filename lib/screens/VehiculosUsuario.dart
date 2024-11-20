@@ -1,11 +1,11 @@
+// ignore_for_file: camel_case_types
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_application_1/screens/EdicionDatosVehiculo.dart';
 import 'package:flutter_application_1/WidgetsPersonalizados/BotonAtras.dart';
 import 'package:flutter_application_1/core/Entities/Vehiculo.dart';
 import 'package:flutter_application_1/core/Providers/user_provider.dart';
 import 'package:flutter_application_1/core/Providers/vehiculo_provider.dart';
-import 'package:flutter_application_1/screens/LoginUsuario.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
@@ -42,7 +42,7 @@ class vehiculosUsuarioState extends ConsumerState<vehiculosUsuario> {
                 style: TextStyle(color: Colors.white, fontSize: 24),
               ),
               const SizedBox(height: 20),
-              const Expanded(child: _ListView()), // Lista de vehículos
+              const Expanded(child: _ListView()),
               Container(
                 padding: const EdgeInsets.symmetric(vertical: 20),
                 child: ElevatedButton(
@@ -52,7 +52,7 @@ class vehiculosUsuarioState extends ConsumerState<vehiculosUsuario> {
                         horizontal: 20, vertical: 15),
                   ),
                   onPressed: () {
-                    context.goNamed('AgregarVehiculos');
+                    context.push('/AgregarVehiculos');
                   },
                   child: const Text(
                     "Agregar vehículo",
@@ -64,11 +64,7 @@ class vehiculosUsuarioState extends ConsumerState<vehiculosUsuario> {
           ),
           BackButtonWidget(
             onPressed: () {
-               Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                          builder: (context) => LoginUsuario()),
-                    );// Usa el nombre definido en GoRoute
+              context.push('/HomeUser');
             },
           )
         ],
@@ -131,7 +127,7 @@ class _ListView extends ConsumerWidget {
                             ref
                                 .read(vehiculoProvider.notifier)
                                 .setVehiculo(elVehiculo);
-                            context.goNamed(EditarDatosAuto.name);
+                            context.push('/EditarDatosAuto');
                           },
                         ),
                       );

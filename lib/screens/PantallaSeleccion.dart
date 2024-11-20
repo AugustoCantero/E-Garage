@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_application_1/screens/PantallaLogin.dart';
-import 'RegistroGenerico.dart';
+import 'package:go_router/go_router.dart';
 
 class SelectionScreen extends StatelessWidget {
   const SelectionScreen({super.key});
@@ -27,13 +26,9 @@ class SelectionScreen extends StatelessWidget {
               ),
             ),
             const SizedBox(height: 50),
-            // Botón de LOGIN
             OutlinedButton(
               onPressed: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (context) => LoginScreen()),
-                );
+                context.push('/login');
               },
               style: OutlinedButton.styleFrom(
                 side: const BorderSide(color: Colors.white),
@@ -49,14 +44,9 @@ class SelectionScreen extends StatelessWidget {
               ),
             ),
             const SizedBox(height: 20),
-            // Botón de REGISTER
             OutlinedButton(
               onPressed: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                      builder: (context) => const RegistroGenericoScreen()),
-                );
+                context.push('/registrar');
               },
               style: OutlinedButton.styleFrom(
                 side: const BorderSide(color: Colors.white),

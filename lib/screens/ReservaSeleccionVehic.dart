@@ -1,6 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_application_1/WidgetsPersonalizados/BotonBot.dart';
 import 'package:flutter_application_1/WidgetsPersonalizados/MenuUsuario.dart';
 import 'package:flutter_application_1/core/Entities/Usuario.dart';
 import 'package:flutter_application_1/core/Entities/Vehiculo.dart';
@@ -30,12 +29,12 @@ class _GestionVehiculosScreenState
       context: context,
       builder: (BuildContext context) {
         return Container(
-          height: 300, // Definir altura de la ventana emergente
+          height: 300,
           child: FutureBuilder<QuerySnapshot<Map<String, dynamic>>>(
             future: db
                 .collection('Vehiculos')
                 .where('userId', isEqualTo: usuarioLogueado.id)
-                .get(), // Obtener datos de Firestore
+                .get(),
             builder: (BuildContext context,
                 AsyncSnapshot<QuerySnapshot<Map<String, dynamic>>> snapshot) {
               if (snapshot.connectionState == ConnectionState.waiting) {
@@ -46,30 +45,28 @@ class _GestionVehiculosScreenState
                 return Center(child: Text('No se encontraron vehículos'));
               }
 
-              // Mostrar la lista de vehículos
               List<DocumentSnapshot<Map<String, dynamic>>> vehicles =
                   snapshot.data!.docs;
 
               return ListView.builder(
                 itemCount: vehicles.length,
                 itemBuilder: (BuildContext context, int index) {
-                  // Crear el objeto Vehiculo usando fromFirestore
                   final vehiculo =
                       Vehiculo.fromFirestore(vehicles[index], null);
 
                   return ListTile(
                     title: Text(vehiculo.patente ??
-                        'Sin patente'), // Usar el campo marca
+                        'Sin patente'),
                     subtitle: Text(vehiculo.modelo ?? 'Sin Modelo'),
                     trailing: Text(vehiculo.marca ?? 'Sin Marca'),
-                    // Mostrar modelo
+
                     onTap: () {
                       setState(() {
                         selectedVehicle = vehiculo
-                            .marca; // Guardar el nombre del vehículo seleccionado
+                            .marca; 
                         vehiculoSeleccionado = vehiculo;
                       });
-                      Navigator.pop(context); // Cerrar la ventana modal
+                      Navigator.pop(context);
                     },
                   );
                 },
@@ -126,7 +123,6 @@ class _GestionVehiculosScreenState
                     if (usuarioState != null) {
                       _showVehiclePicker(context, usuarioState);
                     } else {
-                      // Manejar el caso cuando usuarioState es null
                       print('Usuario no encontrado');
                     }
                   },
@@ -150,7 +146,7 @@ class _GestionVehiculosScreenState
                     ref
                         .read(vehiculoProvider.notifier)
                         .setVehiculo(vehiculoSeleccionado!);
-                    context.goNamed('ReservationScreen');
+                    context.push('/ReservationScreen');
                   },
                   child: Container(
                     padding: const EdgeInsets.all(16),
@@ -170,7 +166,6 @@ class _GestionVehiculosScreenState
               ],
             ),
           ),
-          const BotLogoButton(),
           Align(
             alignment: Alignment.bottomLeft,
             child: Container(
@@ -182,7 +177,7 @@ class _GestionVehiculosScreenState
               child: IconButton(
                 icon: const Icon(Icons.arrow_back, color: Colors.black),
                 onPressed: () {
-                  context.go('/HomeUser');
+                  context.push('/HomeUser');
                 },
               ),
             ),

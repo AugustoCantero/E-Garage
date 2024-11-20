@@ -1,3 +1,5 @@
+// ignore_for_file: library_private_types_in_public_api
+
 import 'package:flutter/material.dart';
 import 'package:local_auth/local_auth.dart';
 
@@ -12,14 +14,13 @@ class _BiometricAuthPageState extends State<BiometricAuthPage> {
   final LocalAuthentication auth = LocalAuthentication();
   bool _isAuthenticated = false;
 
-  // Función para iniciar la autenticación biométrica
   Future<void> _authenticate() async {
     bool authenticated = false;
     try {
       authenticated = await auth.authenticate(
         localizedReason: 'Autentícate para ingresar a la app',
         options: const AuthenticationOptions(
-          biometricOnly: true, // Solo usar biometría, no PIN
+          biometricOnly: true,
           useErrorDialogs: true,
           stickyAuth: true,
         ),
@@ -33,11 +34,10 @@ class _BiometricAuthPageState extends State<BiometricAuthPage> {
     });
 
     if (_isAuthenticated) {
-      // Redirigir a la pantalla principal si la autenticación es exitosa
       Navigator.pushReplacement(
         context,
         MaterialPageRoute(
-            builder: (context) => HomePage()), // Pantalla principal de la app
+            builder: (context) => HomePage()),
       );
     }
   }
@@ -45,7 +45,7 @@ class _BiometricAuthPageState extends State<BiometricAuthPage> {
   @override
   void initState() {
     super.initState();
-    _authenticate(); // Llamar a la autenticación al iniciar la app
+    _authenticate();
   }
 
   @override

@@ -26,7 +26,6 @@ class UsuarioNotifier extends StateNotifier<GarageMarker> {
         name: name);
   }
 
-  // Método para limpiar los datos del usuario (cierre de sesión)
   void clearGarage() {
     state = GarageMarker(
       id: '',

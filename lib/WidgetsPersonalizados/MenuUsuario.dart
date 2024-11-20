@@ -1,8 +1,7 @@
+// ignore_for_file: use_build_context_synchronously
+
 import 'package:flutter/material.dart';
 import 'package:flutter_application_1/core/Providers/user_provider.dart';
-import 'package:flutter_application_1/screens/EditarDatos.dart';
-import 'package:flutter_application_1/screens/VehiculosUsuario.dart';
-import 'package:flutter_application_1/screens/reservasUsuario.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -14,7 +13,7 @@ class MenuUsuario extends ConsumerWidget {
     ref.read(usuarioProvider.notifier).clearUsuario();
     final SharedPreferences prefs = await SharedPreferences.getInstance();
     await prefs.remove('authToken');
-    context.goNamed('SelectionScreen');
+    context.push('/selection');
   }
 
   @override
@@ -38,45 +37,24 @@ class MenuUsuario extends ConsumerWidget {
               leading: const Icon(Icons.person, size: 40, color: Colors.black),
               title: const Text('Editar Datos', style: TextStyle(fontSize: 18)),
               onTap: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                      builder: (context) => const EditarDatosScreen()),
-                );
+                context.push('/EditarDatos');
               },
             ),
-
-            /*const SizedBox(height: 20),
-                  ElevatedButton(
-                    onPressed: () {
-                      context.goNamed(vehiculosUsuario.name);
-                    },
-                    child: const Text("Mis vehículos"),
-                    vehiculosUsuario
-                  ),*/ 
-                  ListTile(
-              leading: const Icon(Icons.car_rental, size: 40, color: Colors.black),
-              title: const Text('Mis Vehiculos',
-                  style: TextStyle(fontSize: 18)),
+            ListTile(
+              leading:
+                  const Icon(Icons.car_rental, size: 40, color: Colors.black),
+              title:
+                  const Text('Mis Vehiculos', style: TextStyle(fontSize: 18)),
               onTap: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                      builder: (context) => const vehiculosUsuario()),
-                );
+                context.push('/vehiculosUsuario');
               },
             ),
-            
             ListTile(
               leading: const Icon(Icons.timer, size: 40, color: Colors.black),
               title: const Text('Gestión de Reservas',
                   style: TextStyle(fontSize: 18)),
               onTap: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                      builder: (context) => const ReservasUsuario()),
-                );
+                context.push('/reservasUsuario');
               },
             ),
             ListTile(
@@ -84,7 +62,6 @@ class MenuUsuario extends ConsumerWidget {
                   const Icon(Icons.exit_to_app, size: 40, color: Colors.black),
               title: const Text('Salir', style: TextStyle(fontSize: 18)),
               onTap: () {
-                // Confirmación antes de cerrar sesión
                 showDialog(
                   context: context,
                   builder: (BuildContext context) {
@@ -94,15 +71,15 @@ class MenuUsuario extends ConsumerWidget {
                         TextButton(
                           child: const Text('Sí'),
                           onPressed: () {
-                            Navigator.pop(context); // Cierra el diálogo
+                            Navigator.pop(context);
                             _logOut(context,
-                                ref); // Cierra sesión y navega al login
+                                ref);
                           },
                         ),
                         TextButton(
                           child: const Text('No'),
                           onPressed: () {
-                            Navigator.pop(context); // Cierra el diálogo
+                            Navigator.pop(context);
                           },
                         ),
                       ],

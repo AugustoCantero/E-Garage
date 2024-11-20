@@ -14,7 +14,6 @@ class Vehiculo {
       required this.patente,
       required this.color});
 
-  // Método para mandar los datos hacia Firestore
   Map<String, dynamic> toFireStore() {
     return {
       'userId': userId,
@@ -25,7 +24,6 @@ class Vehiculo {
     };
   }
 
-  // Método para traer los datos del vehículo desde Firestore
   factory Vehiculo.fromFirestore(
     DocumentSnapshot<Map<String, dynamic>> snapshot,
     SnapshotOptions? options,

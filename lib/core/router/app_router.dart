@@ -1,8 +1,12 @@
+import 'package:flutter_application_1/WidgetsPersonalizados/Mapa.dart';
 import 'package:flutter_application_1/screens/GesionarReserva.dart';
 import 'package:flutter_application_1/Test/test_modif_reserva.dart';
 import 'package:flutter_application_1/WidgetsPersonalizados/Aprobado.dart';
 import 'package:flutter_application_1/WidgetsPersonalizados/PantallaPagos.dart';
 import 'package:flutter_application_1/screens/EditarDatos.dart';
+import 'package:flutter_application_1/screens/MetodoDePago.dart';
+import 'package:flutter_application_1/screens/PantallaLogin.dart';
+import 'package:flutter_application_1/screens/RegistroGenerico.dart';
 import 'package:flutter_application_1/screens/ReservaSeleccionVehic.dart';
 import 'package:flutter_application_1/screens/AgregarVehiculo.dart';
 import 'package:flutter_application_1/screens/VehiculosUsuario.dart';
@@ -11,6 +15,7 @@ import 'package:flutter_application_1/screens/PantallaReserva.dart';
 import 'package:flutter_application_1/screens/PantallaInicio.dart';
 import 'package:flutter_application_1/screens/LoginUsuario.dart';
 import 'package:flutter_application_1/screens/PantallaSeleccion.dart';
+import 'package:flutter_application_1/screens/reservasUsuario.dart';
 import 'package:flutter_application_1/screens/todasLasReservas.dart';
 import 'package:go_router/go_router.dart';
 
@@ -81,5 +86,25 @@ final GoRouter appRouter = GoRouter(initialLocation: '/selection', routes: [
     path: '/ModificacionReservationScreen',
     builder: (context, state) => ModificacionReservationScreen(),
     name: ModificacionReservationScreen.name,
+  ),
+  GoRoute(
+    path: '/mapa',
+    builder: (context, state) => const OpenStreetMapScreen(),
+  ),
+  GoRoute(
+    path: '/metodoPago',
+    builder: (context, state) => const MetodoPagoScreen(),
+  ),
+  GoRoute(
+    path: '/login',
+    builder: (context, state) => LoginScreen(),
+  ),
+  GoRoute(
+    path: '/registrar',
+    builder: (context, state) => const RegistroGenericoScreen(),
+  ),
+  GoRoute(
+    path: '/reservasUsuario',
+    builder: (context, state) => const ReservasUsuario(),
   ),
 ]);

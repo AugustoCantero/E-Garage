@@ -1,8 +1,8 @@
+// ignore_for_file: library_private_types_in_public_api
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_application_1/screens/GesionarReserva.dart';
 import 'package:flutter_application_1/WidgetsPersonalizados/BotonAtras.dart';
-import 'package:flutter_application_1/WidgetsPersonalizados/BotonBot.dart';
 import 'package:flutter_application_1/WidgetsPersonalizados/MenuUsuario.dart';
 import 'package:flutter_application_1/core/Entities/Reserva.dart';
 import 'package:flutter_application_1/core/Providers/reservaGarage.dart';
@@ -60,7 +60,6 @@ class _ReservasUsuarioState extends ConsumerState<ReservasUsuario> {
                   ),
                 ),
                 const SizedBox(height: 20),
-                // Usa Expanded para que el ListView ocupe el espacio restante
                 const Expanded(
                   child: _ListView(),
                 ),
@@ -68,7 +67,6 @@ class _ReservasUsuarioState extends ConsumerState<ReservasUsuario> {
             ),
           ),
           const BackButtonWidget(),
-          const BotLogoButton(),
         ],
       ),
     );
@@ -130,7 +128,7 @@ class _ListView extends ConsumerWidget {
                     ref
                         .read(reservaEnGarageProvider.notifier)
                         .setReserva(listaReservas[index]);
-                    context.goNamed(editarReserva.name);
+                    context.push('/editarReserva');
                   },
                 ),
               );

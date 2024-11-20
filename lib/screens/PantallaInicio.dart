@@ -39,7 +39,7 @@ class IntroScreen extends StatelessWidget {
           child: IconButton(
             icon: const Icon(Icons.arrow_forward, color: Colors.black),
             onPressed: () {
-              context.go('/selection');
+              context.push('/selection');
             },
           ),
         ),

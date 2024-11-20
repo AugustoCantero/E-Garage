@@ -32,8 +32,7 @@ class Usuario {
       "dni": dni,
       "telefono": telefono,
       "token": token,
-      'esAdmin':
-          esAdmin ?? false, // Asegúrate de asignar false si esAdmin es null
+      'esAdmin': esAdmin, 
     };
   }
 
@@ -51,7 +50,7 @@ class Usuario {
         dni: data?['dni'],
         telefono: data?['telefono'],
         token: data?['token'],
-        esAdmin: data?['esAdmin'] ?? false); // Si esAdmin es null, asigna false
+        esAdmin: data?['esAdmin'] ?? false); 
   }
 
   Usuario copywith(
@@ -73,7 +72,6 @@ class Usuario {
         dni: dni ?? this.dni,
         telefono: telefono ?? this.telefono,
         token: token ?? this.token,
-        esAdmin:
-            esAdmin ?? this.esAdmin ?? false); // Usa false si esAdmin es null
+        esAdmin: esAdmin ?? this.esAdmin);
   }
 }
