@@ -5,6 +5,7 @@ import 'package:flutter_application_1/WidgetsPersonalizados/BotonAtras.dart';
 import 'package:flutter_application_1/core/Entities/Vehiculo.dart';
 import 'package:flutter_application_1/core/Providers/user_provider.dart';
 import 'package:flutter_application_1/core/Providers/vehiculo_provider.dart';
+import 'package:flutter_application_1/screens/LoginUsuario.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
@@ -63,7 +64,11 @@ class vehiculosUsuarioState extends ConsumerState<vehiculosUsuario> {
           ),
           BackButtonWidget(
             onPressed: () {
-              context.pop(); // Usa el nombre definido en GoRoute
+               Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => LoginUsuario()),
+                    );// Usa el nombre definido en GoRoute
             },
           )
         ],
