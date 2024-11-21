@@ -9,7 +9,6 @@ import 'package:flutter_application_1/WidgetsPersonalizados/MenuUsuario.dart';
 import 'package:flutter_application_1/core/Entities/Reserva.dart';
 import 'package:flutter_application_1/core/Providers/reservaGarage.dart';
 import 'package:flutter_application_1/core/Providers/user_provider.dart';
-import 'package:flutter_application_1/screens/LoginUsuario.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:http/http.dart' as http;
@@ -26,9 +25,7 @@ class editarReserva extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     Reserva ReservaCargada = ref.watch(reservaEnGarageProvider);
 
-    Future<void> _cancelarReserva() async {
-      await db.collection('Reservas').doc(ReservaCargada.id).delete();
-    }
+    
 
     Future<String> _recuperarTokenAdmin() async {
       Reserva ReservaCargada2 = ref.watch(reservaEnGarageProvider);
@@ -79,6 +76,37 @@ class editarReserva extends ConsumerWidget {
       } catch (e) {}
     }
 
+    Future<void> _cancelarReserva() async {
+      final confirmacion = await showDialog<bool>(
+        context: context,
+        builder: (BuildContext context) {
+          return AlertDialog(
+            title: const Text('¿Quieres cancelar tu reserva?'),
+            content: const Text('Esta acción no se puede deshacer.'),
+            actions: <Widget>[
+              TextButton(
+                child: const Text('Sí'),
+                onPressed: () => Navigator.of(context).pop(true), 
+              ),
+              TextButton(
+                child: const Text('No'),
+                onPressed: () => Navigator.of(context).pop(false), 
+              ),
+            ],
+          );
+        },
+      );
+      if(confirmacion == true) {
+        await db.collection('Reservas').doc(ReservaCargada.id).delete();
+        await _enviarNotificaciones();
+        context.push('/reservasUsuario');
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('Reserva eliminada correctamente.'))
+        );
+      }
+      
+    }
+
     String _formatDuracion(double duracion) {
       final int horas = duracion.floor();
       final int minutos = ((duracion - horas) * 60).round();
@@ -104,7 +132,6 @@ class editarReserva extends ConsumerWidget {
       body: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          const SizedBox(height: 30),
           Image.asset(
                     'assets/images/car_logo.png',
                     height: 100,
@@ -142,8 +169,8 @@ class editarReserva extends ConsumerWidget {
             child: ElevatedButton(
               onPressed: () async {
                 await _cancelarReserva();
-                await _enviarNotificaciones();
-                context.goNamed(LoginUsuario.name);
+                // await _enviarNotificaciones();
+                // context.goNamed(LoginUsuario.name);
               },
               style: ElevatedButton.styleFrom(
                       backgroundColor: const Color.fromARGB(191, 152, 12, 2),
@@ -156,7 +183,7 @@ class editarReserva extends ConsumerWidget {
       ),
       floatingActionButton: BackButtonWidget(
         onPressed: () {
-          context.push('/HomeUser');
+          context.push('/reservasUsuario');
         },
       ),
     );
