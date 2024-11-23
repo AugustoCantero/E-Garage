@@ -1,3 +1,4 @@
+import 'package:flutter_application_1/Test/recuperacionPassword.dart';
 import 'package:flutter_application_1/WidgetsPersonalizados/Mapa.dart';
 import 'package:flutter_application_1/screens/GesionarReserva.dart';
 import 'package:flutter_application_1/Test/test_modif_reserva.dart';
@@ -25,7 +26,7 @@ final GoRouter appRouter = GoRouter(initialLocation: '/selection', routes: [
     builder: (context, state) => const IntroScreen(),
   ),
   GoRoute(
-    name: 'SelectionScreen',
+    name: SelectionScreen.name,
     path: '/selection',
     builder: (context, state) => const SelectionScreen(),
   ),
@@ -107,4 +108,8 @@ final GoRouter appRouter = GoRouter(initialLocation: '/selection', routes: [
     path: '/reservasUsuario',
     builder: (context, state) => const ReservasUsuario(),
   ),
+  GoRoute(
+      path: '/recuperacionPassword',
+      builder: (context, state) => PasswordResetPage(),
+      name: PasswordResetPage.name),
 ]);

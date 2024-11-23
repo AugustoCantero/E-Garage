@@ -1,7 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_application_1/Test/recuperacionPassword.dart';
+import 'package:flutter_application_1/core/router/app_router.dart';
+import 'package:flutter_application_1/screens/PantallaLogin.dart';
 import 'package:go_router/go_router.dart';
+import 'RegistroGenerico.dart';
 
 class SelectionScreen extends StatelessWidget {
+  static final String name = 'selection';
   const SelectionScreen({super.key});
 
   @override
@@ -26,9 +31,13 @@ class SelectionScreen extends StatelessWidget {
               ),
             ),
             const SizedBox(height: 50),
+            // Botón de LOGIN
             OutlinedButton(
               onPressed: () {
-                context.push('/login');
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => LoginScreen()),
+                );
               },
               style: OutlinedButton.styleFrom(
                 side: const BorderSide(color: Colors.white),
@@ -44,9 +53,14 @@ class SelectionScreen extends StatelessWidget {
               ),
             ),
             const SizedBox(height: 20),
+            // Botón de REGISTER
             OutlinedButton(
               onPressed: () {
-                context.push('/registrar');
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                      builder: (context) => const RegistroGenericoScreen()),
+                );
               },
               style: OutlinedButton.styleFrom(
                 side: const BorderSide(color: Colors.white),
@@ -61,6 +75,16 @@ class SelectionScreen extends StatelessWidget {
                 style: TextStyle(color: Colors.white, fontSize: 20),
               ),
             ),
+            const SizedBox(height: 20),
+            GestureDetector(
+              onTap: () {
+                context.goNamed(PasswordResetPage.name);
+              },
+              child: const Text(
+                'Olvidé mi contraseña',
+                style: TextStyle(color: Colors.white, fontSize: 20),
+              ),
+            )
           ],
         ),
       ),

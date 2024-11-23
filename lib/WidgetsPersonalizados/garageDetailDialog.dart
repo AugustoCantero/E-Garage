@@ -10,15 +10,18 @@ class GarageDetailDialog extends ConsumerWidget {
   final String name;
   final String imagePath;
   final String details;
+  final double valorHora;
+  final double valorFraccion;
 
-  const GarageDetailDialog({
-    super.key,
-    required this.id,
-    required this.location,
-    required this.name,
-    required this.imagePath,
-    required this.details,
-  });
+  const GarageDetailDialog(
+      {super.key,
+      required this.id,
+      required this.location,
+      required this.name,
+      required this.imagePath,
+      required this.details,
+      required this.valorHora,
+      required this.valorFraccion});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -50,7 +53,7 @@ class GarageDetailDialog extends ConsumerWidget {
             child: Column(
               mainAxisSize: MainAxisSize.min,
               children: [
-                // Image.asset(imagePath, height: 150, fit: BoxFit.cover),
+                Image.asset(imagePath, height: 150, fit: BoxFit.cover),
                 const SizedBox(height: 20),
                 Text(
                   name,
@@ -71,20 +74,36 @@ class GarageDetailDialog extends ConsumerWidget {
                       decoration: TextDecoration.none),
                 ),
                 const SizedBox(height: 20),
+                Text(
+                  'Valor hora: ${valorHora.toString()}',
+                  textAlign: TextAlign.center,
+                  style: const TextStyle(
+                      fontSize: 16,
+                      color: Colors.black54,
+                      decoration: TextDecoration.none),
+                ),
+                Text(
+                  'Fracción: ${valorFraccion.toString()}',
+                  textAlign: TextAlign.center,
+                  style: const TextStyle(
+                      fontSize: 16,
+                      color: Colors.black54,
+                      decoration: TextDecoration.none),
+                ),
+                const SizedBox(height: 20),
                 ElevatedButton(
                   onPressed: () {
-                    ref.read(garageProvider.notifier).setGarage(this.id,
-                        this.location, this.name, this.imagePath, this.details);
-                    final garageState = ref.read(garageProvider);
+                    ref.read(garageProvider.notifier).setGarage(
+                        this.id,
+                        this.location,
+                        this.name,
+                        this.imagePath,
+                        this.details,
+                        this.valorHora,
+                        this.valorFraccion);
+                    // Obtener el estado actualizado del provider
 
-                    // Imprimir los datos del garage
-                    print('Garage ID: ${garageState.id}');
-                    print('Location: ${garageState.location}');
-                    print('Name: ${garageState.name}');
-                    print('Image Path: ${garageState.imagePath}');
-                    print('Details: ${garageState.details}');
-
-                    context.push('/ReservationSelectVehicule');
+                    context.goNamed('ReservationSelectVehicule');
                   },
                   style: ElevatedButton.styleFrom(
                     backgroundColor: Colors.green,

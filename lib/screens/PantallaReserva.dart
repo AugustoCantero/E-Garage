@@ -1,5 +1,3 @@
-// ignore_for_file: library_private_types_in_public_api, non_constant_identifier_names
-
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_application_1/WidgetsPersonalizados/BotonAtras.dart';
@@ -8,6 +6,7 @@ import 'package:flutter_application_1/core/Entities/Reserva.dart';
 import 'package:flutter_application_1/core/Providers/garage_provider.dart';
 import 'package:flutter_application_1/core/Providers/reservaGarage.dart';
 import 'package:flutter_application_1/core/Providers/vehiculo_provider.dart';
+import 'package:flutter_application_1/screens/MetodoDePago.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
@@ -22,20 +21,23 @@ class ReservationScreen extends ConsumerStatefulWidget {
 }
 
 class Garage {
+  // Tengo que llenar esta array con las reservas
   final String idGarage = 'PruebaIdGarage';
-  final List<Reserva> reservations; 
-  final int totalSpaces; 
+  final List<Reserva> reservations; // Lista de reservas
+  final int totalSpaces; // Total de espacios disponibles en el garage
 
   Garage(
       {this.totalSpaces = 3,
       List<Reserva>?
-          reservasIngresadas}) 
+          reservasIngresadas}) // Inicializa reservations // Asigna 3 como valor por defecto
       : reservations = reservasIngresadas ?? [];
 
+  // Verifica la disponibilidad en un rango dado
   bool isAvailable(DateTime start, DateTime end) {
     int occupiedSpaces = 0;
 
     for (var reservation in reservations) {
+      // Contar reservas que se solapan con el rango
       if ((start.isBefore(reservation.endTime) &&
           end.isAfter(reservation.startTime))) {
         occupiedSpaces++;
@@ -43,18 +45,19 @@ class Garage {
     }
 
     return occupiedSpaces <
-        totalSpaces;
+        totalSpaces; // Devuelve true si hay al menos un espacio disponible
   }
 
   List<DateTime> getAvailableTimes(DateTime selectedDate) {
     List<DateTime> times = [];
-    DateTime now = DateTime.now();
+    DateTime now = DateTime.now(); // Obtener la hora actual
 
     for (int hour = 0; hour < 24; hour++) {
       for (int minute = 0; minute < 60; minute += 30) {
         DateTime time = DateTime(selectedDate.year, selectedDate.month,
             selectedDate.day, hour, minute);
 
+        // Solo agregar el tiempo si es después de la hora actual y está disponible
         if (time.isAfter(now) || time.isAtSameMomentAs(now)) {
           if (isAvailable(time, time.add(Duration(minutes: 30)))) {
             times.add(time);
@@ -68,11 +71,15 @@ class Garage {
   List<DateTime> getAvailableDepartureTimes(
       DateTime selectedDate, DateTime startTime) {
     List<DateTime> times = [];
+    // Inicia desde la misma hora que se seleccionó para el inicio.
     for (int hour = startTime.hour; hour < 24; hour++) {
       for (int minute = 0; minute < 60; minute += 30) {
         DateTime time = DateTime(selectedDate.year, selectedDate.month,
             selectedDate.day, hour, minute);
+        // Permitir seleccionar la hora de fin justo después de la hora de inicio
         if (time.isAfter(startTime)) {
+          // Cambiar isAtSameMomentAs a isAfter
+          // Verificar que la hora de fin seleccionada no se superponga con las reservas existentes
           if (isAvailable(startTime, time)) {
             times.add(time);
           }
@@ -92,13 +99,18 @@ class _ReservationScreenState extends ConsumerState<ReservationScreen> {
   double? totalHoras = 0.0;
   String? tiempoEstadia;
   double? importeAbonar = 0.0;
-  final int VALOR_HORA = 500;
-  final int VALOR_FRACCION_5_MINUTOS = 100;
+  double valorHoraGarage = 1.0;
+  double valorFraccion5MinutosGarage = 1.0;
 
   @override
   void initState() {
     super.initState();
     _fetchReservas();
+  }
+
+  _cargarHoras(double valorHora, double valorFraccion) {
+    valorHoraGarage = valorHora;
+    valorFraccion5MinutosGarage = valorFraccion;
   }
 
   Future<void> _fetchReservas() async {
@@ -213,6 +225,8 @@ class _ReservationScreenState extends ConsumerState<ReservationScreen> {
         totalHoras = (endTime!.difference(startTime!).inMinutes / 60);
         tiempoEstadia = _formatDuracion(totalHoras!);
       });
+
+      //'Duración de estadía: ${_formatDuracion(ReservaCargada.duracionEstadia)} \n'
     }
   }
 
@@ -225,7 +239,7 @@ class _ReservationScreenState extends ConsumerState<ReservationScreen> {
   calcularImporteAbonar() {
     if (totalHoras != null) {
       setState(() {
-        importeAbonar = (totalHoras! * VALOR_HORA);
+        importeAbonar = (totalHoras! * valorHoraGarage!);
       });
     }
   }
@@ -235,6 +249,9 @@ class _ReservationScreenState extends ConsumerState<ReservationScreen> {
     final vehiculoState = ref.watch(vehiculoProvider);
     final garageSeleccionado = ref.watch(garageProvider);
     final db = FirebaseFirestore.instance;
+
+    _cargarHoras(
+        garageSeleccionado.valorHora, garageSeleccionado.valorFraccion);
 
     return GestureDetector(
       onTap: () {
@@ -257,14 +274,14 @@ class _ReservationScreenState extends ConsumerState<ReservationScreen> {
               children: [
                 Image.asset(
                   'assets/images/car_logo.png',
-                  height: 100,
+                  height: 100, // Tamaño más pequeño para el auto
                 ),
                 const SizedBox(height: 10),
                 const Text(
                   'Reservar Garage',
                   style: TextStyle(
                     color: Colors.white,
-                    fontSize: 24,
+                    fontSize: 24, // Ajusta el tamaño del texto
                     fontWeight: FontWeight.bold,
                   ),
                   textAlign: TextAlign.center,
@@ -309,7 +326,7 @@ class _ReservationScreenState extends ConsumerState<ReservationScreen> {
                 ),
                 const SizedBox(height: 32),
                 Text(
-                  'Importe a abonar: $importeAbonar',
+                  'Importe a abonar: ${importeAbonar}',
                   style: const TextStyle(color: Colors.white),
                 ),
                 const SizedBox(height: 32),
@@ -323,28 +340,35 @@ class _ReservationScreenState extends ConsumerState<ReservationScreen> {
                       String idParaReserva = docRef.id;
 
                       final reserva = Reserva(
-                        id: idParaReserva,
-                        startTime: startTime!,
-                        endTime: endTime!,
-                        elvehiculo: vehiculoState,
-                        usuarioId: vehiculoState.userId!,
-                        garajeId: garageSeleccionado.id,
-                        duracionEstadia: totalHoras!,
-                        medioDePago: 'Pendiente',
-                        estaPago: false,
-                        fueAlGarage: false,
-                        seRetiro: false,
-                        monto: importeAbonar!,
-                        valorHoraAlMomentoDeReserva: VALOR_HORA,
-                        valorFraccionAlMomentoDeReserva:
-                            VALOR_FRACCION_5_MINUTOS,
-                      );
+                          id: idParaReserva,
+                          startTime: startTime!,
+                          endTime: endTime!,
+                          elvehiculo: vehiculoState,
+                          usuarioId: vehiculoState.userId!,
+                          garajeId: garageSeleccionado.id,
+                          duracionEstadia: totalHoras!,
+                          medioDePago: 'Pendiente',
+                          estaPago: false,
+                          fueAlGarage: false,
+                          seRetiro: false,
+                          monto: importeAbonar!,
+                          valorHoraAlMomentoDeReserva: valorHoraGarage.toInt(),
+                          valorFraccionAlMomentoDeReserva:
+                              valorFraccion5MinutosGarage.toInt());
 
+                      // Guardar la reserva en el estado (Provider)
                       ref
                           .read(reservaEnGarageProvider.notifier)
                           .setReserva(reserva);
 
-                      context.push('/metodoPago');
+                      // Dirigir a la pantalla de selección de método de pago
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => MetodoPagoScreen(),
+                        ),
+                      );
+                      ;
                     } else {
                       ScaffoldMessenger.of(context).showSnackBar(
                         const SnackBar(
@@ -369,7 +393,7 @@ class _ReservationScreenState extends ConsumerState<ReservationScreen> {
         ),
         floatingActionButton: BackButtonWidget(
           onPressed: () {
-            context.push('/ReservationSelectVehicule');
+            context.goNamed('ReservationSelectVehicule');
           },
         ),
         floatingActionButtonLocation: FloatingActionButtonLocation.startFloat,

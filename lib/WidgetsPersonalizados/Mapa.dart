@@ -1,5 +1,3 @@
-// ignore_for_file: library_private_types_in_public_api, use_build_context_synchronously
-
 import 'dart:convert';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
@@ -29,6 +27,30 @@ class _OpenStreetMapScreenState extends State<OpenStreetMapScreen> {
   final db = FirebaseFirestore.instance;
   List<GarageMarker> garageMarkers = [];
 
+  // SE COMENTO PORQUE YA NO VA A ESTAR HARDCODEADO EL GARAGE.
+  // SE VA A TRAER DE FIREBASE DESDE AHORA.
+  // Lista de garages con marcadores
+  /*final List<GarageMarker> garageMarkers = [
+    GarageMarker(
+      location: LatLng(-34.6035711449937, -58.377600745441114),
+      name: 'Garage Odeon',
+      imagePath: 'assets/images/frenteOdeon.png',
+      details: 'Ubicación: Centro, Precio: 10/hora, Abierto las 24 horas',
+    ),
+    GarageMarker(
+      location: LatLng(-34.604554116354365, -58.37733976545885),
+      name: 'Estacionamiento Sarmiento',
+      imagePath: 'assets/images/garage2.png',
+      details: 'Ubicación: Norte, Precio: 8/hora, Seguridad 24/7',
+    ),
+    GarageMarker(
+      location: LatLng(-34.604300230161876, -58.37810419503197),
+      name: 'Esmeralda 333',
+      imagePath: 'assets/images/garage3.png',
+      details: 'Ubicación: Sur, Precio: 7/hora, Servicio de lavado incluido',
+    ),
+  ];*/
+
   @override
   void initState() {
     super.initState();
@@ -38,37 +60,44 @@ class _OpenStreetMapScreenState extends State<OpenStreetMapScreen> {
     _obtenerGaragesDeBase();
   }
 
-Future<void> _obtenerGaragesDeBase() async {
-  try {
-    QuerySnapshot<Map<String, dynamic>> snapshot =
-        await db.collection('garages').get();
+  // Llenar losGarages con instancias de GarageMarker
+  Future<void> _obtenerGaragesDeBase() async {
+    try {
+      QuerySnapshot<Map<String, dynamic>> snapshot =
+          await db.collection('garages').get();
 
-    List<GarageMarker> garages = snapshot.docs.map((doc) {
-      var data = doc.data();
-      var lat = data['latitude'];
-      var lon = data['longitude'];
+      List<GarageMarker> garages = snapshot.docs
+          .map((doc) {
+            var data = doc.data();
+            var lat = data['latitude'];
+            var lon = data['longitude'];
 
-      if (lat != null && lon != null) {
-        return GarageMarker(
-          id: data['id'] ?? '',
-          location: LatLng(lat, lon),
-          name: data['nombre'] ?? 'Garage',
-          imagePath: data['imagePath'] ?? '',
-          details: data['direccion'] ?? '',
-        );
-      } else {
-        return null;
-      }
-    }).whereType<GarageMarker>().toList();
+            if (lat != null && lon != null) {
+              return GarageMarker(
+                  id: data['id'] ?? '',
+                  location: LatLng(lat, lon),
+                  name: data['nombre'] ?? 'Garage',
+                  imagePath: data['imagePath'] ?? '',
+                  details: data['direccion'] ?? '',
+                  valorHora: (data['valorHora'] as num).toDouble() ?? 0.0,
+                  valorFraccion:
+                      (data['valorFraccion'] as num).toDouble() ?? 0.0);
+            } else {
+              return null;
+            }
+          })
+          .whereType<GarageMarker>()
+          .toList();
 
-    setState(() {
-      garageMarkers = garages;
-    });
-  } catch (e) {
-    print('Error al obtener garages de Firebase: $e');
+      setState(() {
+        garageMarkers = garages;
+      });
+    } catch (e) {
+      print('Error al obtener garages de Firebase: $e');
+    }
   }
-}
 
+  // Solicita permisos
   Future<void> _requestLocationPermission() async {
     var status = await Permission.location.status;
     if (status.isDenied || status.isRestricted) {
@@ -85,6 +114,7 @@ Future<void> _obtenerGaragesDeBase() async {
     }
   }
 
+  // Configura la ubicación inicial
   Future<void> _setInitialLocation() async {
     try {
       Position position = await Geolocator.getCurrentPosition(
@@ -99,6 +129,7 @@ Future<void> _obtenerGaragesDeBase() async {
     }
   }
 
+  // Calcula la ruta entre A y B
   Future<void> _calculateRoute(LatLng start, LatLng end) async {
     final url = Uri.parse(
       'https://router.project-osrm.org/route/v1/driving/${start.longitude},${start.latitude};${end.longitude},${end.latitude}?overview=full&geometries=geojson',
@@ -122,6 +153,7 @@ Future<void> _obtenerGaragesDeBase() async {
     }
   }
 
+  // Actualiza la ubicación de búsqueda y calcula la ruta
   Future<void> _updateSearchLocation(double lat, double lon) async {
     final searchPosition = LatLng(lat, lon);
     setState(() {
@@ -140,6 +172,7 @@ Future<void> _obtenerGaragesDeBase() async {
     await _calculateRoute(_initialPosition, searchPosition);
   }
 
+  // Función para buscar la dirección
   Future<void> _searchAddress() async {
     final address = _addressController.text;
     if (address.isEmpty) return;
@@ -169,6 +202,7 @@ Future<void> _obtenerGaragesDeBase() async {
     }
   }
 
+  // Marca la ubicación actual en el mapa
   Future<void> _goToCurrentLocation() async {
     try {
       Position position = await Geolocator.getCurrentPosition(
@@ -195,7 +229,7 @@ Future<void> _obtenerGaragesDeBase() async {
   }
 
   void _goBack() {
-    Navigator.of(context).pop();
+    Navigator.of(context).pop(); // Volver a la pantalla anterior
   }
 
   @override

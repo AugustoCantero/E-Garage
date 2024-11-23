@@ -9,9 +9,13 @@ class GarageMarker {
   final String imagePath;
   final String details;
   final String id;
+  final double valorHora;
+  final double valorFraccion;
 
   GarageMarker({
     required this.id,
+    required this.valorHora,
+    required this.valorFraccion,
     required this.location,
     required this.name,
     required this.imagePath,
@@ -50,25 +54,30 @@ class GarageMarker {
             name: name,
             imagePath: imagePath,
             details: details,
+            valorHora: valorHora,
+            valorFraccion: valorFraccion,
           ),
         );
       },
     );
   }
 
-  GarageMarker copywith({
-    String? id,
-    LatLng? location,
-    String? imagePath,
-    String? details,
-    String? name,
-  }) {
+  GarageMarker copywith(
+      {String? id,
+      LatLng? location,
+      String? imagePath,
+      String? details,
+      String? name,
+      double? valorHora,
+      double? valorFraccion}) {
     return GarageMarker(
-      id: id ?? this.id,
-      location: location ?? this.location,
-      imagePath: imagePath ?? this.imagePath,
-      details: details ?? this.details,
-      name: name ?? this.name,
-    ); // Usa false si esAdmin es null
+        id: id ?? this.id,
+        location: location ?? this.location,
+        imagePath: imagePath ?? this.imagePath,
+        details: details ?? this.details,
+        name: name ?? this.name,
+        valorHora: valorHora ?? this.valorHora,
+        valorFraccion: valorFraccion ??
+            this.valorFraccion); // Usa false si esAdmin es null
   }
 }
