@@ -53,8 +53,6 @@ class GarageDetailDialog extends ConsumerWidget {
             child: Column(
               mainAxisSize: MainAxisSize.min,
               children: [
-                Image.asset(imagePath, height: 150, fit: BoxFit.cover),
-                const SizedBox(height: 20),
                 Text(
                   name,
                   style: const TextStyle(
