@@ -1,10 +1,12 @@
 import 'package:flutter_application_1/Test/recuperacionPassword.dart';
 import 'package:flutter_application_1/WidgetsPersonalizados/Mapa.dart';
+import 'package:flutter_application_1/screens/ComentarReserva.dart';
 import 'package:flutter_application_1/screens/GesionarReserva.dart';
 import 'package:flutter_application_1/Test/test_modif_reserva.dart';
 import 'package:flutter_application_1/WidgetsPersonalizados/Aprobado.dart';
 import 'package:flutter_application_1/WidgetsPersonalizados/PantallaPagos.dart';
 import 'package:flutter_application_1/screens/EditarDatos.dart';
+import 'package:flutter_application_1/screens/HistorialReservasUsuario.dart';
 import 'package:flutter_application_1/screens/MetodoDePago.dart';
 import 'package:flutter_application_1/screens/PantallaLogin.dart';
 import 'package:flutter_application_1/screens/RegistroGenerico.dart';
@@ -16,6 +18,7 @@ import 'package:flutter_application_1/screens/PantallaReserva.dart';
 import 'package:flutter_application_1/screens/PantallaInicio.dart';
 import 'package:flutter_application_1/screens/LoginUsuario.dart';
 import 'package:flutter_application_1/screens/PantallaSeleccion.dart';
+import 'package:flutter_application_1/screens/cargarComentario.dart';
 import 'package:flutter_application_1/screens/reservasUsuario.dart';
 import 'package:flutter_application_1/screens/todasLasReservas.dart';
 import 'package:go_router/go_router.dart';
@@ -112,4 +115,12 @@ final GoRouter appRouter = GoRouter(initialLocation: '/selection', routes: [
       path: '/recuperacionPassword',
       builder: (context, state) => PasswordResetPage(),
       name: PasswordResetPage.name),
+  GoRoute(
+      path: '/historialReservas',
+      builder: (context, state) => HistorialReservasUsuario(),
+      name: HistorialReservasUsuario.name),
+  GoRoute(
+      path: '/cargarComentarioReserva',
+      builder: (context, state) => cargarComentarioReserva(),
+      name: cargarComentarioReserva.name),
 ]);

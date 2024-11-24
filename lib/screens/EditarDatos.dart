@@ -1,5 +1,3 @@
-// ignore_for_file: use_build_context_synchronously
-
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_application_1/WidgetsPersonalizados/BiometriaService.dart';
@@ -9,9 +7,59 @@ import 'package:flutter_application_1/core/Providers/user_provider.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
-class EditarDatosScreen extends ConsumerWidget {
-  static final String name = "editarDatos";
-  const EditarDatosScreen({super.key});
+class EditarDatosScreen extends ConsumerStatefulWidget {
+  static const String name = "editarDatos";
+  const EditarDatosScreen({Key? key}) : super(key: key);
+
+  @override
+  _EditarDatosScreenState createState() => _EditarDatosScreenState();
+}
+
+class _EditarDatosScreenState extends ConsumerState<EditarDatosScreen> {
+  late TextEditingController nombreController;
+  late TextEditingController apellidoController;
+  late TextEditingController telefonoController;
+  late TextEditingController emailController;
+  late TextEditingController passwordController;
+  late TextEditingController confirmPasswordController;
+
+  bool isPasswordValid = false;
+
+  @override
+  void initState() {
+    super.initState();
+    final usuario = ref.read(usuarioProvider);
+    nombreController = TextEditingController(text: usuario.nombre);
+    apellidoController = TextEditingController(text: usuario.apellido);
+    telefonoController = TextEditingController(text: usuario.telefono);
+    emailController = TextEditingController(text: usuario.email);
+    passwordController = TextEditingController(text: usuario.password);
+    confirmPasswordController = TextEditingController();
+  }
+
+  @override
+  void dispose() {
+    nombreController.dispose();
+    apellidoController.dispose();
+    telefonoController.dispose();
+    emailController.dispose();
+    passwordController.dispose();
+    confirmPasswordController.dispose();
+    super.dispose();
+  }
+
+  bool validatePassword(String password) {
+    final hasUppercase = password.contains(RegExp(r'[A-Z]'));
+    final hasLowercase = password.contains(RegExp(r'[a-z]'));
+    final hasDigit = password.contains(RegExp(r'\d'));
+    final hasMinLength = password.length >= 8;
+    return hasUppercase && hasLowercase && hasDigit && hasMinLength;
+  }
+
+  bool validateEmail(String email) {
+    final emailRegex = RegExp(r'^[^@]+@[^@]+\.[^@]+$');
+    return emailRegex.hasMatch(email);
+  }
 
   Future<void> _eliminarCuenta(BuildContext context, WidgetRef ref) async {
     final usuario = ref.read(usuarioProvider);
@@ -62,35 +110,9 @@ class EditarDatosScreen extends ConsumerWidget {
   }
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  Widget build(BuildContext context) {
     final usuario = ref.watch(usuarioProvider);
     final BiometriaService biometriaService = BiometriaService();
-
-    final TextEditingController nombreController =
-        TextEditingController(text: usuario.nombre);
-    final TextEditingController apellidoController =
-        TextEditingController(text: usuario.apellido);
-    final TextEditingController emailController =
-        TextEditingController(text: usuario.email);
-    final TextEditingController passwordController =
-        TextEditingController(text: usuario.password);
-    final TextEditingController confirmPasswordController =
-        TextEditingController();
-
-    bool isPasswordValid = false;
-
-    bool validatePassword(String password) {
-      final hasUppercase = password.contains(RegExp(r'[A-Z]'));
-      final hasLowercase = password.contains(RegExp(r'[a-z]'));
-      final hasDigit = password.contains(RegExp(r'\d'));
-      final hasMinLength = password.length >= 8;
-      return hasUppercase && hasLowercase && hasDigit && hasMinLength;
-    }
-
-    bool validateEmail(String email) {
-      final emailRegex = RegExp(r'^[^@]+@[^@]+\.[^@]+$');
-      return emailRegex.hasMatch(email);
-    }
 
     return Scaffold(
       backgroundColor: Colors.black,
@@ -115,7 +137,6 @@ class EditarDatosScreen extends ConsumerWidget {
             child: Padding(
               padding: const EdgeInsets.all(16.0),
               child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   const SizedBox(height: 30),
                   Image.asset(
@@ -133,22 +154,28 @@ class EditarDatosScreen extends ConsumerWidget {
                     ),
                   ),
                   const SizedBox(height: 20),
-                  _buildEditableField('Nombre Completo', nombreController),
+                  _buildEditableField(
+                      'Nombre Completo', nombreController, true),
                   const SizedBox(height: 20),
-                  _buildEditableField('Apellido', apellidoController),
+                  _buildEditableField('Apellido', apellidoController, true),
                   const SizedBox(height: 20),
-                  _buildEditableField('Correo Electrónico', emailController),
+                  _buildEditableField('Telefono', telefonoController, true),
+                  const SizedBox(height: 20),
+                  _buildEditableField(
+                      'Correo Electrónico', emailController, false),
                   const SizedBox(height: 20),
                   _buildPasswordField(
                     'Contraseña',
                     passwordController,
                     (value) {
-                      isPasswordValid = validatePassword(value);
+                      setState(() {
+                        isPasswordValid = validatePassword(value);
+                      });
                     },
                   ),
                   const SizedBox(height: 10),
                   Text(
-                    'La contraseña debe contener como mínimo 8 caracteres, letras mayúsculas y minúsculas, 1 número.',
+                    'La contraseña debe contener como mínimo 8 caracteres, letras mayúsculas y minúsculas, y 1 número.',
                     style: TextStyle(
                       color: isPasswordValid ? Colors.green : Colors.red,
                       fontSize: 12,
@@ -173,12 +200,12 @@ class EditarDatosScreen extends ConsumerWidget {
                           passwordController.text ==
                               confirmPasswordController.text) {
                         final db = FirebaseFirestore.instance;
-                        final usuario = ref.read(usuarioProvider);
 
                         try {
                           await db.collection('users').doc(usuario.id).update({
                             'nombre': nombreController.text,
                             'apellido': apellidoController.text,
+                            'telefono': telefonoController.text,
                             'email': emailController.text,
                             'password': passwordController.text,
                           });
@@ -266,9 +293,11 @@ class EditarDatosScreen extends ConsumerWidget {
     );
   }
 
-  Widget _buildEditableField(String label, TextEditingController controller) {
+  Widget _buildEditableField(
+      String label, TextEditingController controller, bool? soloLectura) {
     return TextField(
       controller: controller,
+      enabled: soloLectura ?? true,
       style: const TextStyle(color: Colors.white),
       decoration: InputDecoration(
         labelText: label,
@@ -277,6 +306,9 @@ class EditarDatosScreen extends ConsumerWidget {
           borderSide: BorderSide(color: Colors.white),
         ),
         focusedBorder: const OutlineInputBorder(
+          borderSide: BorderSide(color: Colors.white),
+        ),
+        disabledBorder: const OutlineInputBorder(
           borderSide: BorderSide(color: Colors.white),
         ),
       ),
