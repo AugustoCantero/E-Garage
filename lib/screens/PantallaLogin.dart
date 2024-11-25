@@ -141,6 +141,44 @@ class LoginScreen extends ConsumerWidget {
           QueryDocumentSnapshot userDocument = querySnapshot.docs.first;
           Map<String, dynamic> userData =
               userDocument.data() as Map<String, dynamic>;
+
+          if (userData['token'] == null ||
+              userData['token'].toString().isEmpty) {
+            var prefs = await PreferenciasUsuario();
+            final datos = db.collection('users').doc(userData['id']);
+
+            // Actualizar el token en Firestore
+            try {
+              print("Iniciando actualización del token en Firestore...");
+              await datos.update({'token': prefs.token});
+              print("Token actualizado correctamente.");
+
+              // Actualizar el token localmente después de confirmar la operación en Firestore
+              userData['token'] = prefs.token;
+            } catch (e) {
+              print("Error al actualizar el token en Firestore: $e");
+              // Manejo de errores (puedes lanzar una excepción o mostrar un mensaje)
+              _showErrorSnackbar(context, "No se pudo actualizar el token.");
+              return; // Detener el flujo si falla la actualización
+            }
+          }
+
+// Continuar el flujo solo después de la actualización del token
+          ref.read(usuarioProvider.notifier).setUsuario(
+                userData['id'],
+                userData['nombre'],
+                userData['apellido'],
+                userData['email'],
+                userData['password'],
+                userData['dni'],
+                userData['telefono'],
+                userData['token'], // Ahora contiene el token actualizado
+                userData['esAdmin'],
+              );
+
+          if (userData['esAdmin'] == false) {
+            context.goNamed(LoginUsuario.name);
+          }
           ref.read(usuarioProvider.notifier).setUsuario(
                 userData['id'],
                 userData['nombre'],

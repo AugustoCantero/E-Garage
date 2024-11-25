@@ -7,6 +7,7 @@ import 'package:flutter_application_1/WidgetsPersonalizados/MenuUsuario.dart';
 import 'package:flutter_application_1/core/Entities/Reserva.dart';
 import 'package:flutter_application_1/core/Providers/reservaGarage.dart';
 import 'package:flutter_application_1/core/Providers/user_provider.dart';
+import 'package:flutter_application_1/screens/LoginUsuario.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
@@ -69,7 +70,15 @@ class _HistorialReservasUsuariosState
               ],
             ),
           ),
-          const BackButtonWidget(),
+          Positioned(
+            bottom: 20,
+            left: 20,
+            child: BackButtonWidget(
+              onPressed: () {
+                context.push('/HomeUser');
+              },
+            ),
+          )
         ],
       ),
     );
