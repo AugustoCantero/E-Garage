@@ -58,4 +58,6 @@ class Comentarioreserva {
         comentario: comentario ?? this.comentario,
         puntuacion: puntuacion ?? this.puntuacion);
   }
+
+  double get traerElPuntaje => puntuacion!;
 }

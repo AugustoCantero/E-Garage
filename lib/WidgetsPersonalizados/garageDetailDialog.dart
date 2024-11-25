@@ -1,4 +1,6 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_application_1/core/Entities/ComentarioReserva.dart';
 import 'package:flutter_application_1/core/Providers/garage_provider.dart';
 import 'package:flutter_application_1/screens/comentariosGarage.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -23,6 +25,35 @@ class GarageDetailDialog extends ConsumerWidget {
       required this.details,
       required this.valorHora,
       required this.valorFraccion});
+
+  Future<double> totalPuntaje(WidgetRef ref) async {
+    final elGarage = ref.watch(garageProvider);
+    FirebaseFirestore firestore = FirebaseFirestore.instance;
+
+    // Obtén los documentos que coinciden con el idGarage
+    QuerySnapshot<Map<String, dynamic>> snapshot = await firestore
+        .collection('ComentarioReserva')
+        .where('idGarage', isEqualTo: elGarage.id)
+        .get();
+
+    // Convierte los documentos en una lista de objetos Comentarioreserva
+    List<Comentarioreserva> listaComentarios = snapshot.docs
+        .map((doc) => Comentarioreserva.fromFirestore(doc))
+        .toList();
+
+    // Calcula el puntaje total sumando los puntajes individuales
+    double Puntaje = 0.0;
+    double totalPuntaje;
+    for (var comentario in listaComentarios) {
+      Puntaje += comentario.traerElPuntaje ?? 0.0;
+    }
+    if (Puntaje > 0) {
+      totalPuntaje = Puntaje / listaComentarios.length;
+    } else {
+      totalPuntaje = -0.1;
+    }
+    return totalPuntaje;
+  }
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -82,12 +113,63 @@ class GarageDetailDialog extends ConsumerWidget {
                       decoration: TextDecoration.none),
                 ),
                 Text(
-                  'Fracción: ${valorFraccion.toString()}',
+                  'Fracción: ${valorFraccion.toString()}\n',
                   textAlign: TextAlign.center,
                   style: const TextStyle(
                       fontSize: 16,
                       color: Colors.black54,
                       decoration: TextDecoration.none),
+                ),
+                Text(
+                  'Puntaje promedio:',
+                  textAlign: TextAlign.center,
+                  style: const TextStyle(
+                      fontSize: 16,
+                      color: Colors.black54,
+                      decoration: TextDecoration.none),
+                ),
+                Icon(Icons.star),
+                FutureBuilder<double>(
+                  future: totalPuntaje(ref), // Llama al método asíncrono
+                  builder: (context, snapshot) {
+                    if (snapshot.connectionState == ConnectionState.waiting) {
+                      return const Text(
+                        'Cargando...',
+                        textAlign: TextAlign.center,
+                        style: TextStyle(
+                            fontSize: 16,
+                            color: Colors.black54,
+                            decoration: TextDecoration.none),
+                      );
+                    } else if (snapshot.hasError) {
+                      return Text(
+                        'Error: ${snapshot.error}',
+                        textAlign: TextAlign.center,
+                        style: const TextStyle(
+                            fontSize: 16,
+                            color: Colors.red,
+                            decoration: TextDecoration.none),
+                      );
+                    } else if (snapshot.hasData) {
+                      return Text(
+                        ' ${snapshot.data}',
+                        textAlign: TextAlign.center,
+                        style: const TextStyle(
+                            fontSize: 16,
+                            color: Colors.black54,
+                            decoration: TextDecoration.none),
+                      );
+                    } else {
+                      return const Text(
+                        'No disponible',
+                        textAlign: TextAlign.center,
+                        style: TextStyle(
+                            fontSize: 16,
+                            color: Colors.black54,
+                            decoration: TextDecoration.none),
+                      );
+                    }
+                  },
                 ),
                 const SizedBox(height: 20),
                 ElevatedButton(
