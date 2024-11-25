@@ -75,43 +75,40 @@ class _MetodoPagoScreenState extends ConsumerState<MetodoPagoScreen> {
     return tokenAdmin;
   }
 
-  Future<void> _confirmSelection() async {
-    if (_selectedOption == 0) {
-      //COMENTADO SOLO PARA PROBAR LA RESERVA
-      //Navigator.pushNamed(context, '/efectivoScreen'); // Redirige a Efectivo
-      await _guardarReserva();
+ Future<void> _enviarNotificaciones() async {
       String tokenAdmin = await _recuperarTokenAdmin();
-
       Reserva ReservaCargada = ref.watch(reservaEnGarageProvider);
       final usuario = ref.read(usuarioProvider);
 
-      print('**************ACA VIENE EL TOKEN DEL ADMIN**********************');
-      print(tokenAdmin);
-      print('**************   FIN    **********************');
-
-///////////////////////////////Prueba Token////////////////////////////////
       try {
         http.post(Uri.parse('https://backnoti.onrender.com'),
             headers: {"Content-type": "application/json"},
             body: jsonEncode({
-              //aca en vez del token hardcode iria la variable token de arriba
               "token": [usuario.token, tokenAdmin],
               "data": {
                 "title": "Reserva Realizada",
-                "body": "Se realizo una reserva para la fecha: ${ReservaCargada.startTime}\n"
+                "body":
+                    "Se realizo una reserva para la fecha: ${ReservaCargada.startTime}\n"
                     "por un monto de: ${ReservaCargada.monto}"
               }
             }));
-        print(usuario.token);
       } catch (e) {}
-///////////////////////////////prueba token/////////////////////////////////
+    }
+
+  Future<void> _confirmSelection() async {
+    if (_selectedOption == 0) {
+
+      await _guardarReserva();
+      await _enviarNotificaciones();
 
       context.goNamed(LoginUsuario.name);
-    } else if(_selectedOption == 1){
+    }/* else if(_selectedOption == 1){
       context.push('/HomeUser');
-    }
+    }*/
     else if (_selectedOption == 2) {
       await _launchMercadoPagoURL(); // Redirige a URL de Mercado Pago
+      await _guardarReserva();
+      await _enviarNotificaciones(); 
     } else {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(content: Text('Seleccione un método de pago')),
