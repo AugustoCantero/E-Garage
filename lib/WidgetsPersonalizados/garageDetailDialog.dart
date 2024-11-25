@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_application_1/core/Providers/garage_provider.dart';
+import 'package:flutter_application_1/screens/comentariosGarage.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:latlong2/latlong.dart';
@@ -112,6 +113,29 @@ class GarageDetailDialog extends ConsumerWidget {
                     ),
                   ),
                   child: const Text('Reservar',
+                      style: TextStyle(fontSize: 16, color: Colors.white)),
+                ),
+                ElevatedButton(
+                  onPressed: () {
+                    ref.read(garageProvider.notifier).setGarage(
+                        this.id,
+                        this.location,
+                        this.name,
+                        this.imagePath,
+                        this.details,
+                        this.valorHora,
+                        this.valorFraccion);
+                    context.goNamed(ComentariosGarage.name);
+                  },
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: Colors.green,
+                    padding: const EdgeInsets.symmetric(
+                        vertical: 12.0, horizontal: 24.0),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(20),
+                    ),
+                  ),
+                  child: const Text('Comentarios',
                       style: TextStyle(fontSize: 16, color: Colors.white)),
                 ),
               ],

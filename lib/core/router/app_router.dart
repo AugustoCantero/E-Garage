@@ -19,6 +19,7 @@ import 'package:flutter_application_1/screens/PantallaInicio.dart';
 import 'package:flutter_application_1/screens/LoginUsuario.dart';
 import 'package:flutter_application_1/screens/PantallaSeleccion.dart';
 import 'package:flutter_application_1/screens/cargarComentario.dart';
+import 'package:flutter_application_1/screens/comentariosGarage.dart';
 import 'package:flutter_application_1/screens/reservasUsuario.dart';
 import 'package:flutter_application_1/screens/todasLasReservas.dart';
 import 'package:go_router/go_router.dart';
@@ -123,4 +124,8 @@ final GoRouter appRouter = GoRouter(initialLocation: '/selection', routes: [
       path: '/cargarComentarioReserva',
       builder: (context, state) => cargarComentarioReserva(),
       name: cargarComentarioReserva.name),
+  GoRoute(
+      path: '/ComentariosGarage',
+      builder: (context, state) => ComentariosGarage(),
+      name: ComentariosGarage.name),
 ]);

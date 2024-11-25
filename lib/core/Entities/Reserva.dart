@@ -129,8 +129,8 @@ class Reserva {
 
   String infoReserva() {
     return 'Reserva para vehículo ${elvehiculo.patente}\n'
-    'Fecha inicio: ${DateFormat('dd-MM-yyyy HH:mm').format(startTime)}\n'
-    'Fecha fin: ${DateFormat('dd-MM-yyyy HH:mm').format(endTime)}\n'
-    'Costo estadia: $monto';
+        'Fecha inicio: ${DateFormat('dd-MM-yyyy HH:mm').format(startTime)}\n'
+        'Fecha fin: ${DateFormat('dd-MM-yyyy HH:mm').format(endTime)}\n'
+        'Costo estadia: $monto';
   }
 }

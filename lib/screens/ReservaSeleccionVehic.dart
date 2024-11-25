@@ -55,15 +55,12 @@ class _GestionVehiculosScreenState
                       Vehiculo.fromFirestore(vehicles[index], null);
 
                   return ListTile(
-                    title: Text(vehiculo.patente ??
-                        'Sin patente'),
+                    title: Text(vehiculo.patente ?? 'Sin patente'),
                     subtitle: Text(vehiculo.modelo ?? 'Sin Modelo'),
                     trailing: Text(vehiculo.marca ?? 'Sin Marca'),
-
                     onTap: () {
                       setState(() {
-                        selectedVehicle = vehiculo
-                            .marca; 
+                        selectedVehicle = vehiculo.marca;
                         vehiculoSeleccionado = vehiculo;
                       });
                       Navigator.pop(context);
@@ -81,6 +78,7 @@ class _GestionVehiculosScreenState
   @override
   Widget build(BuildContext context) {
     final usuarioState = ref.watch(usuarioProvider);
+
     return Scaffold(
       backgroundColor: Colors.black,
       appBar: AppBar(

@@ -120,10 +120,12 @@ class _OpenStreetMapScreenState extends State<OpenStreetMapScreen> {
       Position position = await Geolocator.getCurrentPosition(
         desiredAccuracy: LocationAccuracy.high,
       );
-      setState(() {
-        _initialPosition = LatLng(position.latitude, position.longitude);
-        _mapController.move(_initialPosition, 15.0);
-      });
+      if (mounted) {
+        setState(() {
+          _initialPosition = LatLng(position.latitude, position.longitude);
+          _mapController.move(_initialPosition, 15.0);
+        });
+      }
     } catch (e) {
       print('Error al obtener la ubicación: $e');
     }

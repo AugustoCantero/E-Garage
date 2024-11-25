@@ -32,7 +32,7 @@ class Usuario {
       "dni": dni,
       "telefono": telefono,
       "token": token,
-      'esAdmin': esAdmin, 
+      'esAdmin': esAdmin,
     };
   }
 
@@ -50,7 +50,7 @@ class Usuario {
         dni: data?['dni'],
         telefono: data?['telefono'],
         token: data?['token'],
-        esAdmin: data?['esAdmin'] ?? false); 
+        esAdmin: data?['esAdmin'] ?? false);
   }
 
   Usuario copywith(

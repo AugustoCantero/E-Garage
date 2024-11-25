@@ -48,7 +48,7 @@ class _cargarComentarioReservaState
     }
   }
 
-  Future<cometarioReserva?> _fetchReservas(Reserva laReserva) async {
+  Future<Comentarioreserva?> _fetchReservas(Reserva laReserva) async {
     try {
       QuerySnapshot<Map<String, dynamic>> snapshot = await db
           .collection('ComentarioReserva')
@@ -60,7 +60,7 @@ class _cargarComentarioReservaState
         final doc = snapshot.docs.first;
         final data = doc.data();
         documentId = doc.id; // Guarda el ID del documento
-        return cometarioReserva(
+        return Comentarioreserva(
           id: doc.id, // Aquí pasas el ID del documento
           idGarage: data['idGarage'],
           idReserva: data['idReserva'],
@@ -79,7 +79,7 @@ class _cargarComentarioReservaState
 
   Future<void> _guardarComentario(Reserva reserva, String idDelUsuario,
       double laPuntuacion, String elComentario) async {
-    final comentarioNuevo = cometarioReserva(
+    final comentarioNuevo = Comentarioreserva(
       id: documentId, // Usa el ID del documento si existe, o null si es nuevo
       idGarage: reserva.garajeId,
       idReserva: reserva.id,

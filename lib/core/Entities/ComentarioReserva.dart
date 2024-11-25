@@ -1,6 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 
-class cometarioReserva {
+class Comentarioreserva {
   String? id;
   String? idReserva;
   String? idGarage;
@@ -8,7 +8,7 @@ class cometarioReserva {
   String? comentario;
   double? puntuacion;
 
-  cometarioReserva({
+  Comentarioreserva({
     required this.id,
     required this.idGarage,
     required this.idReserva,
@@ -30,14 +30,32 @@ class cometarioReserva {
   }
 
   // Constructor para crear una instancia desde los datos de Firestore
-  factory cometarioReserva.fromFirestore(Map<String, dynamic> data, String id) {
-    return cometarioReserva(
-      id: id, // El id del documento de Firestore
+  factory Comentarioreserva.fromFirestore(
+      DocumentSnapshot<Map<String, dynamic>> snapshot) {
+    final data = snapshot.data()!;
+    return Comentarioreserva(
+      id: data['id'] ?? '', // El id del documento de Firestore
       idGarage: data['idGarage'] ?? '',
       idReserva: data['idReserva'] ?? '',
       idUsuario: data['idUsuario'] ?? '',
       comentario: data['comentario'] ?? '',
       puntuacion: (data['puntuacion'] ?? 0).toDouble(),
     );
+  }
+
+  Comentarioreserva copywith(
+      {String? id,
+      String? idGarage,
+      String? idReserva,
+      String? idUsuario,
+      String? comentario,
+      double? puntuacion}) {
+    return Comentarioreserva(
+        id: id ?? this.id,
+        idGarage: idGarage ?? this.idGarage,
+        idReserva: idReserva ?? this.idReserva,
+        idUsuario: idUsuario ?? this.idUsuario,
+        comentario: comentario ?? this.comentario,
+        puntuacion: puntuacion ?? this.puntuacion);
   }
 }
