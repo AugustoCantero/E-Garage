@@ -42,8 +42,7 @@ class _ComentariosGarageState extends ConsumerState<ComentariosGarage> {
     if (Puntaje > 0) {
       totalPuntaje = Puntaje / listaComentarios.length;
     } else {
-      totalPuntaje = -0.1;
-    }
+      totalPuntaje = -0.0;
     return totalPuntaje;
   }
 
