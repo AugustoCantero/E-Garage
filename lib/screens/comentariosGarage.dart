@@ -42,7 +42,8 @@ class _ComentariosGarageState extends ConsumerState<ComentariosGarage> {
     if (Puntaje > 0) {
       totalPuntaje = Puntaje / listaComentarios.length;
     } else {
-      totalPuntaje = -0.0;
+      totalPuntaje = 0.0;
+    }
     return totalPuntaje;
   }
 
@@ -104,7 +105,9 @@ class _ComentariosGarageState extends ConsumerState<ComentariosGarage> {
                       } else if (snapshot.hasData) {
                         // Cuando el Future se resuelve correctamente
                         return Text(
-                          'Puntaje promedio: ${snapshot.data}', // Muestra el valor del Future
+                          snapshot.data! > 0
+                              ? 'Puntaje promedio: ${snapshot.data}'
+                              : '', // Muestra el valor del Future
                           style: const TextStyle(color: Colors.white),
                         );
                       } else {
