@@ -3,6 +3,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_application_1/WidgetsPersonalizados/GarageMarker.dart';
 import 'package:flutter_map/flutter_map.dart';
+import 'package:go_router/go_router.dart';
 import 'package:http/http.dart' as http;
 import 'package:geolocator/geolocator.dart';
 import 'package:latlong2/latlong.dart';
@@ -231,7 +232,8 @@ class _OpenStreetMapScreenState extends State<OpenStreetMapScreen> {
   }
 
   void _goBack() {
-    Navigator.of(context).pop(); // Volver a la pantalla anterior
+    // Navigator.of(context).pop(); // Volver a la pantalla anterior
+    context.push('/HomeUser');
   }
 
   @override
