@@ -22,6 +22,27 @@ class _ChatBotPageState extends ConsumerState<ChatBotPage> {
   List<String> options = [];
   final TextEditingController _messageController = TextEditingController();
 
+@override
+  initState(){
+    super.initState();
+    _mostratMensajeBienvenida();
+  }
+
+void _mostratMensajeBienvenida(){
+  List<String> opcionesBot = [
+    '¿Qué necesito para hacer una reserva?',
+    '¿Cómo puedo agregar un vehículo?',
+    'Consultar garajes afiliados',
+    'Consultar mis reservas'
+  ];
+  setState(() {
+    _messages.insert(0, {
+        'data': 0,
+        'message': "Hola! Soy tu asistente virtual. ¿En qué puedo ayudarte hoy?",
+        'options': opcionesBot
+      });
+  });
+}
   void _sendMessage(String message) async {
     setState(() {
       _messages.insert(0, {'data': 1, 'message': message});
@@ -30,25 +51,48 @@ class _ChatBotPageState extends ConsumerState<ChatBotPage> {
 
     String botResponse = await _getChatbotResponse(message);
 
-    List<String> opcionesBot = [];
+    List<String> opcionesBot = [
+      '¿Qué necesito para hacer una reserva?',
+      '¿Cómo puedo agregar un vehículo?',
+      "Consultar garajes afiliados",
+      "Consultar mis reservas",
+    ];
 
-    if (botResponse.contains("reservar")) {
-      opcionesBot = ["Para hoy", "Para mañana", "Para esta semana"];
-    } else if (botResponse.contains("cancelar")) {
-      opcionesBot = ["Cancelar reserva actual", "No cancelar"];
-    } else {
-      opcionesBot = [
-        "Consultar garajes afiliados",
-        "Consultar mis reservas",
-        "Reservar un espacio",
-        "Cancelar una reserva",
+
+    // if (botResponse.contains("reservar")) {
+    //   opcionesBot = ["Para hoy", "Para mañana", "Para esta semana"];
+    // } else if (botResponse.contains("cancelar")) {
+    //   opcionesBot = ["Cancelar reserva actual", "No cancelar"];
+    // } else {
+    //   opcionesBot = [
+    //     '¿Qué necesito para hacer una reserva?',
+    //   '¿Cómo puedo agregar un vehículo?',
+    //   "Consultar garajes afiliados",
+    //   "Consultar mis reservas",
         
-      ];
-    }
+    //   ];
+    // }
 
     setState(() {
       _messages.insert(
           0, {'data': 0, 'message': botResponse, 'options': opcionesBot});
+    });
+  }
+
+  void _insertarOpciones(){
+    List<String> opcionesBot = [
+      '¿Qué necesito para hacer una reserva?',
+      '¿Cómo puedo agregar un vehículo?',
+      "Consultar garajes afiliados",
+      "Consultar mis reservas"
+    ];
+
+    setState(() {
+      _messages.insert(0, {
+        'data': 0,
+        'message': "¿Qué más puedo hacer por ti?",
+        'options': opcionesBot,
+      });
     });
   }
 
@@ -98,12 +142,20 @@ class _ChatBotPageState extends ConsumerState<ChatBotPage> {
     if (data['intents'] != null && data['intents'].isNotEmpty) {
       String intent = data['intents'][0]['name'];
       switch (intent) {
-        case 'reservar_espacio':
+         case 'reservar_espacio':
           return "¿Para cuándo te gustaría reservar?";
         case 'cancelar_reserva':
           return "¿Estás seguro de que deseas cancelar la reserva?";
         case 'saludo':
           return "Hola! soy tu asistente virtual, en qué puedo ayudarte hoy?";
+        case 'vehiculo':
+        return "Puedes gestionar tus vehículos desde el menú principal.";
+      case 'garaje':
+        return "Consulta garajes afiliados desde el menú o el botón correspondiente.";
+        case 'gracias':
+        return "¡De nada! Estoy aquí para ayudarte.";
+      case 'adios':
+        return "¡Hasta pronto! No dudes en volver si necesitas algo.";
         default:
           return "No entiendo tu solicitud.";
       }
@@ -123,10 +175,11 @@ class _ChatBotPageState extends ConsumerState<ChatBotPage> {
       List<Map<String, dynamic>> garages = await _obtenerGarajes();
       String garajesInfo = "Garajes afiliados : \n";
       for (var garage in garages) {
-        garajesInfo += "Nombre: ${garage['nombre']}\nDireccion: ${garage['direccion']}\n\n";
+        garajesInfo += "Nombre: ${garage['nombre']}\nDireccion: ${garage['direccion']}\nValor hora: ${garage['valorHora']}\n\n";
       }
       setState(() {
         _messages.insert(0, {'data': 0, 'message': garajesInfo});
+        _insertarOpciones();
       });
 
     } 
@@ -138,8 +191,29 @@ class _ChatBotPageState extends ConsumerState<ChatBotPage> {
       : reservas.map((reserva) => reserva.infoReserva()).join("\n\n");
       setState(() {
         _messages.insert(0, {'data': 0, 'message': reservasMessage});
+        _insertarOpciones();
       });
-    } else {
+    } else if (option == '¿Cómo puedo agregar un vehículo?'){
+      setState(() {
+      _messages.insert(0, {
+        'data': 0,
+        'message': "Para agregar un vehículo:\n"
+            "- Ve a 'Mis vehículos' desde el menú lateral.\n"
+            "- Haz clic en 'Agregar vehículo'.\n"
+            "- Completa los datos del vehículo y confirma."
+      });
+      _insertarOpciones();
+    });
+    }else if (option == "¿Qué necesito para hacer una reserva?") {
+    setState(() {
+      _messages.insert(0, {
+        'data': 0,
+        'message': "Para hacer una reserva, necesitas tener al menos un vehículo registrado:\n"
+            "- Ve a 'Mis vehículos' y registra tu auto.\n"
+            "- Luego selecciona un garaje y reserva el espacio."
+      });
+      _insertarOpciones();
+    });}else {
       _sendMessage(option);
     }
   }
@@ -148,8 +222,8 @@ class _ChatBotPageState extends ConsumerState<ChatBotPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('carBot'),
-        backgroundColor: Colors.blue,
+        title: const Text('carBot', style: TextStyle(color: Colors.white),),
+        backgroundColor: const Color.fromARGB(255, 50, 48, 48),
       ),
       body: Column(
         children: [
