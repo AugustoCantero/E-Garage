@@ -58,7 +58,7 @@ class _HistorialReservasUsuariosState
                   child: Text(
                     'HISTORIAL de RESERVAS',
                     style: TextStyle(
-                      fontSize: 32,
+                      fontSize: 30,
                       color: Colors.white,
                     ),
                   ),

@@ -66,7 +66,11 @@ class _ReservasUsuarioState extends ConsumerState<ReservasUsuario> {
               ],
             ),
           ),
-          const BackButtonWidget(),
+           BackButtonWidget(
+            onPressed: () {
+                    context.push('/HomeUser');
+                  }
+          ),
         ],
       ),
     );
