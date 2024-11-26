@@ -114,6 +114,7 @@ class _MetodoPagoScreenState extends ConsumerState<MetodoPagoScreen> {
         const SnackBar(content: Text('Seleccione un método de pago')),
       );
     }
+    context.goNamed(LoginUsuario.name);
   }
 
  Future<void> _launchMercadoPagoURL() async {
